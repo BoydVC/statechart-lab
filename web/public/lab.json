@@ -1,0 +1,1457 @@
+{
+  "generatedAt": "2026-11-03T23:56:10.972Z",
+  "tlaVersion": "TLA+ 1.7.4 / TLC 2.19",
+  "machines": [
+    {
+      "id": "draft-day/pipeline",
+      "machine": "draft-day/pipeline",
+      "title": "Draft Day",
+      "blurb": "Merge stays closed until the draft is approved. Each seat is scored once.",
+      "commit": "7fb564d8d974db4ad3c8584a0b9b1f4e35a8ea96",
+      "group": "lab",
+      "order": 5,
+      "states": 12,
+      "invariants": [
+        {
+          "name": "NoMergeWithoutApproval",
+          "kind": "safety",
+          "text": "A merged draft was approved first.",
+          "holds": true,
+          "expected": false
+        },
+        {
+          "name": "AtMostOnce",
+          "kind": "safety",
+          "text": "Each seat is scored at most once.",
+          "holds": true,
+          "expected": false
+        },
+        {
+          "name": "JudgedBeforeGraft",
+          "kind": "safety",
+          "text": "Graft waits until every seat has been scored.",
+          "holds": true,
+          "expected": false
+        }
+      ],
+      "status": "pass",
+      "story": [
+        {
+          "phase": "idea",
+          "label": "An idea is on the board."
+        },
+        {
+          "phase": "spec",
+          "label": "The spec is written."
+        },
+        {
+          "phase": "seats",
+          "label": "Seats open."
+        },
+        {
+          "phase": "judge",
+          "label": "Each seat is scored once."
+        },
+        {
+          "phase": "graft",
+          "label": "The winner is grafted."
+        },
+        {
+          "phase": "physical",
+          "label": "The physical pass."
+        },
+        {
+          "phase": "draft",
+          "label": "The draft PR is up. Approve it."
+        },
+        {
+          "phase": "merged",
+          "label": "Merge is allowed only after approval."
+        }
+      ],
+      "chart": {
+        "nodes": [
+          {
+            "id": "idea",
+            "label": "Idea",
+            "x": 70,
+            "y": 70
+          },
+          {
+            "id": "spec",
+            "label": "Spec",
+            "x": 190,
+            "y": 70
+          },
+          {
+            "id": "seats",
+            "label": "Seats",
+            "x": 320,
+            "y": 70
+          },
+          {
+            "id": "judge",
+            "label": "Judge",
+            "x": 450,
+            "y": 70
+          },
+          {
+            "id": "graft",
+            "label": "Graft",
+            "x": 70,
+            "y": 210
+          },
+          {
+            "id": "physical",
+            "label": "Physical",
+            "x": 200,
+            "y": 210
+          },
+          {
+            "id": "draft",
+            "label": "Draft PR",
+            "x": 340,
+            "y": 210
+          },
+          {
+            "id": "merged",
+            "label": "Merged",
+            "x": 460,
+            "y": 210
+          }
+        ],
+        "edges": [
+          {
+            "from": "idea",
+            "to": "spec",
+            "action": "ToSpec",
+            "label": "Write spec"
+          },
+          {
+            "from": "spec",
+            "to": "seats",
+            "action": "ToSeats",
+            "label": "Open seats"
+          },
+          {
+            "from": "seats",
+            "to": "judge",
+            "action": "ToJudge",
+            "label": "To judging"
+          },
+          {
+            "from": "judge",
+            "to": "graft",
+            "action": "ToGraft",
+            "label": "Seats scored"
+          },
+          {
+            "from": "graft",
+            "to": "physical",
+            "action": "ToPhysical",
+            "label": "Graft"
+          },
+          {
+            "from": "physical",
+            "to": "draft",
+            "action": "ToDraft",
+            "label": "Draft PR"
+          },
+          {
+            "from": "draft",
+            "to": "merged",
+            "action": "Merge",
+            "label": "Merge"
+          }
+        ]
+      },
+      "chartSvg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 520 300\" role=\"img\">\n  <defs>\n    <marker id=\"arrow-blueprint\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\">\n      <path d=\"M0,0 L6,3 L0,6 Z\" fill=\"#7fd3ff\"/>\n    </marker>\n  </defs>\n  <rect width=\"520\" height=\"300\" fill=\"#0d2238\"/>\n  <path d=\"M 124.0 70.0 Q 130.0 96.0 136.0 70.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 244.0 70.0 Q 255.0 44.0 266.0 70.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 374.0 70.0 Q 385.0 96.0 396.0 70.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 396.0 89.9 Q 269.0 164.4 124.0 190.1\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 124.0 210.0 Q 135.0 236.0 146.0 210.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 254.0 210.0 Q 270.0 184.0 286.0 210.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 394.0 210.0 Q 400.0 236.0 406.0 210.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/>\n  <text x=\"130.0\" y=\"90.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Write spec</text><text x=\"255.0\" y=\"38.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Open seats</text><text x=\"385.0\" y=\"90.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">To judging</text><text x=\"269.0\" y=\"158.4\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Seats scored</text><text x=\"135.0\" y=\"230.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Graft</text><text x=\"270.0\" y=\"178.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Draft PR</text><text x=\"400.0\" y=\"230.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Merge</text>\n  <g><rect x=\"16\" y=\"50\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"70\" y=\"74\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Idea</text></g><g><rect x=\"136\" y=\"50\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"190\" y=\"74\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Spec</text></g><g><rect x=\"266\" y=\"50\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"320\" y=\"74\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Seats</text></g><g><rect x=\"396\" y=\"50\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"450\" y=\"74\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Judge</text></g><g><rect x=\"16\" y=\"190\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"70\" y=\"214\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Graft</text></g><g><rect x=\"146\" y=\"190\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"200\" y=\"214\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Physical</text></g><g><rect x=\"286\" y=\"190\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"340\" y=\"214\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Draft PR</text></g><g><rect x=\"406\" y=\"190\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"460\" y=\"214\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Merged</text></g>\n</svg>",
+      "mermaid": "stateDiagram-v2\n  idea: Idea\n  spec: Spec\n  seats: Seats\n  judge: Judge\n  graft: Graft\n  physical: Physical\n  draft: Draft PR\n  merged: Merged\n  idea --> spec: Write spec\n  spec --> seats: Open seats\n  seats --> judge: To judging\n  judge --> graft: Seats scored\n  graft --> physical: Graft\n  physical --> draft: Draft PR\n  draft --> merged: Merge"
+    },
+    {
+      "id": "post-queue/queue",
+      "machine": "post-queue/queue",
+      "title": "Post queue",
+      "blurb": "Posted requires approval. The server also allows posted straight from approved, skipping the cue.",
+      "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b",
+      "group": "lab",
+      "order": 3,
+      "states": 8,
+      "invariants": [
+        {
+          "name": "ScheduledBeforePosted",
+          "kind": "safety",
+          "text": "Posted happens only after the item was cued.",
+          "holds": false,
+          "expected": true
+        },
+        {
+          "name": "PostedRequiresApproval",
+          "kind": "safety",
+          "text": "Posted happens only after approval.",
+          "holds": true,
+          "expected": false
+        }
+      ],
+      "status": "violation",
+      "trace": [
+        {
+          "state": {
+            "cued": false,
+            "approved": false,
+            "phase": "draft"
+          },
+          "action": "Init",
+          "label": "Start",
+          "chartState": "draft",
+          "sourceRef": "new item status draft, server.py:716"
+        },
+        {
+          "state": {
+            "cued": false,
+            "approved": true,
+            "phase": "approved"
+          },
+          "action": "Approve",
+          "label": "Approve",
+          "chartState": "approved",
+          "sourceRef": "server.py:780-785 @ dea8484"
+        },
+        {
+          "state": {
+            "cued": false,
+            "approved": true,
+            "phase": "posted"
+          },
+          "action": "PostFromApproved",
+          "label": "Skip the cue",
+          "chartState": "posted",
+          "sourceRef": "server.py:794-798 @ dea8484"
+        }
+      ],
+      "story": [
+        {
+          "phase": "draft",
+          "label": "A draft is saved."
+        },
+        {
+          "phase": "approved",
+          "label": "Boyd approves the exact text."
+        },
+        {
+          "phase": "posted",
+          "label": "Mark posted is accepted before the cue."
+        }
+      ],
+      "chart": {
+        "nodes": [
+          {
+            "id": "draft",
+            "label": "Draft",
+            "x": 70,
+            "y": 150
+          },
+          {
+            "id": "approved",
+            "label": "Approved",
+            "x": 220,
+            "y": 60
+          },
+          {
+            "id": "cued",
+            "label": "Cued",
+            "x": 380,
+            "y": 60
+          },
+          {
+            "id": "posted",
+            "label": "Posted",
+            "x": 450,
+            "y": 190
+          },
+          {
+            "id": "skipped",
+            "label": "Skipped",
+            "x": 180,
+            "y": 230
+          }
+        ],
+        "edges": [
+          {
+            "from": "draft",
+            "to": "approved",
+            "action": "Approve",
+            "label": "Approve"
+          },
+          {
+            "from": "approved",
+            "to": "cued",
+            "action": "Cue",
+            "label": "Cue"
+          },
+          {
+            "from": "cued",
+            "to": "posted",
+            "action": "PostFromCued",
+            "label": "Mark posted"
+          },
+          {
+            "from": "approved",
+            "to": "posted",
+            "action": "PostFromApproved",
+            "label": "Skip the cue",
+            "tone": "danger"
+          },
+          {
+            "from": "draft",
+            "to": "skipped",
+            "action": "Skip",
+            "label": "Skip"
+          },
+          {
+            "from": "posted",
+            "to": "draft",
+            "action": "Edit",
+            "label": "Edit"
+          }
+        ]
+      },
+      "chartSvg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 520 300\" role=\"img\">\n  <defs>\n    <marker id=\"arrow-blueprint\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\">\n      <path d=\"M0,0 L6,3 L0,6 Z\" fill=\"#7fd3ff\"/>\n    </marker>\n  </defs>\n  <rect width=\"520\" height=\"300\" fill=\"#0d2238\"/>\n  <path d=\"M 103.3 130.0 Q 158.4 127.3 186.7 80.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 274.0 60.0 Q 300.0 34.0 326.0 60.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 390.8 80.0 Q 392.1 137.3 439.2 170.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 255.4 80.0 Q 347.8 102.4 414.6 170.0\" fill=\"none\" stroke=\"#ff5d73\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 97.5 170.0 Q 109.7 211.0 152.5 210.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 396.0 184.3 Q 257.3 195.9 124.0 155.7\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/>\n  <text x=\"158.4\" y=\"121.3\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Approve</text><text x=\"300.0\" y=\"28.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Cue</text><text x=\"392.1\" y=\"131.3\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Mark posted</text><text x=\"347.8\" y=\"96.4\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Skip the cue</text><text x=\"109.7\" y=\"205.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Skip</text><text x=\"257.3\" y=\"189.9\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Edit</text>\n  <g><rect x=\"16\" y=\"130\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"70\" y=\"154\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Draft</text></g><g><rect x=\"166\" y=\"40\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"220\" y=\"64\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Approved</text></g><g><rect x=\"326\" y=\"40\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"380\" y=\"64\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Cued</text></g><g><rect x=\"396\" y=\"170\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"450\" y=\"194\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Posted</text></g><g><rect x=\"126\" y=\"210\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"180\" y=\"234\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Skipped</text></g>\n</svg>",
+      "mermaid": "stateDiagram-v2\n  draft: Draft\n  approved: Approved\n  cued: Cued\n  posted: Posted\n  skipped: Skipped\n  draft --> approved: Approve\n  approved --> cued: Cue\n  cued --> posted: Mark posted\n  approved --> posted: Skip the cue\n  draft --> skipped: Skip\n  posted --> draft: Edit",
+      "bugId": "pq-posted-skips-cue"
+    },
+    {
+      "id": "school-pulse/assignment",
+      "machine": "school-pulse/assignment",
+      "title": "Assignment flow",
+      "blurb": "Missing work can be turned in. A grade needs points.",
+      "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+      "group": "lab",
+      "order": 7,
+      "states": 4,
+      "invariants": [
+        {
+          "name": "GradedHasPoints",
+          "kind": "safety",
+          "text": "A graded assignment has points.",
+          "holds": true,
+          "expected": false
+        },
+        {
+          "name": "MissingIsUngraded",
+          "kind": "safety",
+          "text": "Missing work has no score yet.",
+          "holds": true,
+          "expected": false
+        }
+      ],
+      "status": "pass",
+      "story": [
+        {
+          "phase": "missing",
+          "label": "The work is missing."
+        },
+        {
+          "phase": "turned_in",
+          "label": "It is turned in."
+        },
+        {
+          "phase": "turned_in",
+          "label": "Points are attached."
+        },
+        {
+          "phase": "graded",
+          "label": "A grade needs those points."
+        }
+      ],
+      "chart": {
+        "nodes": [
+          {
+            "id": "missing",
+            "label": "Missing",
+            "x": 90,
+            "y": 150
+          },
+          {
+            "id": "turned_in",
+            "label": "Turned in",
+            "x": 260,
+            "y": 150
+          },
+          {
+            "id": "graded",
+            "label": "Graded",
+            "x": 430,
+            "y": 150
+          }
+        ],
+        "edges": [
+          {
+            "from": "missing",
+            "to": "turned_in",
+            "action": "TurnIn",
+            "label": "Turn in"
+          },
+          {
+            "from": "turned_in",
+            "to": "graded",
+            "action": "Grade",
+            "label": "Grade"
+          }
+        ]
+      },
+      "chartSvg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 520 300\" role=\"img\">\n  <defs>\n    <marker id=\"arrow-blueprint\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\">\n      <path d=\"M0,0 L6,3 L0,6 Z\" fill=\"#7fd3ff\"/>\n    </marker>\n  </defs>\n  <rect width=\"520\" height=\"300\" fill=\"#0d2238\"/>\n  <path d=\"M 144.0 150.0 Q 175.0 176.0 206.0 150.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 314.0 150.0 Q 345.0 124.0 376.0 150.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/>\n  <text x=\"175.0\" y=\"170.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Turn in</text><text x=\"345.0\" y=\"118.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Grade</text>\n  <g><rect x=\"36\" y=\"130\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"90\" y=\"154\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Missing</text></g><g><rect x=\"206\" y=\"130\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"260\" y=\"154\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Turned in</text></g><g><rect x=\"376\" y=\"130\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"430\" y=\"154\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Graded</text></g>\n</svg>",
+      "mermaid": "stateDiagram-v2\n  missing: Missing\n  turned_in: Turned in\n  graded: Graded\n  missing --> turned_in: Turn in\n  turned_in --> graded: Grade",
+      "poster": {
+        "kicker": "Homework",
+        "title": "Missing, turned in, graded",
+        "caption": "Missing work can be turned in. A grade needs points on the page.",
+        "scene": "assignment"
+      }
+    },
+    {
+      "id": "school-pulse/ingest",
+      "machine": "school-pulse/ingest",
+      "title": "Ingest idempotency",
+      "blurb": "The same source and sourceId stay one row.",
+      "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+      "group": "lab",
+      "order": 4,
+      "states": 2,
+      "invariants": [
+        {
+          "name": "OneRowPerKey",
+          "kind": "safety",
+          "text": "One source and sourceId produce at most one row.",
+          "holds": true,
+          "expected": false
+        },
+        {
+          "name": "RepeatStaysQuiet",
+          "kind": "safety",
+          "text": "A repeat of the same key does not add a second row.",
+          "holds": true,
+          "expected": false
+        }
+      ],
+      "status": "pass",
+      "story": [
+        {
+          "phase": "empty",
+          "label": "The key has not been seen."
+        },
+        {
+          "phase": "stored",
+          "label": "The row is inserted."
+        },
+        {
+          "phase": "stored",
+          "label": "The same key again. Still one row."
+        }
+      ],
+      "chart": {
+        "nodes": [
+          {
+            "id": "empty",
+            "label": "Empty",
+            "x": 150,
+            "y": 150
+          },
+          {
+            "id": "stored",
+            "label": "Stored",
+            "x": 370,
+            "y": 150
+          }
+        ],
+        "edges": [
+          {
+            "from": "empty",
+            "to": "stored",
+            "action": "First",
+            "label": "First insert"
+          }
+        ]
+      },
+      "chartSvg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 520 300\" role=\"img\">\n  <defs>\n    <marker id=\"arrow-blueprint\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\">\n      <path d=\"M0,0 L6,3 L0,6 Z\" fill=\"#7fd3ff\"/>\n    </marker>\n  </defs>\n  <rect width=\"520\" height=\"300\" fill=\"#0d2238\"/>\n  <path d=\"M 204.0 150.0 Q 260.0 176.0 316.0 150.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/>\n  <text x=\"260.0\" y=\"170.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">First insert</text>\n  <g><rect x=\"96\" y=\"130\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"150\" y=\"154\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Empty</text></g><g><rect x=\"316\" y=\"130\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"370\" y=\"154\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Stored</text></g>\n</svg>",
+      "mermaid": "stateDiagram-v2\n  empty: Empty\n  stored: Stored\n  empty --> stored: First insert"
+    },
+    {
+      "id": "school-pulse/oauth",
+      "machine": "school-pulse/oauth",
+      "title": "Token lifecycle",
+      "blurb": "Sync still sends the access token after expires_at.",
+      "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+      "group": "lab",
+      "order": 1,
+      "states": 8,
+      "invariants": [
+        {
+          "name": "ExpiredTokenNotUsed",
+          "kind": "safety",
+          "text": "An expired access token is not used to sync.",
+          "holds": false,
+          "expected": true
+        },
+        {
+          "name": "NoSyncWithoutToken",
+          "kind": "safety",
+          "text": "Sync does not run when no token is stored.",
+          "holds": true,
+          "expected": false
+        }
+      ],
+      "status": "violation",
+      "trace": [
+        {
+          "state": {
+            "hasToken": false,
+            "expired": false,
+            "phase": "none"
+          },
+          "action": "Init",
+          "label": "Start",
+          "chartState": "none",
+          "sourceRef": "no token file"
+        },
+        {
+          "state": {
+            "hasToken": true,
+            "expired": false,
+            "phase": "fresh"
+          },
+          "action": "Exchange",
+          "label": "Exchange code",
+          "chartState": "fresh",
+          "sourceRef": "src/auth/oauth.ts:108-115 @ 3b76b08"
+        },
+        {
+          "state": {
+            "hasToken": true,
+            "expired": true,
+            "phase": "expired"
+          },
+          "action": "Age",
+          "label": "Past expires_at",
+          "chartState": "expired",
+          "sourceRef": "expires_at is stored and never read again"
+        },
+        {
+          "state": {
+            "hasToken": true,
+            "expired": true,
+            "phase": "syncing"
+          },
+          "action": "Sync",
+          "label": "Sync anyway",
+          "chartState": "syncing",
+          "sourceRef": "src/main.ts:150-157 @ 3b76b08"
+        }
+      ],
+      "story": [
+        {
+          "phase": "none",
+          "label": "No token file yet."
+        },
+        {
+          "phase": "fresh",
+          "label": "The code exchange stores an access token."
+        },
+        {
+          "phase": "expired",
+          "label": "expires_at has passed. The file is unchanged."
+        },
+        {
+          "phase": "syncing",
+          "label": "Sync reads access_token and uses it anyway."
+        }
+      ],
+      "chart": {
+        "nodes": [
+          {
+            "id": "none",
+            "label": "Signed out",
+            "x": 90,
+            "y": 150
+          },
+          {
+            "id": "fresh",
+            "label": "Fresh",
+            "x": 250,
+            "y": 58
+          },
+          {
+            "id": "expired",
+            "label": "Expired",
+            "x": 420,
+            "y": 58
+          },
+          {
+            "id": "syncing",
+            "label": "Syncing",
+            "x": 420,
+            "y": 220
+          },
+          {
+            "id": "reauth",
+            "label": "Re-auth",
+            "x": 250,
+            "y": 220
+          }
+        ],
+        "edges": [
+          {
+            "from": "none",
+            "to": "fresh",
+            "action": "Exchange",
+            "label": "Exchange code"
+          },
+          {
+            "from": "fresh",
+            "to": "expired",
+            "action": "Age",
+            "label": "Past expires_at"
+          },
+          {
+            "from": "expired",
+            "to": "syncing",
+            "action": "Sync",
+            "label": "Sync anyway",
+            "tone": "danger"
+          },
+          {
+            "from": "expired",
+            "to": "reauth",
+            "action": "Reauth",
+            "label": "Sign in again"
+          },
+          {
+            "from": "reauth",
+            "to": "fresh",
+            "action": "Store",
+            "label": "Store token"
+          }
+        ]
+      },
+      "chartSvg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 520 300\" role=\"img\">\n  <defs>\n    <marker id=\"arrow-blueprint\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\">\n      <path d=\"M0,0 L6,3 L0,6 Z\" fill=\"#7fd3ff\"/>\n    </marker>\n  </defs>\n  <rect width=\"520\" height=\"300\" fill=\"#0d2238\"/>\n  <path d=\"M 124.8 130.0 Q 183.0 126.5 215.2 78.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 304.0 58.0 Q 335.0 32.0 366.0 58.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 420.0 78.0 Q 394.0 139.0 420.0 200.0\" fill=\"none\" stroke=\"#ff5d73\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 399.0 78.0 Q 352.9 157.8 271.0 200.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 250.0 200.0 Q 276.0 139.0 250.0 78.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/>\n  <text x=\"183.0\" y=\"120.5\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Exchange code</text><text x=\"335.0\" y=\"26.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Past expires_at</text><text x=\"394.0\" y=\"133.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Sync anyway</text><text x=\"352.9\" y=\"151.8\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Sign in again</text><text x=\"276.0\" y=\"133.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Store token</text>\n  <g><rect x=\"36\" y=\"130\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"90\" y=\"154\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Signed out</text></g><g><rect x=\"196\" y=\"38\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"250\" y=\"62\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Fresh</text></g><g><rect x=\"366\" y=\"38\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"420\" y=\"62\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Expired</text></g><g><rect x=\"366\" y=\"200\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"420\" y=\"224\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Syncing</text></g><g><rect x=\"196\" y=\"200\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"250\" y=\"224\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Re-auth</text></g>\n</svg>",
+      "mermaid": "stateDiagram-v2\n  none: Signed out\n  fresh: Fresh\n  expired: Expired\n  syncing: Syncing\n  reauth: Re-auth\n  none --> fresh: Exchange code\n  fresh --> expired: Past expires_at\n  expired --> syncing: Sync anyway\n  expired --> reauth: Sign in again\n  reauth --> fresh: Store token",
+      "bugId": "sp-oauth-expired-sync"
+    },
+    {
+      "id": "school-pulse/sse",
+      "machine": "school-pulse/sse",
+      "title": "Live stream",
+      "blurb": "A silent stream stays on the live pill. Nothing reconnects it.",
+      "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+      "group": "lab",
+      "order": 2,
+      "states": 4,
+      "invariants": [
+        {
+          "name": "SilentStreamReconnects",
+          "kind": "safety",
+          "text": "A stream that stops sending is reconnected.",
+          "holds": false,
+          "expected": true
+        },
+        {
+          "name": "AtMostOneSocket",
+          "kind": "safety",
+          "text": "The page opens at most one event socket.",
+          "holds": true,
+          "expected": false
+        }
+      ],
+      "status": "violation",
+      "trace": [
+        {
+          "state": {
+            "phase": "off",
+            "sockets": 0
+          },
+          "action": "Init",
+          "label": "Start",
+          "chartState": "off",
+          "sourceRef": "page load before connect()"
+        },
+        {
+          "state": {
+            "phase": "live",
+            "sockets": 1
+          },
+          "action": "Open",
+          "label": "Open",
+          "chartState": "live",
+          "sourceRef": "web/app.ts:466-467 @ 3b76b08"
+        },
+        {
+          "state": {
+            "phase": "silent",
+            "sockets": 1
+          },
+          "action": "Silence",
+          "label": "No ping",
+          "chartState": "silent",
+          "sourceRef": "web/app.ts:466-479 has no silence timer"
+        }
+      ],
+      "story": [
+        {
+          "phase": "off",
+          "label": "The page has not connected."
+        },
+        {
+          "phase": "live",
+          "label": "One EventSource is open."
+        },
+        {
+          "phase": "silent",
+          "label": "Pings stop. The pill stays live."
+        }
+      ],
+      "chart": {
+        "nodes": [
+          {
+            "id": "off",
+            "label": "Off",
+            "x": 80,
+            "y": 150
+          },
+          {
+            "id": "live",
+            "label": "Live",
+            "x": 250,
+            "y": 70
+          },
+          {
+            "id": "silent",
+            "label": "Silent",
+            "x": 430,
+            "y": 70
+          },
+          {
+            "id": "down",
+            "label": "Down",
+            "x": 250,
+            "y": 220
+          }
+        ],
+        "edges": [
+          {
+            "from": "off",
+            "to": "live",
+            "action": "Open",
+            "label": "Open"
+          },
+          {
+            "from": "live",
+            "to": "silent",
+            "action": "Silence",
+            "label": "No ping",
+            "tone": "danger"
+          },
+          {
+            "from": "live",
+            "to": "down",
+            "action": "Error",
+            "label": "Socket error"
+          },
+          {
+            "from": "down",
+            "to": "live",
+            "action": "Reconnect",
+            "label": "Browser retry"
+          }
+        ]
+      },
+      "chartSvg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 520 300\" role=\"img\">\n  <defs>\n    <marker id=\"arrow-blueprint\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\">\n      <path d=\"M0,0 L6,3 L0,6 Z\" fill=\"#7fd3ff\"/>\n    </marker>\n  </defs>\n  <rect width=\"520\" height=\"300\" fill=\"#0d2238\"/>\n  <path d=\"M 122.5 130.0 Q 176.1 133.5 207.5 90.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 304.0 70.0 Q 340.0 44.0 376.0 70.0\" fill=\"none\" stroke=\"#ff5d73\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 250.0 90.0 Q 224.0 145.0 250.0 200.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 250.0 200.0 Q 224.0 145.0 250.0 90.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/>\n  <text x=\"176.1\" y=\"127.5\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Open</text><text x=\"340.0\" y=\"38.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">No ping</text><text x=\"224.0\" y=\"139.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Socket error</text><text x=\"224.0\" y=\"139.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Browser retry</text>\n  <g><rect x=\"26\" y=\"130\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"80\" y=\"154\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Off</text></g><g><rect x=\"196\" y=\"50\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"250\" y=\"74\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Live</text></g><g><rect x=\"376\" y=\"50\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"430\" y=\"74\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Silent</text></g><g><rect x=\"196\" y=\"200\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"250\" y=\"224\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Down</text></g>\n</svg>",
+      "mermaid": "stateDiagram-v2\n  off: Off\n  live: Live\n  silent: Silent\n  down: Down\n  off --> live: Open\n  live --> silent: No ping\n  live --> down: Socket error\n  down --> live: Browser retry",
+      "bugId": "sp-sse-silent-stream"
+    },
+    {
+      "id": "session-owner/household",
+      "machine": "session-owner/household",
+      "title": "Session owner",
+      "blurb": "One owner. Keep-alive while fresh, re-auth when stale, no send before that.",
+      "commit": "generic",
+      "group": "lab",
+      "order": 6,
+      "states": 6,
+      "invariants": [
+        {
+          "name": "FreshBeforeSend",
+          "kind": "safety",
+          "text": "A message goes out only while the session is fresh.",
+          "holds": true,
+          "expected": false
+        },
+        {
+          "name": "SignedOutIsIdle",
+          "kind": "safety",
+          "text": "A signed-out session is not sending.",
+          "holds": true,
+          "expected": false
+        }
+      ],
+      "status": "pass",
+      "story": [
+        {
+          "phase": "signed-out",
+          "label": "Nobody holds the session."
+        },
+        {
+          "phase": "fresh",
+          "label": "The owner claims it."
+        },
+        {
+          "phase": "messaging",
+          "label": "A send is allowed while fresh."
+        },
+        {
+          "phase": "fresh",
+          "label": "The send ends."
+        },
+        {
+          "phase": "aging",
+          "label": "Left alone, it ages."
+        },
+        {
+          "phase": "stale",
+          "label": "Stale. Sending is closed."
+        },
+        {
+          "phase": "reauth",
+          "label": "Re-auth is the way back."
+        },
+        {
+          "phase": "fresh",
+          "label": "Fresh again."
+        }
+      ],
+      "chart": {
+        "nodes": [
+          {
+            "id": "signed-out",
+            "label": "Signed out",
+            "x": 80,
+            "y": 150
+          },
+          {
+            "id": "fresh",
+            "label": "Fresh",
+            "x": 230,
+            "y": 60
+          },
+          {
+            "id": "aging",
+            "label": "Aging",
+            "x": 390,
+            "y": 60
+          },
+          {
+            "id": "stale",
+            "label": "Stale",
+            "x": 450,
+            "y": 180
+          },
+          {
+            "id": "messaging",
+            "label": "Sending",
+            "x": 230,
+            "y": 220
+          },
+          {
+            "id": "reauth",
+            "label": "Re-auth",
+            "x": 80,
+            "y": 230
+          }
+        ],
+        "edges": [
+          {
+            "from": "signed-out",
+            "to": "fresh",
+            "action": "Claim",
+            "label": "Claim"
+          },
+          {
+            "from": "fresh",
+            "to": "aging",
+            "action": "Age",
+            "label": "Age"
+          },
+          {
+            "from": "aging",
+            "to": "fresh",
+            "action": "Keep",
+            "label": "Keep-alive"
+          },
+          {
+            "from": "aging",
+            "to": "stale",
+            "action": "Stale",
+            "label": "Goes stale"
+          },
+          {
+            "from": "fresh",
+            "to": "messaging",
+            "action": "Send",
+            "label": "Send"
+          },
+          {
+            "from": "messaging",
+            "to": "fresh",
+            "action": "Stop",
+            "label": "Done"
+          },
+          {
+            "from": "stale",
+            "to": "reauth",
+            "action": "Reauth",
+            "label": "Re-auth"
+          },
+          {
+            "from": "reauth",
+            "to": "fresh",
+            "action": "FinishReauth",
+            "label": "Signed in"
+          }
+        ]
+      },
+      "chartSvg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 520 300\" role=\"img\">\n  <defs>\n    <marker id=\"arrow-blueprint\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\">\n      <path d=\"M0,0 L6,3 L0,6 Z\" fill=\"#7fd3ff\"/>\n    </marker>\n  </defs>\n  <rect width=\"520\" height=\"300\" fill=\"#0d2238\"/>\n  <path d=\"M 113.3 130.0 Q 168.4 127.3 196.7 80.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 284.0 60.0 Q 310.0 34.0 336.0 60.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 336.0 60.0 Q 310.0 34.0 284.0 60.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 400.0 80.0 Q 443.3 108.4 440.0 160.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 230.0 80.0 Q 204.0 140.0 230.0 200.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 230.0 200.0 Q 204.0 140.0 230.0 80.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 396.0 187.3 Q 261.5 179.2 134.0 222.7\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 97.6 210.0 Q 135.5 127.8 212.4 80.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/>\n  <text x=\"168.4\" y=\"121.3\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Claim</text><text x=\"310.0\" y=\"28.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Age</text><text x=\"310.0\" y=\"28.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Keep-alive</text><text x=\"443.3\" y=\"102.4\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Goes stale</text><text x=\"204.0\" y=\"134.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Send</text><text x=\"204.0\" y=\"134.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Done</text><text x=\"261.5\" y=\"173.2\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Re-auth</text><text x=\"135.5\" y=\"121.8\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Signed in</text>\n  <g><rect x=\"26\" y=\"130\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"80\" y=\"154\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Signed out</text></g><g><rect x=\"176\" y=\"40\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"230\" y=\"64\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Fresh</text></g><g><rect x=\"336\" y=\"40\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"390\" y=\"64\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Aging</text></g><g><rect x=\"396\" y=\"160\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"450\" y=\"184\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Stale</text></g><g><rect x=\"176\" y=\"200\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"230\" y=\"224\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Sending</text></g><g><rect x=\"26\" y=\"210\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"80\" y=\"234\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Re-auth</text></g>\n</svg>",
+      "mermaid": "stateDiagram-v2\n  signed_out: Signed out\n  fresh: Fresh\n  aging: Aging\n  stale: Stale\n  messaging: Sending\n  reauth: Re-auth\n  signed_out --> fresh: Claim\n  fresh --> aging: Age\n  aging --> fresh: Keep-alive\n  aging --> stale: Goes stale\n  fresh --> messaging: Send\n  messaging --> fresh: Done\n  stale --> reauth: Re-auth\n  reauth --> fresh: Signed in"
+    },
+    {
+      "id": "storybook/booster",
+      "machine": "storybook/booster",
+      "title": "Booster catch",
+      "blurb": "The arms have to be ready. Otherwise the booster misses.",
+      "commit": "story-model",
+      "group": "story",
+      "order": 4,
+      "states": 8,
+      "invariants": [
+        {
+          "name": "CatchNeedsArms",
+          "kind": "safety",
+          "text": "A catch happens only with the arms ready.",
+          "holds": true,
+          "expected": false
+        },
+        {
+          "name": "MissIsBare",
+          "kind": "safety",
+          "text": "A miss happens with the arms not ready.",
+          "holds": true,
+          "expected": false
+        }
+      ],
+      "status": "pass",
+      "story": [
+        {
+          "phase": "pad",
+          "label": "The booster is on the pad."
+        },
+        {
+          "phase": "ascent",
+          "label": "Ascent."
+        },
+        {
+          "phase": "entry",
+          "label": "It comes back."
+        },
+        {
+          "phase": "arms",
+          "label": "The arms are ready."
+        },
+        {
+          "phase": "window",
+          "label": "The catch window is open."
+        },
+        {
+          "phase": "caught",
+          "label": "Caught, because the arms were ready."
+        }
+      ],
+      "chart": {
+        "nodes": [
+          {
+            "id": "pad",
+            "label": "Pad",
+            "x": 60,
+            "y": 160
+          },
+          {
+            "id": "ascent",
+            "label": "Ascent",
+            "x": 160,
+            "y": 70
+          },
+          {
+            "id": "entry",
+            "label": "Entry",
+            "x": 280,
+            "y": 70
+          },
+          {
+            "id": "arms",
+            "label": "Arms",
+            "x": 420,
+            "y": 70
+          },
+          {
+            "id": "window",
+            "label": "Window",
+            "x": 300,
+            "y": 190
+          },
+          {
+            "id": "caught",
+            "label": "Caught",
+            "x": 450,
+            "y": 190
+          },
+          {
+            "id": "missed",
+            "label": "Missed",
+            "x": 140,
+            "y": 230
+          }
+        ],
+        "edges": [
+          {
+            "from": "pad",
+            "to": "ascent",
+            "action": "Launch",
+            "label": "Launch"
+          },
+          {
+            "from": "ascent",
+            "to": "entry",
+            "action": "Entry",
+            "label": "Entry"
+          },
+          {
+            "from": "entry",
+            "to": "arms",
+            "action": "Ready",
+            "label": "Arms ready"
+          },
+          {
+            "from": "entry",
+            "to": "window",
+            "action": "SkipArms",
+            "label": "Arms late"
+          },
+          {
+            "from": "arms",
+            "to": "window",
+            "action": "OpenWindow",
+            "label": "Window"
+          },
+          {
+            "from": "window",
+            "to": "caught",
+            "action": "Catch",
+            "label": "Catch"
+          },
+          {
+            "from": "window",
+            "to": "missed",
+            "action": "Miss",
+            "label": "Miss"
+          }
+        ]
+      },
+      "chartSvg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 520 300\" role=\"img\">\n  <defs>\n    <marker id=\"arrow-blueprint\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\">\n      <path d=\"M0,0 L6,3 L0,6 Z\" fill=\"#7fd3ff\"/>\n    </marker>\n  </defs>\n  <rect width=\"520\" height=\"300\" fill=\"#0d2238\"/>\n  <path d=\"M 82.2 140.0 Q 127.4 134.3 137.8 90.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 214.0 70.0 Q 220.0 44.0 226.0 70.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 334.0 70.0 Q 350.0 96.0 366.0 70.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 283.3 90.0 Q 315.6 125.7 296.7 170.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 400.0 90.0 Q 341.6 111.6 320.0 170.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 354.0 190.0 Q 375.0 164.0 396.0 190.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 246.0 203.5 Q 213.7 184.8 194.0 216.5\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/>\n  <text x=\"127.4\" y=\"128.3\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Launch</text><text x=\"220.0\" y=\"38.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Entry</text><text x=\"350.0\" y=\"90.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Arms ready</text><text x=\"315.6\" y=\"119.7\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Arms late</text><text x=\"341.6\" y=\"105.6\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Window</text><text x=\"375.0\" y=\"158.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Catch</text><text x=\"213.7\" y=\"178.8\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Miss</text>\n  <g><rect x=\"6\" y=\"140\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"60\" y=\"164\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Pad</text></g><g><rect x=\"106\" y=\"50\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"160\" y=\"74\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Ascent</text></g><g><rect x=\"226\" y=\"50\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"280\" y=\"74\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Entry</text></g><g><rect x=\"366\" y=\"50\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"420\" y=\"74\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Arms</text></g><g><rect x=\"246\" y=\"170\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"300\" y=\"194\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Window</text></g><g><rect x=\"396\" y=\"170\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"450\" y=\"194\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Caught</text></g><g><rect x=\"86\" y=\"210\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"140\" y=\"234\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Missed</text></g>\n</svg>",
+      "mermaid": "stateDiagram-v2\n  pad: Pad\n  ascent: Ascent\n  entry: Entry\n  arms: Arms\n  window: Window\n  caught: Caught\n  missed: Missed\n  pad --> ascent: Launch\n  ascent --> entry: Entry\n  entry --> arms: Arms ready\n  entry --> window: Arms late\n  arms --> window: Window\n  window --> caught: Catch\n  window --> missed: Miss",
+      "poster": {
+        "kicker": "Catch window",
+        "title": "Booster catch",
+        "caption": "The arms have to be ready before a catch counts. If they are not, the booster misses.",
+        "scene": "booster"
+      }
+    },
+    {
+      "id": "storybook/bus",
+      "machine": "storybook/bus",
+      "title": "Bus morning",
+      "blurb": "Home, the stop, the seat, the ride, then school. Arrival requires boarding.",
+      "commit": "story-model",
+      "group": "story",
+      "order": 3,
+      "states": 5,
+      "invariants": [
+        {
+          "name": "ArriveAfterBoarding",
+          "kind": "safety",
+          "text": "School comes only after boarding.",
+          "holds": true,
+          "expected": false
+        },
+        {
+          "name": "NoRideBeforeBoard",
+          "kind": "safety",
+          "text": "The ride does not start before boarding.",
+          "holds": true,
+          "expected": false
+        }
+      ],
+      "status": "pass",
+      "story": [
+        {
+          "phase": "home",
+          "label": "Still at home."
+        },
+        {
+          "phase": "waiting",
+          "label": "Waiting at the stop."
+        },
+        {
+          "phase": "boarded",
+          "label": "A seat is taken."
+        },
+        {
+          "phase": "riding",
+          "label": "The bus is moving."
+        },
+        {
+          "phase": "school",
+          "label": "School, after boarding."
+        }
+      ],
+      "chart": {
+        "nodes": [
+          {
+            "id": "home",
+            "label": "Home",
+            "x": 60,
+            "y": 150
+          },
+          {
+            "id": "waiting",
+            "label": "Stop",
+            "x": 170,
+            "y": 150
+          },
+          {
+            "id": "boarded",
+            "label": "Boarded",
+            "x": 290,
+            "y": 150
+          },
+          {
+            "id": "riding",
+            "label": "Riding",
+            "x": 400,
+            "y": 80
+          },
+          {
+            "id": "school",
+            "label": "School",
+            "x": 450,
+            "y": 210
+          }
+        ],
+        "edges": [
+          {
+            "from": "home",
+            "to": "waiting",
+            "action": "Walk",
+            "label": "Walk"
+          },
+          {
+            "from": "waiting",
+            "to": "boarded",
+            "action": "Board",
+            "label": "Board"
+          },
+          {
+            "from": "boarded",
+            "to": "riding",
+            "action": "Ride",
+            "label": "Ride"
+          },
+          {
+            "from": "riding",
+            "to": "school",
+            "action": "Arrive",
+            "label": "Arrive"
+          }
+        ]
+      },
+      "chartSvg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 520 300\" role=\"img\">\n  <defs>\n    <marker id=\"arrow-blueprint\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\">\n      <path d=\"M0,0 L6,3 L0,6 Z\" fill=\"#7fd3ff\"/>\n    </marker>\n  </defs>\n  <rect width=\"520\" height=\"300\" fill=\"#0d2238\"/>\n  <path d=\"M 114.0 150.0 Q 115.0 176.0 116.0 150.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 224.0 150.0 Q 230.0 124.0 236.0 150.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 321.4 130.0 Q 359.0 136.9 368.6 100.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 407.7 100.0 Q 449.3 135.7 442.3 190.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/>\n  <text x=\"115.0\" y=\"170.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Walk</text><text x=\"230.0\" y=\"118.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Board</text><text x=\"359.0\" y=\"130.9\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Ride</text><text x=\"449.3\" y=\"129.7\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Arrive</text>\n  <g><rect x=\"6\" y=\"130\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"60\" y=\"154\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Home</text></g><g><rect x=\"116\" y=\"130\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"170\" y=\"154\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Stop</text></g><g><rect x=\"236\" y=\"130\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"290\" y=\"154\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Boarded</text></g><g><rect x=\"346\" y=\"60\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"400\" y=\"84\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Riding</text></g><g><rect x=\"396\" y=\"190\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"450\" y=\"214\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">School</text></g>\n</svg>",
+      "mermaid": "stateDiagram-v2\n  home: Home\n  waiting: Stop\n  boarded: Boarded\n  riding: Riding\n  school: School\n  home --> waiting: Walk\n  waiting --> boarded: Board\n  boarded --> riding: Ride\n  riding --> school: Arrive",
+      "poster": {
+        "kicker": "Maple stop",
+        "title": "Bus morning",
+        "caption": "Home, the stop, a seat, the ride, then school. The bus arrives only after someone boards.",
+        "scene": "bus"
+      }
+    },
+    {
+      "id": "storybook/play-clock",
+      "machine": "storybook/play-clock",
+      "title": "Play clock",
+      "blurb": "The clock runs on a live play. A timeout freezes it. The snap needs time left.",
+      "commit": "story-model",
+      "group": "story",
+      "order": 1,
+      "states": 20,
+      "invariants": [
+        {
+          "name": "NoSnapAtZero",
+          "kind": "safety",
+          "text": "The ball is not snapped at zero.",
+          "holds": true,
+          "expected": false
+        },
+        {
+          "name": "TimeoutFreezes",
+          "kind": "safety",
+          "text": "A timeout holds the clock where it stopped.",
+          "holds": true,
+          "expected": false
+        }
+      ],
+      "status": "pass",
+      "story": [
+        {
+          "phase": "ready",
+          "label": "The ball is set."
+        },
+        {
+          "phase": "running",
+          "label": "The clock starts."
+        },
+        {
+          "phase": "timeout",
+          "label": "Timeout. The clock holds."
+        },
+        {
+          "phase": "running",
+          "label": "Play resumes."
+        },
+        {
+          "phase": "snapped",
+          "label": "The ball is snapped with time left."
+        }
+      ],
+      "chart": {
+        "nodes": [
+          {
+            "id": "ready",
+            "label": "Ready",
+            "x": 70,
+            "y": 150
+          },
+          {
+            "id": "running",
+            "label": "Running",
+            "x": 210,
+            "y": 70
+          },
+          {
+            "id": "timeout",
+            "label": "Timeout",
+            "x": 360,
+            "y": 70
+          },
+          {
+            "id": "snapped",
+            "label": "Snapped",
+            "x": 210,
+            "y": 220
+          },
+          {
+            "id": "expired",
+            "label": "Zero",
+            "x": 430,
+            "y": 200
+          }
+        ],
+        "edges": [
+          {
+            "from": "ready",
+            "to": "running",
+            "action": "Start",
+            "label": "Start"
+          },
+          {
+            "from": "running",
+            "to": "timeout",
+            "action": "Timeout",
+            "label": "Timeout"
+          },
+          {
+            "from": "timeout",
+            "to": "running",
+            "action": "Resume",
+            "label": "Resume"
+          },
+          {
+            "from": "running",
+            "to": "snapped",
+            "action": "Snap",
+            "label": "Snap"
+          },
+          {
+            "from": "running",
+            "to": "expired",
+            "action": "Expire",
+            "label": "Hits zero"
+          }
+        ]
+      },
+      "chartSvg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 520 300\" role=\"img\">\n  <defs>\n    <marker id=\"arrow-blueprint\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\">\n      <path d=\"M0,0 L6,3 L0,6 Z\" fill=\"#7fd3ff\"/>\n    </marker>\n  </defs>\n  <rect width=\"520\" height=\"300\" fill=\"#0d2238\"/>\n  <path d=\"M 105.0 130.0 Q 152.9 132.6 175.0 90.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 264.0 70.0 Q 285.0 44.0 306.0 70.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 306.0 70.0 Q 285.0 44.0 264.0 70.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 210.0 90.0 Q 236.0 145.0 210.0 200.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 243.8 90.0 Q 306.8 157.4 396.2 180.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/>\n  <text x=\"152.9\" y=\"126.6\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Start</text><text x=\"285.0\" y=\"38.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Timeout</text><text x=\"285.0\" y=\"38.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Resume</text><text x=\"236.0\" y=\"139.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Snap</text><text x=\"306.8\" y=\"151.4\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Hits zero</text>\n  <g><rect x=\"16\" y=\"130\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"70\" y=\"154\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Ready</text></g><g><rect x=\"156\" y=\"50\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"210\" y=\"74\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Running</text></g><g><rect x=\"306\" y=\"50\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"360\" y=\"74\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Timeout</text></g><g><rect x=\"156\" y=\"200\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"210\" y=\"224\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Snapped</text></g><g><rect x=\"376\" y=\"180\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"430\" y=\"204\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Zero</text></g>\n</svg>",
+      "mermaid": "stateDiagram-v2\n  ready: Ready\n  running: Running\n  timeout: Timeout\n  snapped: Snapped\n  expired: Zero\n  ready --> running: Start\n  running --> timeout: Timeout\n  timeout --> running: Resume\n  running --> snapped: Snap\n  running --> expired: Hits zero",
+      "poster": {
+        "kicker": "Friday night",
+        "title": "Play clock",
+        "caption": "The clock runs on a live play. A timeout freezes it. You cannot snap the ball at zero.",
+        "scene": "play-clock"
+      }
+    },
+    {
+      "id": "storybook/replay",
+      "machine": "storybook/replay",
+      "title": "Replay challenge",
+      "blurb": "One challenge. The window closes on the next pitch.",
+      "commit": "story-model",
+      "group": "story",
+      "order": 2,
+      "states": 7,
+      "invariants": [
+        {
+          "name": "AtMostOneChallenge",
+          "kind": "safety",
+          "text": "A play gets at most one challenge.",
+          "holds": true,
+          "expected": false
+        },
+        {
+          "name": "ReviewNeedsChallenge",
+          "kind": "safety",
+          "text": "A review starts only after a challenge.",
+          "holds": true,
+          "expected": false
+        }
+      ],
+      "status": "pass",
+      "story": [
+        {
+          "phase": "live",
+          "label": "The pitch is live."
+        },
+        {
+          "phase": "window",
+          "label": "The challenge window is open."
+        },
+        {
+          "phase": "review",
+          "label": "The one challenge is used."
+        },
+        {
+          "phase": "overturned",
+          "label": "The call is overturned."
+        },
+        {
+          "phase": "closed",
+          "label": "The window is closed."
+        }
+      ],
+      "chart": {
+        "nodes": [
+          {
+            "id": "live",
+            "label": "Live",
+            "x": 60,
+            "y": 150
+          },
+          {
+            "id": "window",
+            "label": "Window",
+            "x": 180,
+            "y": 70
+          },
+          {
+            "id": "review",
+            "label": "Review",
+            "x": 320,
+            "y": 70
+          },
+          {
+            "id": "stands",
+            "label": "Stands",
+            "x": 450,
+            "y": 70
+          },
+          {
+            "id": "overturned",
+            "label": "Overturned",
+            "x": 430,
+            "y": 190
+          },
+          {
+            "id": "closed",
+            "label": "Closed",
+            "x": 200,
+            "y": 220
+          }
+        ],
+        "edges": [
+          {
+            "from": "live",
+            "to": "window",
+            "action": "Pitch",
+            "label": "Pitch"
+          },
+          {
+            "from": "window",
+            "to": "review",
+            "action": "Challenge",
+            "label": "Challenge"
+          },
+          {
+            "from": "review",
+            "to": "stands",
+            "action": "Stand",
+            "label": "Stands"
+          },
+          {
+            "from": "review",
+            "to": "overturned",
+            "action": "Overturn",
+            "label": "Overturned"
+          },
+          {
+            "from": "window",
+            "to": "closed",
+            "action": "Close",
+            "label": "Next pitch"
+          },
+          {
+            "from": "stands",
+            "to": "closed",
+            "action": "Close",
+            "label": "Play on"
+          },
+          {
+            "from": "overturned",
+            "to": "closed",
+            "action": "Close",
+            "label": "Play on"
+          }
+        ]
+      },
+      "chartSvg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 520 300\" role=\"img\">\n  <defs>\n    <marker id=\"arrow-blueprint\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\">\n      <path d=\"M0,0 L6,3 L0,6 Z\" fill=\"#7fd3ff\"/>\n    </marker>\n  </defs>\n  <rect width=\"520\" height=\"300\" fill=\"#0d2238\"/>\n  <path d=\"M 90.0 130.0 Q 134.4 131.6 150.0 90.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 234.0 70.0 Q 250.0 44.0 266.0 70.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 374.0 70.0 Q 385.0 96.0 396.0 70.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 338.3 90.0 Q 394.2 112.4 411.7 170.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 182.7 90.0 Q 164.2 148.4 197.3 200.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 416.7 90.0 Q 338.4 167.3 233.3 200.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 376.0 197.0 Q 311.6 179.2 254.0 213.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/>\n  <text x=\"134.4\" y=\"125.6\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Pitch</text><text x=\"250.0\" y=\"38.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Challenge</text><text x=\"385.0\" y=\"90.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Stands</text><text x=\"394.2\" y=\"106.4\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Overturned</text><text x=\"164.2\" y=\"142.4\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Next pitch</text><text x=\"338.4\" y=\"161.3\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Play on</text><text x=\"311.6\" y=\"173.2\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Play on</text>\n  <g><rect x=\"6\" y=\"130\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"60\" y=\"154\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Live</text></g><g><rect x=\"126\" y=\"50\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"180\" y=\"74\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Window</text></g><g><rect x=\"266\" y=\"50\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"320\" y=\"74\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Review</text></g><g><rect x=\"396\" y=\"50\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"450\" y=\"74\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Stands</text></g><g><rect x=\"376\" y=\"170\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"430\" y=\"194\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Overturned</text></g><g><rect x=\"146\" y=\"200\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"200\" y=\"224\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Closed</text></g>\n</svg>",
+      "mermaid": "stateDiagram-v2\n  live: Live\n  window: Window\n  review: Review\n  stands: Stands\n  overturned: Overturned\n  closed: Closed\n  live --> window: Pitch\n  window --> review: Challenge\n  review --> stands: Stands\n  review --> overturned: Overturned\n  window --> closed: Next pitch\n  stands --> closed: Play on\n  overturned --> closed: Play on",
+      "poster": {
+        "kicker": "One challenge",
+        "title": "Replay",
+        "caption": "A side gets one challenge. The window closes when the next pitch is thrown.",
+        "scene": "replay"
+      }
+    }
+  ]
+}
