@@ -29,10 +29,11 @@ test("machine ids are branded slugs", () => {
   }
 });
 
+type PlainStringIsMachineId = "school-pulse/oauth" extends MachineId ? true : false;
+
 test("a plain string is not a machine id", () => {
-  // @ts-expect-error a plain string is not a MachineId
-  const plain: MachineId = "school-pulse/oauth";
-  assert.equal(typeof plain, "string");
+  const rejected: PlainStringIsMachineId = false;
+  assert.equal(rejected, false);
 });
 
 test("source refs parse into file, line, and commit", () => {
