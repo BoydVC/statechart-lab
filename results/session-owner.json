@@ -1,0 +1,158 @@
+{
+  "target": "session-owner",
+  "machines": [
+    {
+      "id": "session-owner/household",
+      "machine": "session-owner/household",
+      "title": "Session owner",
+      "blurb": "One owner. Keep-alive while fresh, re-auth when stale, no send before that.",
+      "commit": "generic",
+      "group": "lab",
+      "order": 6,
+      "states": 6,
+      "invariants": [
+        {
+          "name": "FreshBeforeSend",
+          "kind": "safety",
+          "text": "A message goes out only while the session is fresh.",
+          "holds": true,
+          "expected": false
+        },
+        {
+          "name": "SignedOutIsIdle",
+          "kind": "safety",
+          "text": "A signed-out session is not sending.",
+          "holds": true,
+          "expected": false
+        }
+      ],
+      "status": "pass",
+      "story": [
+        {
+          "phase": "signed-out",
+          "label": "Nobody holds the session."
+        },
+        {
+          "phase": "fresh",
+          "label": "The owner claims it."
+        },
+        {
+          "phase": "messaging",
+          "label": "A send is allowed while fresh."
+        },
+        {
+          "phase": "fresh",
+          "label": "The send ends."
+        },
+        {
+          "phase": "aging",
+          "label": "Left alone, it ages."
+        },
+        {
+          "phase": "stale",
+          "label": "Stale. Sending is closed."
+        },
+        {
+          "phase": "reauth",
+          "label": "Re-auth is the way back."
+        },
+        {
+          "phase": "fresh",
+          "label": "Fresh again."
+        }
+      ],
+      "chart": {
+        "nodes": [
+          {
+            "id": "signed-out",
+            "label": "Signed out",
+            "x": 80,
+            "y": 150
+          },
+          {
+            "id": "fresh",
+            "label": "Fresh",
+            "x": 230,
+            "y": 60
+          },
+          {
+            "id": "aging",
+            "label": "Aging",
+            "x": 390,
+            "y": 60
+          },
+          {
+            "id": "stale",
+            "label": "Stale",
+            "x": 450,
+            "y": 180
+          },
+          {
+            "id": "messaging",
+            "label": "Sending",
+            "x": 230,
+            "y": 220
+          },
+          {
+            "id": "reauth",
+            "label": "Re-auth",
+            "x": 80,
+            "y": 230
+          }
+        ],
+        "edges": [
+          {
+            "from": "signed-out",
+            "to": "fresh",
+            "action": "Claim",
+            "label": "Claim"
+          },
+          {
+            "from": "fresh",
+            "to": "aging",
+            "action": "Age",
+            "label": "Age"
+          },
+          {
+            "from": "aging",
+            "to": "fresh",
+            "action": "Keep",
+            "label": "Keep-alive"
+          },
+          {
+            "from": "aging",
+            "to": "stale",
+            "action": "Stale",
+            "label": "Goes stale"
+          },
+          {
+            "from": "fresh",
+            "to": "messaging",
+            "action": "Send",
+            "label": "Send"
+          },
+          {
+            "from": "messaging",
+            "to": "fresh",
+            "action": "Stop",
+            "label": "Done"
+          },
+          {
+            "from": "stale",
+            "to": "reauth",
+            "action": "Reauth",
+            "label": "Re-auth"
+          },
+          {
+            "from": "reauth",
+            "to": "fresh",
+            "action": "FinishReauth",
+            "label": "Signed in"
+          }
+        ]
+      },
+      "chartSvg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 520 300\" role=\"img\">\n  <defs>\n    <marker id=\"arrow-blueprint\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\">\n      <path d=\"M0,0 L6,3 L0,6 Z\" fill=\"#7fd3ff\"/>\n    </marker>\n  </defs>\n  <rect width=\"520\" height=\"300\" fill=\"#0d2238\"/>\n  <path d=\"M 113.3 130.0 Q 168.4 127.3 196.7 80.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 284.0 60.0 Q 310.0 34.0 336.0 60.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 336.0 60.0 Q 310.0 34.0 284.0 60.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 400.0 80.0 Q 443.3 108.4 440.0 160.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 230.0 80.0 Q 204.0 140.0 230.0 200.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 230.0 200.0 Q 204.0 140.0 230.0 80.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 396.0 187.3 Q 261.5 179.2 134.0 222.7\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 97.6 210.0 Q 135.5 127.8 212.4 80.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/>\n  <text x=\"168.4\" y=\"121.3\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Claim</text><text x=\"310.0\" y=\"28.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Age</text><text x=\"310.0\" y=\"28.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Keep-alive</text><text x=\"443.3\" y=\"102.4\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Goes stale</text><text x=\"204.0\" y=\"134.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Send</text><text x=\"204.0\" y=\"134.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Done</text><text x=\"261.5\" y=\"173.2\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Re-auth</text><text x=\"135.5\" y=\"121.8\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Signed in</text>\n  <g><rect x=\"26\" y=\"130\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"80\" y=\"154\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Signed out</text></g><g><rect x=\"176\" y=\"40\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"230\" y=\"64\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Fresh</text></g><g><rect x=\"336\" y=\"40\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"390\" y=\"64\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Aging</text></g><g><rect x=\"396\" y=\"160\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"450\" y=\"184\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Stale</text></g><g><rect x=\"176\" y=\"200\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"230\" y=\"224\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Sending</text></g><g><rect x=\"26\" y=\"210\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"80\" y=\"234\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Re-auth</text></g>\n</svg>",
+      "mermaid": "stateDiagram-v2\n  signed_out: Signed out\n  fresh: Fresh\n  aging: Aging\n  stale: Stale\n  messaging: Sending\n  reauth: Re-auth\n  signed_out --> fresh: Claim\n  fresh --> aging: Age\n  aging --> fresh: Keep-alive\n  aging --> stale: Goes stale\n  fresh --> messaging: Send\n  messaging --> fresh: Done\n  stale --> reauth: Re-auth\n  reauth --> fresh: Signed in"
+    }
+  ]
+}

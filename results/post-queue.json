@@ -1,0 +1,157 @@
+{
+  "target": "post-queue",
+  "machines": [
+    {
+      "id": "post-queue/queue",
+      "machine": "post-queue/queue",
+      "title": "Post queue",
+      "blurb": "Posted requires approval. The server also allows posted straight from approved, skipping the cue.",
+      "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b",
+      "group": "lab",
+      "order": 3,
+      "states": 8,
+      "invariants": [
+        {
+          "name": "ScheduledBeforePosted",
+          "kind": "safety",
+          "text": "Posted happens only after the item was cued.",
+          "holds": false,
+          "expected": true
+        },
+        {
+          "name": "PostedRequiresApproval",
+          "kind": "safety",
+          "text": "Posted happens only after approval.",
+          "holds": true,
+          "expected": false
+        }
+      ],
+      "status": "violation",
+      "trace": [
+        {
+          "state": {
+            "cued": false,
+            "approved": false,
+            "phase": "draft"
+          },
+          "action": "Init",
+          "label": "Start",
+          "chartState": "draft",
+          "sourceRef": "new item status draft, server.py:716"
+        },
+        {
+          "state": {
+            "cued": false,
+            "approved": true,
+            "phase": "approved"
+          },
+          "action": "Approve",
+          "label": "Approve",
+          "chartState": "approved",
+          "sourceRef": "server.py:780-785 @ dea8484"
+        },
+        {
+          "state": {
+            "cued": false,
+            "approved": true,
+            "phase": "posted"
+          },
+          "action": "PostFromApproved",
+          "label": "Skip the cue",
+          "chartState": "posted",
+          "sourceRef": "server.py:794-798 @ dea8484"
+        }
+      ],
+      "story": [
+        {
+          "phase": "draft",
+          "label": "A draft is saved."
+        },
+        {
+          "phase": "approved",
+          "label": "Boyd approves the exact text."
+        },
+        {
+          "phase": "posted",
+          "label": "Mark posted is accepted before the cue."
+        }
+      ],
+      "chart": {
+        "nodes": [
+          {
+            "id": "draft",
+            "label": "Draft",
+            "x": 70,
+            "y": 150
+          },
+          {
+            "id": "approved",
+            "label": "Approved",
+            "x": 220,
+            "y": 60
+          },
+          {
+            "id": "cued",
+            "label": "Cued",
+            "x": 380,
+            "y": 60
+          },
+          {
+            "id": "posted",
+            "label": "Posted",
+            "x": 450,
+            "y": 190
+          },
+          {
+            "id": "skipped",
+            "label": "Skipped",
+            "x": 180,
+            "y": 230
+          }
+        ],
+        "edges": [
+          {
+            "from": "draft",
+            "to": "approved",
+            "action": "Approve",
+            "label": "Approve"
+          },
+          {
+            "from": "approved",
+            "to": "cued",
+            "action": "Cue",
+            "label": "Cue"
+          },
+          {
+            "from": "cued",
+            "to": "posted",
+            "action": "PostFromCued",
+            "label": "Mark posted"
+          },
+          {
+            "from": "approved",
+            "to": "posted",
+            "action": "PostFromApproved",
+            "label": "Skip the cue",
+            "tone": "danger"
+          },
+          {
+            "from": "draft",
+            "to": "skipped",
+            "action": "Skip",
+            "label": "Skip"
+          },
+          {
+            "from": "posted",
+            "to": "draft",
+            "action": "Edit",
+            "label": "Edit"
+          }
+        ]
+      },
+      "chartSvg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 520 300\" role=\"img\">\n  <defs>\n    <marker id=\"arrow-blueprint\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\">\n      <path d=\"M0,0 L6,3 L0,6 Z\" fill=\"#7fd3ff\"/>\n    </marker>\n  </defs>\n  <rect width=\"520\" height=\"300\" fill=\"#0d2238\"/>\n  <path d=\"M 103.3 130.0 Q 158.4 127.3 186.7 80.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 274.0 60.0 Q 300.0 34.0 326.0 60.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 390.8 80.0 Q 392.1 137.3 439.2 170.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 255.4 80.0 Q 347.8 102.4 414.6 170.0\" fill=\"none\" stroke=\"#ff5d73\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 97.5 170.0 Q 109.7 211.0 152.5 210.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 396.0 184.3 Q 257.3 195.9 124.0 155.7\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/>\n  <text x=\"158.4\" y=\"121.3\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Approve</text><text x=\"300.0\" y=\"28.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Cue</text><text x=\"392.1\" y=\"131.3\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Mark posted</text><text x=\"347.8\" y=\"96.4\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Skip the cue</text><text x=\"109.7\" y=\"205.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Skip</text><text x=\"257.3\" y=\"189.9\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Edit</text>\n  <g><rect x=\"16\" y=\"130\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"70\" y=\"154\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Draft</text></g><g><rect x=\"166\" y=\"40\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"220\" y=\"64\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Approved</text></g><g><rect x=\"326\" y=\"40\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"380\" y=\"64\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Cued</text></g><g><rect x=\"396\" y=\"170\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"450\" y=\"194\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Posted</text></g><g><rect x=\"126\" y=\"210\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"180\" y=\"234\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Skipped</text></g>\n</svg>",
+      "mermaid": "stateDiagram-v2\n  draft: Draft\n  approved: Approved\n  cued: Cued\n  posted: Posted\n  skipped: Skipped\n  draft --> approved: Approve\n  approved --> cued: Cue\n  cued --> posted: Mark posted\n  approved --> posted: Skip the cue\n  draft --> skipped: Skip\n  posted --> draft: Edit",
+      "bugId": "pq-posted-skips-cue"
+    }
+  ]
+}

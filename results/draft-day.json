@@ -1,0 +1,171 @@
+{
+  "target": "draft-day",
+  "machines": [
+    {
+      "id": "draft-day/pipeline",
+      "machine": "draft-day/pipeline",
+      "title": "Draft Day",
+      "blurb": "Merge stays closed until the draft is approved. Each seat is scored once.",
+      "commit": "7fb564d8d974db4ad3c8584a0b9b1f4e35a8ea96",
+      "group": "lab",
+      "order": 5,
+      "states": 12,
+      "invariants": [
+        {
+          "name": "NoMergeWithoutApproval",
+          "kind": "safety",
+          "text": "A merged draft was approved first.",
+          "holds": true,
+          "expected": false
+        },
+        {
+          "name": "AtMostOnce",
+          "kind": "safety",
+          "text": "Each seat is scored at most once.",
+          "holds": true,
+          "expected": false
+        },
+        {
+          "name": "JudgedBeforeGraft",
+          "kind": "safety",
+          "text": "Graft waits until every seat has been scored.",
+          "holds": true,
+          "expected": false
+        }
+      ],
+      "status": "pass",
+      "story": [
+        {
+          "phase": "idea",
+          "label": "An idea is on the board."
+        },
+        {
+          "phase": "spec",
+          "label": "The spec is written."
+        },
+        {
+          "phase": "seats",
+          "label": "Seats open."
+        },
+        {
+          "phase": "judge",
+          "label": "Each seat is scored once."
+        },
+        {
+          "phase": "graft",
+          "label": "The winner is grafted."
+        },
+        {
+          "phase": "physical",
+          "label": "The physical pass."
+        },
+        {
+          "phase": "draft",
+          "label": "The draft PR is up. Approve it."
+        },
+        {
+          "phase": "merged",
+          "label": "Merge is allowed only after approval."
+        }
+      ],
+      "chart": {
+        "nodes": [
+          {
+            "id": "idea",
+            "label": "Idea",
+            "x": 70,
+            "y": 70
+          },
+          {
+            "id": "spec",
+            "label": "Spec",
+            "x": 190,
+            "y": 70
+          },
+          {
+            "id": "seats",
+            "label": "Seats",
+            "x": 320,
+            "y": 70
+          },
+          {
+            "id": "judge",
+            "label": "Judge",
+            "x": 450,
+            "y": 70
+          },
+          {
+            "id": "graft",
+            "label": "Graft",
+            "x": 70,
+            "y": 210
+          },
+          {
+            "id": "physical",
+            "label": "Physical",
+            "x": 200,
+            "y": 210
+          },
+          {
+            "id": "draft",
+            "label": "Draft PR",
+            "x": 340,
+            "y": 210
+          },
+          {
+            "id": "merged",
+            "label": "Merged",
+            "x": 460,
+            "y": 210
+          }
+        ],
+        "edges": [
+          {
+            "from": "idea",
+            "to": "spec",
+            "action": "ToSpec",
+            "label": "Write spec"
+          },
+          {
+            "from": "spec",
+            "to": "seats",
+            "action": "ToSeats",
+            "label": "Open seats"
+          },
+          {
+            "from": "seats",
+            "to": "judge",
+            "action": "ToJudge",
+            "label": "To judging"
+          },
+          {
+            "from": "judge",
+            "to": "graft",
+            "action": "ToGraft",
+            "label": "Seats scored"
+          },
+          {
+            "from": "graft",
+            "to": "physical",
+            "action": "ToPhysical",
+            "label": "Graft"
+          },
+          {
+            "from": "physical",
+            "to": "draft",
+            "action": "ToDraft",
+            "label": "Draft PR"
+          },
+          {
+            "from": "draft",
+            "to": "merged",
+            "action": "Merge",
+            "label": "Merge"
+          }
+        ]
+      },
+      "chartSvg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 520 300\" role=\"img\">\n  <defs>\n    <marker id=\"arrow-blueprint\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\">\n      <path d=\"M0,0 L6,3 L0,6 Z\" fill=\"#7fd3ff\"/>\n    </marker>\n  </defs>\n  <rect width=\"520\" height=\"300\" fill=\"#0d2238\"/>\n  <path d=\"M 124.0 70.0 Q 130.0 96.0 136.0 70.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 244.0 70.0 Q 255.0 44.0 266.0 70.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 374.0 70.0 Q 385.0 96.0 396.0 70.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 396.0 89.9 Q 269.0 164.4 124.0 190.1\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 124.0 210.0 Q 135.0 236.0 146.0 210.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 254.0 210.0 Q 270.0 184.0 286.0 210.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/><path d=\"M 394.0 210.0 Q 400.0 236.0 406.0 210.0\" fill=\"none\" stroke=\"#7fd3ff\" stroke-width=\"1.4\" stroke-linecap=\"round\" marker-end=\"url(#arrow-blueprint)\"/>\n  <text x=\"130.0\" y=\"90.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Write spec</text><text x=\"255.0\" y=\"38.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Open seats</text><text x=\"385.0\" y=\"90.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">To judging</text><text x=\"269.0\" y=\"158.4\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Seats scored</text><text x=\"135.0\" y=\"230.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Graft</text><text x=\"270.0\" y=\"178.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Draft PR</text><text x=\"400.0\" y=\"230.0\" text-anchor=\"middle\" font-size=\"10\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#9fd4ea\">Merge</text>\n  <g><rect x=\"16\" y=\"50\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"70\" y=\"74\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Idea</text></g><g><rect x=\"136\" y=\"50\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"190\" y=\"74\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Spec</text></g><g><rect x=\"266\" y=\"50\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"320\" y=\"74\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Seats</text></g><g><rect x=\"396\" y=\"50\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"450\" y=\"74\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Judge</text></g><g><rect x=\"16\" y=\"190\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"70\" y=\"214\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Graft</text></g><g><rect x=\"146\" y=\"190\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"200\" y=\"214\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Physical</text></g><g><rect x=\"286\" y=\"190\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"340\" y=\"214\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Draft PR</text></g><g><rect x=\"406\" y=\"190\" rx=\"10\" width=\"108\" height=\"40\" fill=\"#12304d\" stroke=\"#7fd3ff\" stroke-width=\"1.6\"/><text x=\"460\" y=\"214\" text-anchor=\"middle\" font-size=\"12\" font-family=\"ui-sans-serif, sans-serif\" fill=\"#e7f6ff\">Merged</text></g>\n</svg>",
+      "mermaid": "stateDiagram-v2\n  idea: Idea\n  spec: Spec\n  seats: Seats\n  judge: Judge\n  graft: Graft\n  physical: Physical\n  draft: Draft PR\n  merged: Merged\n  idea --> spec: Write spec\n  spec --> seats: Open seats\n  seats --> judge: To judging\n  judge --> graft: Seats scored\n  graft --> physical: Graft\n  physical --> draft: Draft PR\n  draft --> merged: Merge"
+    }
+  ]
+}
