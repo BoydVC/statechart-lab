@@ -1,0 +1,9 @@
+{
+  "Init": "demo/app.js:42",
+  "Advance": "demo/app.js:42",
+  "Judge1": "demo/app.js:156",
+  "Judge2": "demo/app.js:156",
+  "Approve": "demo/app.js:177",
+  "Merge": "demo/app.js:177",
+  "Hold": "demo/app.js:42"
+}

@@ -1,0 +1,50 @@
+{
+  "id": "school-pulse/sse",
+  "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+  "states": 3,
+  "chartSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 228\" role=\"img\"><rect width=\"360\" height=\"228\" fill=\"#0e1c2f\"/><defs><marker id=\"arrow-down-open-closed\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L6,3 L0,6\" fill=\"#8ecae6\"/></marker></defs><line x1=\"100\" y1=\"40\" x2=\"100\" y2=\"84\" stroke=\"#8ecae6\" stroke-width=\"1.4\" marker-end=\"url(#arrow-down-open-closed)\"/><text x=\"168\" y=\"66\" fill=\"#9bb8c9\" font-size=\"11\">Connect</text><line x1=\"100\" y1=\"108\" x2=\"100\" y2=\"152\" stroke=\"#e85d4c\" stroke-width=\"2.5\" marker-end=\"url(#arrow-down-open-closed)\"/><text x=\"168\" y=\"134\" fill=\"#e85d4c\" font-size=\"11\">Drop</text><rect x=\"24\" y=\"16\" width=\"152\" height=\"36\" rx=\"6\" fill=\"#16324f\" stroke=\"#e85d4c\" stroke-width=\"2\"/><text x=\"100\" y=\"39\" text-anchor=\"middle\" fill=\"#e8f1f8\" font-size=\"13\" font-family=\"ui-sans-serif, sans-serif\">down</text><rect x=\"24\" y=\"84\" width=\"152\" height=\"36\" rx=\"6\" fill=\"#16324f\" stroke=\"#8ecae6\" stroke-width=\"1.2\"/><text x=\"100\" y=\"107\" text-anchor=\"middle\" fill=\"#e8f1f8\" font-size=\"13\" font-family=\"ui-sans-serif, sans-serif\">open</text><rect x=\"24\" y=\"152\" width=\"152\" height=\"36\" rx=\"6\" fill=\"#16324f\" stroke=\"#8ecae6\" stroke-width=\"1.2\"/><text x=\"100\" y=\"175\" text-anchor=\"middle\" fill=\"#e8f1f8\" font-size=\"13\" font-family=\"ui-sans-serif, sans-serif\">closed</text></svg>",
+  "status": "violation",
+  "invariants": [
+    {
+      "name": "LinkKnown",
+      "kind": "safety",
+      "text": "The client link is down, open, or closed.",
+      "holds": true
+    },
+    {
+      "name": "ReconnectScheduled",
+      "kind": "safety",
+      "text": "A closed link has a reconnect scheduled.",
+      "holds": false
+    }
+  ],
+  "trace": [
+    {
+      "action": "Init",
+      "state": {},
+      "sourceRef": {
+        "file": "web/app.ts",
+        "line": 99,
+        "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+      }
+    },
+    {
+      "action": "Connect",
+      "state": {},
+      "sourceRef": {
+        "file": "web/app.ts",
+        "line": 466,
+        "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+      }
+    },
+    {
+      "action": "Drop",
+      "state": {},
+      "sourceRef": {
+        "file": "web/app.ts",
+        "line": 476,
+        "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+      }
+    }
+  ]
+}

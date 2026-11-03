@@ -1,0 +1,15 @@
+{
+  "initial": "idea",
+  "nodes": ["idea", "spec", "seats", "judge", "graft", "physical", "draft", "merged"],
+  "edges": [
+    { "from": "idea", "to": "spec", "action": "Advance" },
+    { "from": "spec", "to": "seats", "action": "Advance" },
+    { "from": "seats", "to": "judge", "action": "Advance" },
+    { "from": "judge", "to": "graft", "action": "Advance" },
+    { "from": "graft", "to": "physical", "action": "Advance" },
+    { "from": "physical", "to": "draft", "action": "Advance" },
+    { "from": "judge", "to": "judge", "action": "Judge1" },
+    { "from": "draft", "to": "draft", "action": "Approve" },
+    { "from": "draft", "to": "merged", "action": "Merge" }
+  ]
+}

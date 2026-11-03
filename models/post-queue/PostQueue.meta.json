@@ -1,0 +1,13 @@
+{
+  "id": "post-queue/queue",
+  "invariants": {
+    "PostedRequiresApproval": {
+      "kind": "safety",
+      "text": "Posted is reached only after approval."
+    },
+    "SkipOnlyBeforePost": {
+      "kind": "safety",
+      "text": "Skip does not run after the item is posted."
+    }
+  }
+}

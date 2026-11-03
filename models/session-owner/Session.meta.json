@@ -1,0 +1,13 @@
+{
+  "id": "session-owner/session",
+  "invariants": {
+    "SingleOwner": {
+      "kind": "safety",
+      "text": "The session has one owner or none."
+    },
+    "FreshBeforeSend": {
+      "kind": "safety",
+      "text": "A send records an age below the freshness limit."
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "initial": "down",
+  "nodes": [
+    "down",
+    "open",
+    "closed"
+  ],
+  "edges": [
+    {
+      "from": "down",
+      "to": "open",
+      "action": "Connect"
+    },
+    {
+      "from": "open",
+      "to": "closed",
+      "action": "Drop"
+    }
+  ]
+}

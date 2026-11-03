@@ -1,0 +1,26 @@
+{
+  "initial": "none",
+  "nodes": [
+    "none",
+    "fresh",
+    "expiring",
+    "reauth"
+  ],
+  "edges": [
+    {
+      "from": "none",
+      "to": "fresh",
+      "action": "Exchange"
+    },
+    {
+      "from": "fresh",
+      "to": "expiring",
+      "action": "Tick"
+    },
+    {
+      "from": "expiring",
+      "to": "reauth",
+      "action": "Expire"
+    }
+  ]
+}

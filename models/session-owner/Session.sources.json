@@ -1,0 +1,12 @@
+{
+  "Init": "SPEC.md:20",
+  "Claim": "SPEC.md:20",
+  "KeepAlive": "SPEC.md:20",
+  "Tick": "SPEC.md:20",
+  "GoStale": "SPEC.md:20",
+  "Resume": "SPEC.md:20",
+  "NeedReauth": "SPEC.md:20",
+  "FinishReauth": "SPEC.md:20",
+  "Send": "SPEC.md:20",
+  "Hold": "SPEC.md:20"
+}

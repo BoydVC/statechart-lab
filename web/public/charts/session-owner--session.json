@@ -1,0 +1,46 @@
+{
+  "initial": "signed-out",
+  "nodes": [
+    "signed-out",
+    "live",
+    "stale",
+    "reauth"
+  ],
+  "edges": [
+    {
+      "from": "signed-out",
+      "to": "live",
+      "action": "Claim"
+    },
+    {
+      "from": "live",
+      "to": "live",
+      "action": "KeepAlive"
+    },
+    {
+      "from": "live",
+      "to": "stale",
+      "action": "GoStale"
+    },
+    {
+      "from": "stale",
+      "to": "live",
+      "action": "Resume"
+    },
+    {
+      "from": "stale",
+      "to": "reauth",
+      "action": "NeedReauth"
+    },
+    {
+      "from": "reauth",
+      "to": "live",
+      "action": "FinishReauth"
+    },
+    {
+      "from": "live",
+      "to": "live",
+      "action": "Send"
+    }
+  ]
+}

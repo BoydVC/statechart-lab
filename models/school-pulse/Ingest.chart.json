@@ -1,0 +1,10 @@
+{
+  "initial": "none",
+  "nodes": ["none", "key-a", "key-b", "both"],
+  "edges": [
+    { "from": "none", "to": "key-a", "action": "IngestA" },
+    { "from": "none", "to": "key-b", "action": "IngestB" },
+    { "from": "key-a", "to": "both", "action": "IngestB" },
+    { "from": "key-b", "to": "both", "action": "IngestA" }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "Init": "server.py:28",
+  "Approve": "server.py:780",
+  "Cue": "server.py:788",
+  "Post": "server.py:794",
+  "Skip": "server.py:786",
+  "Edit": "server.py:763",
+  "Hold": "server.py:786"
+}

@@ -1,0 +1,17 @@
+{
+  "id": "draft-day/pipeline",
+  "invariants": {
+    "NoMergeWithoutApproval": {
+      "kind": "safety",
+      "text": "Merge happens only after approval."
+    },
+    "EachSeatOnce": {
+      "kind": "safety",
+      "text": "Leaving the judge phase means each seat was judged once."
+    },
+    "MergedMeansPhase": {
+      "kind": "safety",
+      "text": "The merged flag is set only in the merged phase."
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "id": "school-pulse/sse",
+  "invariants": {
+    "LinkKnown": {
+      "kind": "safety",
+      "text": "The client link is down, open, or closed."
+    },
+    "ReconnectScheduled": {
+      "kind": "safety",
+      "text": "A closed link has a reconnect scheduled."
+    }
+  }
+}

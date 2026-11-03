@@ -1,0 +1,13 @@
+{
+  "id": "school-pulse/ingest",
+  "invariants": {
+    "OneRowPerKey": {
+      "kind": "safety",
+      "text": "Each source and sourceId pair has at most one row."
+    },
+    "NoRowWithoutDelivery": {
+      "kind": "safety",
+      "text": "A row exists only after a delivery of that key."
+    }
+  }
+}

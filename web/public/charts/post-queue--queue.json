@@ -1,0 +1,42 @@
+{
+  "initial": "draft",
+  "nodes": [
+    "draft",
+    "approved",
+    "cued",
+    "posted",
+    "skipped"
+  ],
+  "edges": [
+    {
+      "from": "draft",
+      "to": "approved",
+      "action": "Approve"
+    },
+    {
+      "from": "approved",
+      "to": "cued",
+      "action": "Cue"
+    },
+    {
+      "from": "cued",
+      "to": "posted",
+      "action": "Post"
+    },
+    {
+      "from": "approved",
+      "to": "posted",
+      "action": "Post"
+    },
+    {
+      "from": "posted",
+      "to": "skipped",
+      "action": "Skip"
+    },
+    {
+      "from": "posted",
+      "to": "draft",
+      "action": "Edit"
+    }
+  ]
+}

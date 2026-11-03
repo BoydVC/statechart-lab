@@ -1,0 +1,13 @@
+{
+  "id": "school-pulse/oauth",
+  "invariants": {
+    "NoRefreshBeforeExchange": {
+      "kind": "safety",
+      "text": "A refresh token is absent until the code exchange stores one."
+    },
+    "RefreshBeforeReauth": {
+      "kind": "safety",
+      "text": "A stored refresh token is used before the account is sent to re-auth."
+    }
+  }
+}

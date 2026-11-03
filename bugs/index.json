@@ -1,0 +1,34 @@
+[
+  {
+    "id": "draft-day-pipeline-each-seat-once",
+    "machine": "draft-day/pipeline",
+    "invariant": "EachSeatOnce",
+    "confirmed": false,
+    "explanation": "TLC found this counterexample in the model. The sketch was not run in the target repo. This seat does not push to other repositories, so the finding stays unconfirmed.",
+    "failingTest": "test(\"the verified phase waits until each seat is judged once\", () => {\n  const view = applyPhase(12);\n  assert.equal(view.seats.every((seat) => seat.judged === 1), true);\n});"
+  },
+  {
+    "id": "post-queue-queue-skip-only-before-post",
+    "machine": "post-queue/queue",
+    "invariant": "SkipOnlyBeforePost",
+    "confirmed": false,
+    "explanation": "TLC found this counterexample in the model. The sketch was not run in the target repo. This seat does not push to other repositories, so the finding stays unconfirmed.",
+    "failingTest": "def test_skip_after_post_is_refused():\n    item = {\"status\": \"posted\", \"text\": \"synthetic draft\"}\n    status, body = act(item, \"skip\")\n    assert status == 400\n    assert item[\"status\"] == \"posted\""
+  },
+  {
+    "id": "school-pulse-oauth-refresh-before-reauth",
+    "machine": "school-pulse/oauth",
+    "invariant": "RefreshBeforeReauth",
+    "confirmed": false,
+    "explanation": "TLC found this counterexample in the model. The sketch was not run in the target repo. This seat does not push to other repositories, so the finding stays unconfirmed.",
+    "failingTest": "test(\"a stored refresh token is used before re-auth\", () => {\n  const token = {\n    access_token: \"synthetic-access\",\n    refresh_token: \"synthetic-refresh\",\n    expires_at: \"2000-01-01T00:00:00.000Z\",\n  };\n  assert.equal(token.refresh_token === null || phaseAfterExpiry(token) === \"refreshing\", true);\n});"
+  },
+  {
+    "id": "school-pulse-sse-reconnect-scheduled",
+    "machine": "school-pulse/sse",
+    "invariant": "ReconnectScheduled",
+    "confirmed": false,
+    "explanation": "TLC found this counterexample in the model. The sketch was not run in the target repo. This seat does not push to other repositories, so the finding stays unconfirmed.",
+    "failingTest": "test(\"a closed event source is opened again\", () => {\n  let opened = 0;\n  onError({ readyState: 2 }, () => { opened += 1; });\n  assert.equal(opened, 1);\n});"
+  }
+]
