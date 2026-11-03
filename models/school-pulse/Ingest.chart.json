@@ -1,0 +1,25 @@
+{
+  "id": "school-pulse/ingest",
+  "title": "Ingest idempotency",
+  "blurb": "The same source and sourceId stay one row.",
+  "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+  "group": "lab",
+  "order": 4,
+  "stateKey": "phase",
+  "invariantText": {
+    "OneRowPerKey": "One source and sourceId produce at most one row.",
+    "RepeatStaysQuiet": "A repeat of the same key does not add a second row."
+  },
+  "nodes": [
+    { "id": "empty", "label": "Empty", "x": 150, "y": 150 },
+    { "id": "stored", "label": "Stored", "x": 370, "y": 150 }
+  ],
+  "edges": [
+    { "from": "empty", "to": "stored", "action": "First", "label": "First insert" }
+  ],
+  "story": [
+    { "phase": "empty", "label": "The key has not been seen." },
+    { "phase": "stored", "label": "The row is inserted." },
+    { "phase": "stored", "label": "The same key again. Still one row." }
+  ]
+}

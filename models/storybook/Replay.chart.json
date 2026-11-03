@@ -1,0 +1,43 @@
+{
+  "id": "storybook/replay",
+  "title": "Replay challenge",
+  "blurb": "One challenge. The window closes on the next pitch.",
+  "commit": "story-model",
+  "group": "story",
+  "order": 2,
+  "stateKey": "phase",
+  "poster": {
+    "kicker": "One challenge",
+    "title": "Replay",
+    "caption": "A side gets one challenge. The window closes when the next pitch is thrown.",
+    "scene": "replay"
+  },
+  "invariantText": {
+    "AtMostOneChallenge": "A play gets at most one challenge.",
+    "ReviewNeedsChallenge": "A review starts only after a challenge."
+  },
+  "nodes": [
+    { "id": "live", "label": "Live", "x": 60, "y": 150 },
+    { "id": "window", "label": "Window", "x": 180, "y": 70 },
+    { "id": "review", "label": "Review", "x": 320, "y": 70 },
+    { "id": "stands", "label": "Stands", "x": 450, "y": 70 },
+    { "id": "overturned", "label": "Overturned", "x": 430, "y": 190 },
+    { "id": "closed", "label": "Closed", "x": 200, "y": 220 }
+  ],
+  "edges": [
+    { "from": "live", "to": "window", "action": "Pitch", "label": "Pitch" },
+    { "from": "window", "to": "review", "action": "Challenge", "label": "Challenge" },
+    { "from": "review", "to": "stands", "action": "Stand", "label": "Stands" },
+    { "from": "review", "to": "overturned", "action": "Overturn", "label": "Overturned" },
+    { "from": "window", "to": "closed", "action": "Close", "label": "Next pitch" },
+    { "from": "stands", "to": "closed", "action": "Close", "label": "Play on" },
+    { "from": "overturned", "to": "closed", "action": "Close", "label": "Play on" }
+  ],
+  "story": [
+    { "phase": "live", "label": "The pitch is live." },
+    { "phase": "window", "label": "The challenge window is open." },
+    { "phase": "review", "label": "The one challenge is used." },
+    { "phase": "overturned", "label": "The call is overturned." },
+    { "phase": "closed", "label": "The window is closed." }
+  ]
+}

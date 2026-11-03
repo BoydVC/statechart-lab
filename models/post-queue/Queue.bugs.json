@@ -1,0 +1,19 @@
+{
+  "ScheduledBeforePosted": {
+    "id": "pq-posted-skips-cue",
+    "summary": "Mark posted is accepted from approved, so the cue step can be skipped.",
+    "confirmed": true,
+    "draftPr": null,
+    "why": "The handler allows posted from approved, cued, or posted. The page shows Mark posted for an approved item. Approval still holds. The scheduled step, called cued in the code, does not.",
+    "codePath": "Pinned x-post-queue dea8484. Statuses are server.py:28. posted action is server.py:794-798. The button gate is server.py:443.",
+    "sketch": "def test_posted_from_approved_is_refused():\n    # create a draft, approve it, POST /posted\n    # the queue spec wants cue before posted\n    assert response.status == 400\n",
+    "repro": "Local copy of x-post-queue at dea8484, PORT 4357. Create returned 201 draft. Approve returned 200 approved. POST /posted from approved returned 200 posted. A check that the cue is required expects 400. The repo ships smoke.sh and no unit suite, so this was an HTTP assertion against server.py. No draft PR was opened on BoydVC/x-post-queue.",
+    "actions": {
+      "Init": "new item status draft, server.py:716",
+      "Approve": "server.py:780-785 @ dea8484",
+      "PostFromApproved": "server.py:794-798 @ dea8484",
+      "Cue": "server.py:788-793 @ dea8484",
+      "PostFromCued": "server.py:794-798 @ dea8484"
+    }
+  }
+}

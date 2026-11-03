@@ -1,0 +1,30 @@
+{
+  "id": "school-pulse/sse",
+  "title": "Live stream",
+  "blurb": "A silent stream stays on the live pill. Nothing reconnects it.",
+  "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+  "group": "lab",
+  "order": 2,
+  "stateKey": "phase",
+  "invariantText": {
+    "SilentStreamReconnects": "A stream that stops sending is reconnected.",
+    "AtMostOneSocket": "The page opens at most one event socket."
+  },
+  "nodes": [
+    { "id": "off", "label": "Off", "x": 80, "y": 150 },
+    { "id": "live", "label": "Live", "x": 250, "y": 70 },
+    { "id": "silent", "label": "Silent", "x": 430, "y": 70 },
+    { "id": "down", "label": "Down", "x": 250, "y": 220 }
+  ],
+  "edges": [
+    { "from": "off", "to": "live", "action": "Open", "label": "Open" },
+    { "from": "live", "to": "silent", "action": "Silence", "label": "No ping", "tone": "danger" },
+    { "from": "live", "to": "down", "action": "Error", "label": "Socket error" },
+    { "from": "down", "to": "live", "action": "Reconnect", "label": "Browser retry" }
+  ],
+  "story": [
+    { "phase": "off", "label": "The page has not connected." },
+    { "phase": "live", "label": "One EventSource is open." },
+    { "phase": "silent", "label": "Pings stop. The pill stays live." }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "id": "session-owner/household",
+  "title": "Session owner",
+  "blurb": "One owner. Keep-alive while fresh, re-auth when stale, no send before that.",
+  "commit": "generic",
+  "group": "lab",
+  "order": 6,
+  "stateKey": "phase",
+  "invariantText": {
+    "FreshBeforeSend": "A message goes out only while the session is fresh.",
+    "SignedOutIsIdle": "A signed-out session is not sending."
+  },
+  "nodes": [
+    { "id": "signed-out", "label": "Signed out", "x": 80, "y": 150 },
+    { "id": "fresh", "label": "Fresh", "x": 230, "y": 60 },
+    { "id": "aging", "label": "Aging", "x": 390, "y": 60 },
+    { "id": "stale", "label": "Stale", "x": 450, "y": 180 },
+    { "id": "messaging", "label": "Sending", "x": 230, "y": 220 },
+    { "id": "reauth", "label": "Re-auth", "x": 80, "y": 230 }
+  ],
+  "edges": [
+    { "from": "signed-out", "to": "fresh", "action": "Claim", "label": "Claim" },
+    { "from": "fresh", "to": "aging", "action": "Age", "label": "Age" },
+    { "from": "aging", "to": "fresh", "action": "Keep", "label": "Keep-alive" },
+    { "from": "aging", "to": "stale", "action": "Stale", "label": "Goes stale" },
+    { "from": "fresh", "to": "messaging", "action": "Send", "label": "Send" },
+    { "from": "messaging", "to": "fresh", "action": "Stop", "label": "Done" },
+    { "from": "stale", "to": "reauth", "action": "Reauth", "label": "Re-auth" },
+    { "from": "reauth", "to": "fresh", "action": "FinishReauth", "label": "Signed in" }
+  ],
+  "story": [
+    { "phase": "signed-out", "label": "Nobody holds the session." },
+    { "phase": "fresh", "label": "The owner claims it." },
+    { "phase": "messaging", "label": "A send is allowed while fresh." },
+    { "phase": "fresh", "label": "The send ends." },
+    { "phase": "aging", "label": "Left alone, it ages." },
+    { "phase": "stale", "label": "Stale. Sending is closed." },
+    { "phase": "reauth", "label": "Re-auth is the way back." },
+    { "phase": "fresh", "label": "Fresh again." }
+  ]
+}

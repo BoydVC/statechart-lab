@@ -1,0 +1,33 @@
+{
+  "id": "post-queue/queue",
+  "title": "Post queue",
+  "blurb": "Posted requires approval. The server also allows posted straight from approved, skipping the cue.",
+  "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b",
+  "group": "lab",
+  "order": 3,
+  "stateKey": "phase",
+  "invariantText": {
+    "ScheduledBeforePosted": "Posted happens only after the item was cued.",
+    "PostedRequiresApproval": "Posted happens only after approval."
+  },
+  "nodes": [
+    { "id": "draft", "label": "Draft", "x": 70, "y": 150 },
+    { "id": "approved", "label": "Approved", "x": 220, "y": 60 },
+    { "id": "cued", "label": "Cued", "x": 380, "y": 60 },
+    { "id": "posted", "label": "Posted", "x": 450, "y": 190 },
+    { "id": "skipped", "label": "Skipped", "x": 180, "y": 230 }
+  ],
+  "edges": [
+    { "from": "draft", "to": "approved", "action": "Approve", "label": "Approve" },
+    { "from": "approved", "to": "cued", "action": "Cue", "label": "Cue" },
+    { "from": "cued", "to": "posted", "action": "PostFromCued", "label": "Mark posted" },
+    { "from": "approved", "to": "posted", "action": "PostFromApproved", "label": "Skip the cue", "tone": "danger" },
+    { "from": "draft", "to": "skipped", "action": "Skip", "label": "Skip" },
+    { "from": "posted", "to": "draft", "action": "Edit", "label": "Edit" }
+  ],
+  "story": [
+    { "phase": "draft", "label": "A draft is saved." },
+    { "phase": "approved", "label": "Boyd approves the exact text." },
+    { "phase": "posted", "label": "Mark posted is accepted before the cue." }
+  ]
+}

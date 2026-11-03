@@ -1,0 +1,18 @@
+{
+  "ExpiredTokenNotUsed": {
+    "id": "sp-oauth-expired-sync",
+    "summary": "school-pulse stores expires_at, then sync ignores it and sends the access token.",
+    "confirmed": true,
+    "draftPr": null,
+    "why": "readToken returns access_token and never branches on expires_at or refresh_token. runSync passes that string straight to the Classroom and OneNote fetchers. The auth command is a separate path, so an expired file does not become re-auth-needed.",
+    "codePath": "Pinned school-pulse 3b76b08. Exchange writes expires_at in src/auth/oauth.ts:108-115. readToken is src/main.ts:150-157. runSync uses the string at src/main.ts:124-132.",
+    "sketch": "test(\"an expired access token is not returned for sync\", () => {\n  const dir = mkdtempSync(join(tmpdir(), \"sp-\"));\n  mkdirSync(join(dir, \"tokens\"));\n  writeFileSync(join(dir, \"tokens\", \"google-classroom.json\"), JSON.stringify({\n    access_token: \"synthetic-access-token\",\n    refresh_token: \"synthetic-refresh\",\n    expires_at: \"2020-01-01T00:00:00.000Z\"\n  }));\n  assert.equal(readToken(dir, \"google-classroom.json\", \"SCHOOL_PULSE_CLASSROOM_TOKEN_UNSET\"), null);\n});",
+    "repro": "Local copy of school-pulse at 3b76b08. npm test ran the new test in the repo's node:test runner. It expected readToken to return null for an expires_at in 2020. The actual value was synthetic-access-token. The other 57 tests in that run passed. No draft PR was opened on BoydVC/school-pulse.",
+    "actions": {
+      "Init": "no token file",
+      "Exchange": "src/auth/oauth.ts:108-115 @ 3b76b08",
+      "Age": "expires_at is stored and never read again",
+      "Sync": "src/main.ts:150-157 @ 3b76b08"
+    }
+  }
+}

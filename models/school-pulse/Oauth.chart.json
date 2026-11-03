@@ -1,0 +1,33 @@
+{
+  "id": "school-pulse/oauth",
+  "title": "Token lifecycle",
+  "blurb": "Sync still sends the access token after expires_at.",
+  "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+  "group": "lab",
+  "order": 1,
+  "stateKey": "phase",
+  "invariantText": {
+    "ExpiredTokenNotUsed": "An expired access token is not used to sync.",
+    "NoSyncWithoutToken": "Sync does not run when no token is stored."
+  },
+  "nodes": [
+    { "id": "none", "label": "Signed out", "x": 90, "y": 150 },
+    { "id": "fresh", "label": "Fresh", "x": 250, "y": 58 },
+    { "id": "expired", "label": "Expired", "x": 420, "y": 58 },
+    { "id": "syncing", "label": "Syncing", "x": 420, "y": 220 },
+    { "id": "reauth", "label": "Re-auth", "x": 250, "y": 220 }
+  ],
+  "edges": [
+    { "from": "none", "to": "fresh", "action": "Exchange", "label": "Exchange code" },
+    { "from": "fresh", "to": "expired", "action": "Age", "label": "Past expires_at" },
+    { "from": "expired", "to": "syncing", "action": "Sync", "label": "Sync anyway", "tone": "danger" },
+    { "from": "expired", "to": "reauth", "action": "Reauth", "label": "Sign in again" },
+    { "from": "reauth", "to": "fresh", "action": "Store", "label": "Store token" }
+  ],
+  "story": [
+    { "phase": "none", "label": "No token file yet." },
+    { "phase": "fresh", "label": "The code exchange stores an access token." },
+    { "phase": "expired", "label": "expires_at has passed. The file is unchanged." },
+    { "phase": "syncing", "label": "Sync reads access_token and uses it anyway." }
+  ]
+}

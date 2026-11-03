@@ -1,0 +1,43 @@
+{
+  "id": "draft-day/pipeline",
+  "title": "Draft Day",
+  "blurb": "Merge stays closed until the draft is approved. Each seat is scored once.",
+  "commit": "7fb564d8d974db4ad3c8584a0b9b1f4e35a8ea96",
+  "group": "lab",
+  "order": 5,
+  "stateKey": "phase",
+  "invariantText": {
+    "NoMergeWithoutApproval": "A merged draft was approved first.",
+    "AtMostOnce": "Each seat is scored at most once.",
+    "JudgedBeforeGraft": "Graft waits until every seat has been scored."
+  },
+  "nodes": [
+    { "id": "idea", "label": "Idea", "x": 70, "y": 70 },
+    { "id": "spec", "label": "Spec", "x": 190, "y": 70 },
+    { "id": "seats", "label": "Seats", "x": 320, "y": 70 },
+    { "id": "judge", "label": "Judge", "x": 450, "y": 70 },
+    { "id": "graft", "label": "Graft", "x": 70, "y": 210 },
+    { "id": "physical", "label": "Physical", "x": 200, "y": 210 },
+    { "id": "draft", "label": "Draft PR", "x": 340, "y": 210 },
+    { "id": "merged", "label": "Merged", "x": 460, "y": 210 }
+  ],
+  "edges": [
+    { "from": "idea", "to": "spec", "action": "ToSpec", "label": "Write spec" },
+    { "from": "spec", "to": "seats", "action": "ToSeats", "label": "Open seats" },
+    { "from": "seats", "to": "judge", "action": "ToJudge", "label": "To judging" },
+    { "from": "judge", "to": "graft", "action": "ToGraft", "label": "Seats scored" },
+    { "from": "graft", "to": "physical", "action": "ToPhysical", "label": "Graft" },
+    { "from": "physical", "to": "draft", "action": "ToDraft", "label": "Draft PR" },
+    { "from": "draft", "to": "merged", "action": "Merge", "label": "Merge" }
+  ],
+  "story": [
+    { "phase": "idea", "label": "An idea is on the board." },
+    { "phase": "spec", "label": "The spec is written." },
+    { "phase": "seats", "label": "Seats open." },
+    { "phase": "judge", "label": "Each seat is scored once." },
+    { "phase": "graft", "label": "The winner is grafted." },
+    { "phase": "physical", "label": "The physical pass." },
+    { "phase": "draft", "label": "The draft PR is up. Approve it." },
+    { "phase": "merged", "label": "Merge is allowed only after approval." }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "id": "storybook/booster",
+  "title": "Booster catch",
+  "blurb": "The arms have to be ready. Otherwise the booster misses.",
+  "commit": "story-model",
+  "group": "story",
+  "order": 4,
+  "stateKey": "phase",
+  "poster": {
+    "kicker": "Catch window",
+    "title": "Booster catch",
+    "caption": "The arms have to be ready before a catch counts. If they are not, the booster misses.",
+    "scene": "booster"
+  },
+  "invariantText": {
+    "CatchNeedsArms": "A catch happens only with the arms ready.",
+    "MissIsBare": "A miss happens with the arms not ready."
+  },
+  "nodes": [
+    { "id": "pad", "label": "Pad", "x": 60, "y": 160 },
+    { "id": "ascent", "label": "Ascent", "x": 160, "y": 70 },
+    { "id": "entry", "label": "Entry", "x": 280, "y": 70 },
+    { "id": "arms", "label": "Arms", "x": 420, "y": 70 },
+    { "id": "window", "label": "Window", "x": 300, "y": 190 },
+    { "id": "caught", "label": "Caught", "x": 450, "y": 190 },
+    { "id": "missed", "label": "Missed", "x": 140, "y": 230 }
+  ],
+  "edges": [
+    { "from": "pad", "to": "ascent", "action": "Launch", "label": "Launch" },
+    { "from": "ascent", "to": "entry", "action": "Entry", "label": "Entry" },
+    { "from": "entry", "to": "arms", "action": "Ready", "label": "Arms ready" },
+    { "from": "entry", "to": "window", "action": "SkipArms", "label": "Arms late" },
+    { "from": "arms", "to": "window", "action": "OpenWindow", "label": "Window" },
+    { "from": "window", "to": "caught", "action": "Catch", "label": "Catch" },
+    { "from": "window", "to": "missed", "action": "Miss", "label": "Miss" }
+  ],
+  "story": [
+    { "phase": "pad", "label": "The booster is on the pad." },
+    { "phase": "ascent", "label": "Ascent." },
+    { "phase": "entry", "label": "It comes back." },
+    { "phase": "arms", "label": "The arms are ready." },
+    { "phase": "window", "label": "The catch window is open." },
+    { "phase": "caught", "label": "Caught, because the arms were ready." }
+  ]
+}

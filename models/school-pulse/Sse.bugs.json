@@ -1,0 +1,19 @@
+{
+  "SilentStreamReconnects": {
+    "id": "sp-sse-silent-stream",
+    "summary": "The SSE client flips the pill off on error, and never notices a silent stream.",
+    "confirmed": true,
+    "draftPr": null,
+    "why": "connect() creates one EventSource. onerror sets the pill to off and relies on the browser to retry a broken socket. Comment pings from the server are not events, and the client has no timer, so a half-open stream stays Live.",
+    "codePath": "Pinned school-pulse 3b76b08. Client connect is web/app.ts:466-479. Server comment ping is src/server/server.ts:110-116.",
+    "sketch": "test(\"the SSE client reconnects a silent stream\", () => {\n  const src = readFileSync(new URL(\"../../web/app.ts\", import.meta.url), \"utf8\");\n  const connect = src.slice(src.indexOf(\"function connect\"), src.indexOf(\"function toggleTheme\"));\n  assert.match(connect, /setTimeout|lastEvent|reconnect/i);\n});",
+    "repro": "Same npm test run. The new test expected connect() to start a silence timer or call reconnect. The function only sets the pill off inside onerror. The assertion failed. No draft PR was opened on BoydVC/school-pulse.",
+    "actions": {
+      "Init": "page load before connect()",
+      "Open": "web/app.ts:466-467 @ 3b76b08",
+      "Silence": "web/app.ts:466-479 has no silence timer",
+      "Error": "web/app.ts:476-478 @ 3b76b08",
+      "Reconnect": "web/app.ts:472-475 onopen, browser EventSource"
+    }
+  }
+}

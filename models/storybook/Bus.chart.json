@@ -1,0 +1,39 @@
+{
+  "id": "storybook/bus",
+  "title": "Bus morning",
+  "blurb": "Home, the stop, the seat, the ride, then school. Arrival requires boarding.",
+  "commit": "story-model",
+  "group": "story",
+  "order": 3,
+  "stateKey": "phase",
+  "poster": {
+    "kicker": "Maple stop",
+    "title": "Bus morning",
+    "caption": "Home, the stop, a seat, the ride, then school. The bus arrives only after someone boards.",
+    "scene": "bus"
+  },
+  "invariantText": {
+    "ArriveAfterBoarding": "School comes only after boarding.",
+    "NoRideBeforeBoard": "The ride does not start before boarding."
+  },
+  "nodes": [
+    { "id": "home", "label": "Home", "x": 60, "y": 150 },
+    { "id": "waiting", "label": "Stop", "x": 170, "y": 150 },
+    { "id": "boarded", "label": "Boarded", "x": 290, "y": 150 },
+    { "id": "riding", "label": "Riding", "x": 400, "y": 80 },
+    { "id": "school", "label": "School", "x": 450, "y": 210 }
+  ],
+  "edges": [
+    { "from": "home", "to": "waiting", "action": "Walk", "label": "Walk" },
+    { "from": "waiting", "to": "boarded", "action": "Board", "label": "Board" },
+    { "from": "boarded", "to": "riding", "action": "Ride", "label": "Ride" },
+    { "from": "riding", "to": "school", "action": "Arrive", "label": "Arrive" }
+  ],
+  "story": [
+    { "phase": "home", "label": "Still at home." },
+    { "phase": "waiting", "label": "Waiting at the stop." },
+    { "phase": "boarded", "label": "A seat is taken." },
+    { "phase": "riding", "label": "The bus is moving." },
+    { "phase": "school", "label": "School, after boarding." }
+  ]
+}
