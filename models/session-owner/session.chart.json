@@ -1,0 +1,50 @@
+{
+  "id": "session-owner/lease",
+  "title": "Session lease",
+  "blurb": "One household owner. A stale lease has to be signed in again before a message is sent. No school data.",
+  "group": "lab",
+  "order": 9,
+  "stateKey": "phase",
+  "nodes": [
+    {
+      "id": "active",
+      "label": "Active",
+      "x": 90,
+      "y": 140
+    },
+    {
+      "id": "reauth",
+      "label": "Sign in",
+      "x": 280,
+      "y": 80
+    }
+  ],
+  "edges": [
+    {
+      "from": "active",
+      "to": "reauth",
+      "action": "Reauth",
+      "label": "Lease went stale"
+    },
+    {
+      "from": "reauth",
+      "to": "active",
+      "action": "Resume",
+      "label": "Signed in"
+    }
+  ],
+  "story": [
+    {
+      "phase": "active",
+      "label": "The lease is fresh. One owner."
+    },
+    {
+      "phase": "reauth",
+      "label": "After it goes stale, someone signs in."
+    },
+    {
+      "phase": "active",
+      "label": "A message waits until the lease is fresh."
+    }
+  ]
+}

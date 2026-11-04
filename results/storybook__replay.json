@@ -1,0 +1,25 @@
+{
+  "id": "storybook/replay",
+  "commit": "none",
+  "repo": "",
+  "states": 7,
+  "invariants": [
+    {
+      "name": "AtMostOneChallenge",
+      "kind": "safety",
+      "text": "A play has at most one challenge.",
+      "expected": false,
+      "holds": true
+    },
+    {
+      "name": "ReviewNeedsChallenge",
+      "kind": "safety",
+      "text": "Review runs only after a challenge.",
+      "expected": false,
+      "holds": true
+    }
+  ],
+  "status": "pass",
+  "chartSvg": "charts/storybook-replay-blueprint.svg",
+  "chartField": "charts/storybook-replay-field.svg"
+}

@@ -1,0 +1,91 @@
+{
+  "id": "school-pulse/silence",
+  "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+  "repo": "https://github.com/BoydVC/school-pulse",
+  "states": 4,
+  "invariants": [
+    {
+      "name": "SilentStreamReconnects",
+      "kind": "safety",
+      "text": "A stream that stops sending is reconnected.",
+      "expected": true,
+      "holds": false,
+      "trace": [
+        {
+          "action": "Init",
+          "state": {
+            "phase": "off",
+            "sockets": 0
+          }
+        },
+        {
+          "action": "Open",
+          "state": {
+            "phase": "live",
+            "sockets": 1
+          },
+          "sourceRef": {
+            "file": "web/app.ts",
+            "line": 466,
+            "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+          }
+        },
+        {
+          "action": "Silence",
+          "state": {
+            "phase": "silent",
+            "sockets": 1
+          },
+          "sourceRef": {
+            "file": "web/app.ts",
+            "line": 466,
+            "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+          }
+        }
+      ]
+    },
+    {
+      "name": "AtMostOneSocket",
+      "kind": "safety",
+      "text": "The page opens one event stream.",
+      "expected": false,
+      "holds": true
+    }
+  ],
+  "status": "violation",
+  "trace": [
+    {
+      "action": "Init",
+      "state": {
+        "phase": "off",
+        "sockets": 0
+      }
+    },
+    {
+      "action": "Open",
+      "state": {
+        "phase": "live",
+        "sockets": 1
+      },
+      "sourceRef": {
+        "file": "web/app.ts",
+        "line": 466,
+        "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+      }
+    },
+    {
+      "action": "Silence",
+      "state": {
+        "phase": "silent",
+        "sockets": 1
+      },
+      "sourceRef": {
+        "file": "web/app.ts",
+        "line": 466,
+        "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+      }
+    }
+  ],
+  "chartSvg": "charts/school-pulse-silence-blueprint.svg",
+  "chartField": "charts/school-pulse-silence-field.svg"
+}

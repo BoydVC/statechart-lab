@@ -1,0 +1,25 @@
+{
+  "id": "storybook/booster",
+  "commit": "none",
+  "repo": "",
+  "states": 8,
+  "invariants": [
+    {
+      "name": "CatchNeedsArms",
+      "kind": "safety",
+      "text": "The catch happens with the arms out.",
+      "expected": false,
+      "holds": true
+    },
+    {
+      "name": "MissIsBare",
+      "kind": "safety",
+      "text": "A miss is a catch without the arms.",
+      "expected": false,
+      "holds": true
+    }
+  ],
+  "status": "pass",
+  "chartSvg": "charts/storybook-booster-blueprint.svg",
+  "chartField": "charts/storybook-booster-field.svg"
+}

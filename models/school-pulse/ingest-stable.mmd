@@ -1,0 +1,23 @@
+---
+title: "Inbox retry of one file"
+---
+stateDiagram-v2
+  state "Legend" as legend {
+    lg0: Waiting
+    lg1: Stored
+  }
+  class lg0 tan
+  class lg1 teal
+  s0: File waiting
+  s1: Row stored, callback running
+  s2: Import finished
+  s3: One row, retry pending
+  [*] --> s0
+  s0 --> s1: the watcher reads the file and imports it
+  s1 --> s2: the publish callback returns
+  s1 --> s3: the publish callback throws
+  s3 --> s1: the watcher reads the file and imports it
+  class s0 tan
+  class s1 teal
+  class s2 teal
+  class s3 teal

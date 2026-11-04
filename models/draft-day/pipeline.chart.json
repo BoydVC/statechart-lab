@@ -1,0 +1,124 @@
+{
+  "id": "draft-day/pipeline",
+  "title": "Draft Day protocol",
+  "blurb": "The public commit is a visual player. This machine is the protocol in the spec. Each seat is judged once, and merge waits for approval.",
+  "group": "lab",
+  "order": 8,
+  "stateKey": "phase",
+  "nodes": [
+    {
+      "id": "idea",
+      "label": "Idea",
+      "x": 40,
+      "y": 150
+    },
+    {
+      "id": "spec",
+      "label": "Spec",
+      "x": 130,
+      "y": 70
+    },
+    {
+      "id": "seated",
+      "label": "Seats",
+      "x": 230,
+      "y": 70
+    },
+    {
+      "id": "judged",
+      "label": "Judged",
+      "x": 330,
+      "y": 70
+    },
+    {
+      "id": "grafted",
+      "label": "Graft",
+      "x": 430,
+      "y": 70
+    },
+    {
+      "id": "physical",
+      "label": "Physical",
+      "x": 430,
+      "y": 170
+    },
+    {
+      "id": "draft",
+      "label": "Draft",
+      "x": 300,
+      "y": 220
+    },
+    {
+      "id": "merged",
+      "label": "Merged",
+      "x": 140,
+      "y": 220
+    }
+  ],
+  "edges": [
+    {
+      "from": "idea",
+      "to": "spec",
+      "action": "ToSpec",
+      "label": "Spec"
+    },
+    {
+      "from": "spec",
+      "to": "seated",
+      "action": "Seat",
+      "label": "Seats"
+    },
+    {
+      "from": "seated",
+      "to": "judged",
+      "action": "FinishJudge",
+      "label": "Each seat once"
+    },
+    {
+      "from": "judged",
+      "to": "grafted",
+      "action": "Graft",
+      "label": "Graft"
+    },
+    {
+      "from": "grafted",
+      "to": "physical",
+      "action": "Physical",
+      "label": "Physical"
+    },
+    {
+      "from": "physical",
+      "to": "draft",
+      "action": "OpenDraft",
+      "label": "Draft"
+    },
+    {
+      "from": "draft",
+      "to": "merged",
+      "action": "Merge",
+      "label": "Merge after approval"
+    }
+  ],
+  "story": [
+    {
+      "phase": "idea",
+      "label": "An idea."
+    },
+    {
+      "phase": "seated",
+      "label": "Two seats."
+    },
+    {
+      "phase": "judged",
+      "label": "Each seat is judged once."
+    },
+    {
+      "phase": "draft",
+      "label": "The draft waits for approval."
+    },
+    {
+      "phase": "merged",
+      "label": "Merge requires that approval."
+    }
+  ]
+}

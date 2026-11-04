@@ -1,0 +1,25 @@
+{
+  "id": "storybook/play-clock",
+  "commit": "none",
+  "repo": "",
+  "states": 20,
+  "invariants": [
+    {
+      "name": "NoSnapAtZero",
+      "kind": "safety",
+      "text": "The ball is not snapped at zero.",
+      "expected": false,
+      "holds": true
+    },
+    {
+      "name": "TimeoutFreezes",
+      "kind": "safety",
+      "text": "A timeout holds the clock where it stopped.",
+      "expected": false,
+      "holds": true
+    }
+  ],
+  "status": "pass",
+  "chartSvg": "charts/storybook-play-clock-blueprint.svg",
+  "chartField": "charts/storybook-play-clock-field.svg"
+}

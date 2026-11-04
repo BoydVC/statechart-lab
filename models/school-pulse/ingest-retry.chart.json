@@ -1,0 +1,63 @@
+{
+  "id": "school-pulse/ingest-retry",
+  "title": "Clock token retry",
+  "blurb": "A retried inbox file expands {{SP:NOW}} again and stores a second row.",
+  "group": "lab",
+  "order": 2,
+  "stateKey": "phase",
+  "nodes": [
+    {
+      "id": "ready",
+      "label": "Ready",
+      "x": 80,
+      "y": 150
+    },
+    {
+      "id": "callback",
+      "label": "Committed",
+      "x": 250,
+      "y": 70
+    },
+    {
+      "id": "done",
+      "label": "Done",
+      "x": 420,
+      "y": 150
+    }
+  ],
+  "edges": [
+    {
+      "from": "ready",
+      "to": "callback",
+      "action": "Commit",
+      "label": "Insert the row"
+    },
+    {
+      "from": "callback",
+      "to": "ready",
+      "action": "CallbackThrows",
+      "label": "Callback throws",
+      "tone": "danger"
+    },
+    {
+      "from": "callback",
+      "to": "done",
+      "action": "CallbackOk",
+      "label": "Callback returns"
+    }
+  ],
+  "story": [
+    {
+      "phase": "ready",
+      "label": "The watcher reads the file."
+    },
+    {
+      "phase": "callback",
+      "label": "The row is committed, then the callback throws."
+    },
+    {
+      "phase": "ready",
+      "label": "The retry expands the clock token again."
+    }
+  ]
+}

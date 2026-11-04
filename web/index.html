@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Statechart Lab</title>
+  </head>
+  <body data-theme="blueprint">
+    <header>
+      <div class="brand">
+        <p class="kicker">BoydVC</p>
+        <h1>Statechart Lab</h1>
+      </div>
+      <div class="switch" role="tablist" aria-label="Section">
+        <button type="button" data-tab="lab" aria-selected="true">Lab</button>
+        <button type="button" data-tab="story" aria-selected="false">Storybook</button>
+      </div>
+      <div class="switch" role="group" aria-label="Chart theme">
+        <button type="button" data-theme-set="blueprint" aria-pressed="true">Blueprint</button>
+        <button type="button" data-theme-set="field" aria-pressed="false">Field guide</button>
+      </div>
+    </header>
+    <p id="summary" class="summary"></p>
+    <main id="app"></main>
+    <div id="dock" class="dock" hidden>
+      <p id="dock-kicker" class="dock-kicker"></p>
+      <p id="dock-caption" class="dock-caption" aria-live="polite"></p>
+      <input id="scrub" type="range" min="0" value="0" aria-label="Trace step" />
+      <div class="dock-row">
+        <button type="button" data-act="restart">Restart</button>
+        <button type="button" data-act="prev">Back</button>
+        <button type="button" data-act="play">Play</button>
+        <button type="button" data-act="next">Step</button>
+        <button type="button" data-act="share">Share card</button>
+      </div>
+    </div>
+    <div id="sheet" class="sheet" hidden>
+      <div class="sheet-card">
+        <img id="card-preview" alt="Share card for this bug" width="1200" height="675" />
+        <div class="sheet-row">
+          <a id="card-download" download="statechart-lab.png">Download PNG</a>
+          <button type="button" data-act="close-sheet">Close</button>
+        </div>
+      </div>
+    </div>
+    <footer>
+      <p>Synthetic charts. No names, no account ids, no team marks.</p>
+      <p><a href="https://github.com/cursor/plugins/tree/main/harness/pstack">poteto's pstack</a></p>
+    </footer>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

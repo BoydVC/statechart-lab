@@ -1,0 +1,39 @@
+---
+title: "Idea to draft, merge only after approval"
+---
+stateDiagram-v2
+  state "Legend" as legend {
+    lg0: Approved
+    lg1: Shaping
+    lg2: Building
+  }
+  class lg0 teal
+  class lg1 tan
+  class lg2 blue
+  s0: Idea
+  s1: Spec
+  s2: Seats open
+  s3: Seats judged
+  s4: Grafted
+  s5: Physical check
+  s6: Draft, waiting for approval
+  s7: Draft, approved
+  s8: Merged
+  [*] --> s0
+  s0 --> s1: write the spec
+  s1 --> s2: open the seats
+  s2 --> s3: every seat has one judgment
+  s3 --> s4: graft
+  s4 --> s5: physical check
+  s5 --> s6: open the draft
+  s6 --> s7: approve
+  s7 --> s8: merge
+  class s0 tan
+  class s1 tan
+  class s2 blue
+  class s3 blue
+  class s4 blue
+  class s5 blue
+  class s6 blue
+  class s7 teal
+  class s8 teal

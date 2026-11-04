@@ -1,0 +1,163 @@
+{
+  "id": "post-queue/status",
+  "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b",
+  "repo": "https://github.com/BoydVC/x-post-queue",
+  "states": 10,
+  "invariants": [
+    {
+      "name": "PostedRequiresApproval",
+      "kind": "safety",
+      "text": "Posted happens only after approval.",
+      "expected": false,
+      "holds": true
+    },
+    {
+      "name": "ScheduledBeforePosted",
+      "kind": "safety",
+      "text": "Posted happens only after the item was cued.",
+      "expected": true,
+      "holds": false,
+      "trace": [
+        {
+          "action": "Init",
+          "state": {
+            "cued": false,
+            "seenPosted": false,
+            "approved": false,
+            "phase": "draft"
+          }
+        },
+        {
+          "action": "Approve",
+          "state": {
+            "cued": false,
+            "seenPosted": false,
+            "approved": true,
+            "phase": "approved"
+          },
+          "sourceRef": {
+            "file": "server.py",
+            "line": 780,
+            "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+          }
+        },
+        {
+          "action": "PostFromApproved",
+          "state": {
+            "cued": false,
+            "seenPosted": true,
+            "approved": true,
+            "phase": "posted"
+          },
+          "sourceRef": {
+            "file": "server.py",
+            "line": 794,
+            "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+          }
+        }
+      ]
+    },
+    {
+      "name": "SkipOnlyBeforePost",
+      "kind": "safety",
+      "text": "Skip does not run after posted.",
+      "expected": true,
+      "holds": false,
+      "trace": [
+        {
+          "action": "Init",
+          "state": {
+            "cued": false,
+            "seenPosted": false,
+            "approved": false,
+            "phase": "draft"
+          }
+        },
+        {
+          "action": "Approve",
+          "state": {
+            "cued": false,
+            "seenPosted": false,
+            "approved": true,
+            "phase": "approved"
+          },
+          "sourceRef": {
+            "file": "server.py",
+            "line": 780,
+            "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+          }
+        },
+        {
+          "action": "PostFromApproved",
+          "state": {
+            "cued": false,
+            "seenPosted": true,
+            "approved": true,
+            "phase": "posted"
+          },
+          "sourceRef": {
+            "file": "server.py",
+            "line": 794,
+            "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+          }
+        },
+        {
+          "action": "Skip",
+          "state": {
+            "cued": false,
+            "seenPosted": true,
+            "approved": true,
+            "phase": "skipped"
+          },
+          "sourceRef": {
+            "file": "server.py",
+            "line": 786,
+            "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+          }
+        }
+      ]
+    }
+  ],
+  "status": "violation",
+  "trace": [
+    {
+      "action": "Init",
+      "state": {
+        "cued": false,
+        "seenPosted": false,
+        "approved": false,
+        "phase": "draft"
+      }
+    },
+    {
+      "action": "Approve",
+      "state": {
+        "cued": false,
+        "seenPosted": false,
+        "approved": true,
+        "phase": "approved"
+      },
+      "sourceRef": {
+        "file": "server.py",
+        "line": 780,
+        "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+      }
+    },
+    {
+      "action": "PostFromApproved",
+      "state": {
+        "cued": false,
+        "seenPosted": true,
+        "approved": true,
+        "phase": "posted"
+      },
+      "sourceRef": {
+        "file": "server.py",
+        "line": 794,
+        "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+      }
+    }
+  ],
+  "chartSvg": "charts/post-queue-status-blueprint.svg",
+  "chartField": "charts/post-queue-status-field.svg"
+}

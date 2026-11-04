@@ -1,0 +1,88 @@
+{
+  "id": "post-queue/status",
+  "title": "Cue and skip",
+  "blurb": "Posted is accepted from approved. Skip is accepted after posted.",
+  "group": "lab",
+  "order": 7,
+  "stateKey": "phase",
+  "nodes": [
+    {
+      "id": "draft",
+      "label": "Draft",
+      "x": 60,
+      "y": 150
+    },
+    {
+      "id": "approved",
+      "label": "Approved",
+      "x": 190,
+      "y": 70
+    },
+    {
+      "id": "cued",
+      "label": "Cued",
+      "x": 330,
+      "y": 70
+    },
+    {
+      "id": "posted",
+      "label": "Posted",
+      "x": 460,
+      "y": 150
+    },
+    {
+      "id": "skipped",
+      "label": "Skipped",
+      "x": 300,
+      "y": 220
+    }
+  ],
+  "edges": [
+    {
+      "from": "draft",
+      "to": "approved",
+      "action": "Approve",
+      "label": "Approve"
+    },
+    {
+      "from": "approved",
+      "to": "cued",
+      "action": "Cue",
+      "label": "Cue"
+    },
+    {
+      "from": "cued",
+      "to": "posted",
+      "action": "PostFromCued",
+      "label": "Post after cue"
+    },
+    {
+      "from": "approved",
+      "to": "posted",
+      "action": "PostFromApproved",
+      "label": "Skip the cue",
+      "tone": "danger"
+    },
+    {
+      "from": "posted",
+      "to": "skipped",
+      "action": "Skip",
+      "label": "Skip after post",
+      "tone": "danger"
+    }
+  ],
+  "story": [
+    {
+      "phase": "draft",
+      "label": "A synthetic draft."
+    },
+    {
+      "phase": "approved",
+      "label": "Approval is recorded."
+    },
+    {
+      "phase": "posted",
+      "label": "Posted does not require the cue."
+    }
+  ]
+}

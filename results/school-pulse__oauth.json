@@ -1,0 +1,346 @@
+{
+  "id": "school-pulse/oauth",
+  "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+  "repo": "https://github.com/BoydVC/school-pulse",
+  "states": 112,
+  "invariants": [
+    {
+      "name": "TokenFileCoherent",
+      "kind": "safety",
+      "text": "An empty token file names no account, and a stored token names one.",
+      "expected": false,
+      "holds": true
+    },
+    {
+      "name": "NotExpiredUse",
+      "kind": "safety",
+      "text": "A sync does not read an access token after it has expired.",
+      "expected": true,
+      "holds": false,
+      "trace": [
+        {
+          "action": "Init",
+          "state": {
+            "pending": {
+              "desk": -1,
+              "phone": -1
+            },
+            "clobbered": false,
+            "filePhase": "empty",
+            "usedExpired": false,
+            "fileAccount": "none",
+            "fileGen": 0
+          }
+        },
+        {
+          "action": "StartDesk",
+          "state": {
+            "pending": {
+              "desk": 0,
+              "phone": -1
+            },
+            "clobbered": false,
+            "filePhase": "empty",
+            "usedExpired": false,
+            "fileAccount": "none",
+            "fileGen": 0
+          },
+          "sourceRef": {
+            "file": "src/auth/oauth.ts",
+            "line": 127,
+            "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+          }
+        },
+        {
+          "action": "FinishDesk",
+          "state": {
+            "pending": {
+              "desk": -1,
+              "phone": -1
+            },
+            "clobbered": false,
+            "filePhase": "fresh",
+            "usedExpired": false,
+            "fileAccount": "desk",
+            "fileGen": 1
+          },
+          "sourceRef": {
+            "file": "src/auth/oauth.ts",
+            "line": 118,
+            "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+          }
+        },
+        {
+          "action": "Tick",
+          "state": {
+            "pending": {
+              "desk": -1,
+              "phone": -1
+            },
+            "clobbered": false,
+            "filePhase": "expiring",
+            "usedExpired": false,
+            "fileAccount": "desk",
+            "fileGen": 1
+          },
+          "sourceRef": {
+            "file": "src/main.ts",
+            "line": 155,
+            "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+          }
+        },
+        {
+          "action": "Tick",
+          "state": {
+            "pending": {
+              "desk": -1,
+              "phone": -1
+            },
+            "clobbered": false,
+            "filePhase": "expired",
+            "usedExpired": false,
+            "fileAccount": "desk",
+            "fileGen": 1
+          },
+          "sourceRef": {
+            "file": "src/main.ts",
+            "line": 155,
+            "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+          }
+        },
+        {
+          "action": "UseDesk",
+          "state": {
+            "pending": {
+              "desk": -1,
+              "phone": -1
+            },
+            "clobbered": false,
+            "filePhase": "expired",
+            "usedExpired": true,
+            "fileAccount": "desk",
+            "fileGen": 1
+          },
+          "sourceRef": {
+            "file": "src/main.ts",
+            "line": 155,
+            "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+          }
+        }
+      ]
+    },
+    {
+      "name": "NoStaleClobber",
+      "kind": "safety",
+      "text": "A sign-in that started earlier does not overwrite a token written after it started.",
+      "expected": true,
+      "holds": false,
+      "trace": [
+        {
+          "action": "Init",
+          "state": {
+            "pending": {
+              "desk": -1,
+              "phone": -1
+            },
+            "clobbered": false,
+            "filePhase": "empty",
+            "usedExpired": false,
+            "fileAccount": "none",
+            "fileGen": 0
+          }
+        },
+        {
+          "action": "StartDesk",
+          "state": {
+            "pending": {
+              "desk": 0,
+              "phone": -1
+            },
+            "clobbered": false,
+            "filePhase": "empty",
+            "usedExpired": false,
+            "fileAccount": "none",
+            "fileGen": 0
+          },
+          "sourceRef": {
+            "file": "src/auth/oauth.ts",
+            "line": 127,
+            "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+          }
+        },
+        {
+          "action": "StartPhone",
+          "state": {
+            "pending": {
+              "desk": 0,
+              "phone": 0
+            },
+            "clobbered": false,
+            "filePhase": "empty",
+            "usedExpired": false,
+            "fileAccount": "none",
+            "fileGen": 0
+          },
+          "sourceRef": {
+            "file": "src/auth/oauth.ts",
+            "line": 127,
+            "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+          }
+        },
+        {
+          "action": "FinishDesk",
+          "state": {
+            "pending": {
+              "desk": -1,
+              "phone": 0
+            },
+            "clobbered": false,
+            "filePhase": "fresh",
+            "usedExpired": false,
+            "fileAccount": "desk",
+            "fileGen": 1
+          },
+          "sourceRef": {
+            "file": "src/auth/oauth.ts",
+            "line": 118,
+            "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+          }
+        },
+        {
+          "action": "FinishPhone",
+          "state": {
+            "pending": {
+              "desk": -1,
+              "phone": -1
+            },
+            "clobbered": true,
+            "filePhase": "fresh",
+            "usedExpired": false,
+            "fileAccount": "phone",
+            "fileGen": 2
+          },
+          "sourceRef": {
+            "file": "src/auth/oauth.ts",
+            "line": 118,
+            "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+          }
+        }
+      ]
+    }
+  ],
+  "status": "violation",
+  "trace": [
+    {
+      "action": "Init",
+      "state": {
+        "pending": {
+          "desk": -1,
+          "phone": -1
+        },
+        "clobbered": false,
+        "filePhase": "empty",
+        "usedExpired": false,
+        "fileAccount": "none",
+        "fileGen": 0
+      }
+    },
+    {
+      "action": "StartDesk",
+      "state": {
+        "pending": {
+          "desk": 0,
+          "phone": -1
+        },
+        "clobbered": false,
+        "filePhase": "empty",
+        "usedExpired": false,
+        "fileAccount": "none",
+        "fileGen": 0
+      },
+      "sourceRef": {
+        "file": "src/auth/oauth.ts",
+        "line": 127,
+        "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+      }
+    },
+    {
+      "action": "FinishDesk",
+      "state": {
+        "pending": {
+          "desk": -1,
+          "phone": -1
+        },
+        "clobbered": false,
+        "filePhase": "fresh",
+        "usedExpired": false,
+        "fileAccount": "desk",
+        "fileGen": 1
+      },
+      "sourceRef": {
+        "file": "src/auth/oauth.ts",
+        "line": 118,
+        "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+      }
+    },
+    {
+      "action": "Tick",
+      "state": {
+        "pending": {
+          "desk": -1,
+          "phone": -1
+        },
+        "clobbered": false,
+        "filePhase": "expiring",
+        "usedExpired": false,
+        "fileAccount": "desk",
+        "fileGen": 1
+      },
+      "sourceRef": {
+        "file": "src/main.ts",
+        "line": 155,
+        "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+      }
+    },
+    {
+      "action": "Tick",
+      "state": {
+        "pending": {
+          "desk": -1,
+          "phone": -1
+        },
+        "clobbered": false,
+        "filePhase": "expired",
+        "usedExpired": false,
+        "fileAccount": "desk",
+        "fileGen": 1
+      },
+      "sourceRef": {
+        "file": "src/main.ts",
+        "line": 155,
+        "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+      }
+    },
+    {
+      "action": "UseDesk",
+      "state": {
+        "pending": {
+          "desk": -1,
+          "phone": -1
+        },
+        "clobbered": false,
+        "filePhase": "expired",
+        "usedExpired": true,
+        "fileAccount": "desk",
+        "fileGen": 1
+      },
+      "sourceRef": {
+        "file": "src/main.ts",
+        "line": 155,
+        "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+      }
+    }
+  ],
+  "chartSvg": "charts/school-pulse-oauth-blueprint.svg",
+  "chartField": "charts/school-pulse-oauth-field.svg"
+}

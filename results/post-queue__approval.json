@@ -1,0 +1,247 @@
+{
+  "id": "post-queue/approval",
+  "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b",
+  "repo": "https://github.com/BoydVC/x-post-queue",
+  "states": 115,
+  "invariants": [
+    {
+      "name": "RevokeSticks",
+      "kind": "safety",
+      "text": "An edit that cleared approval is not overwritten by an older mark-posted.",
+      "expected": true,
+      "holds": false,
+      "trace": [
+        {
+          "action": "Init",
+          "state": {
+            "snapText": "t1",
+            "revoked": false,
+            "text": "t1",
+            "approvedText": "",
+            "loaded": false,
+            "status": "draft",
+            "snapApproved": "",
+            "version": 0,
+            "snapStatus": "draft"
+          }
+        },
+        {
+          "action": "Approve",
+          "state": {
+            "snapText": "t1",
+            "revoked": false,
+            "text": "t1",
+            "approvedText": "t1",
+            "loaded": false,
+            "status": "approved",
+            "snapApproved": "",
+            "version": 1,
+            "snapStatus": "draft"
+          },
+          "sourceRef": {
+            "file": "server.py",
+            "line": 780,
+            "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+          }
+        },
+        {
+          "action": "Load",
+          "state": {
+            "snapText": "t1",
+            "revoked": false,
+            "text": "t1",
+            "approvedText": "t1",
+            "loaded": true,
+            "status": "approved",
+            "snapApproved": "t1",
+            "version": 1,
+            "snapStatus": "approved"
+          },
+          "sourceRef": {
+            "file": "server.py",
+            "line": 775,
+            "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+          }
+        },
+        {
+          "action": "Edit",
+          "state": {
+            "snapText": "t1",
+            "revoked": true,
+            "text": "t2",
+            "approvedText": "",
+            "loaded": true,
+            "status": "draft",
+            "snapApproved": "t1",
+            "version": 2,
+            "snapStatus": "approved"
+          },
+          "sourceRef": {
+            "file": "server.py",
+            "line": 763,
+            "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+          }
+        },
+        {
+          "action": "Arm",
+          "state": {
+            "snapText": "t1",
+            "revoked": true,
+            "text": "t2",
+            "approvedText": "",
+            "loaded": true,
+            "status": "draft",
+            "snapApproved": "t1",
+            "version": 2,
+            "snapStatus": "posted"
+          },
+          "sourceRef": {
+            "file": "server.py",
+            "line": 794,
+            "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+          }
+        },
+        {
+          "action": "CommitSnap",
+          "state": {
+            "snapText": "t1",
+            "revoked": true,
+            "text": "t1",
+            "approvedText": "t1",
+            "loaded": false,
+            "status": "posted",
+            "snapApproved": "t1",
+            "version": 3,
+            "snapStatus": "posted"
+          },
+          "sourceRef": {
+            "file": "server.py",
+            "line": 799,
+            "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+          }
+        }
+      ]
+    },
+    {
+      "name": "NeverPostedUnapproved",
+      "kind": "safety",
+      "text": "Posted text was approved on the snapshot that got saved.",
+      "expected": false,
+      "holds": true
+    }
+  ],
+  "status": "violation",
+  "trace": [
+    {
+      "action": "Init",
+      "state": {
+        "snapText": "t1",
+        "revoked": false,
+        "text": "t1",
+        "approvedText": "",
+        "loaded": false,
+        "status": "draft",
+        "snapApproved": "",
+        "version": 0,
+        "snapStatus": "draft"
+      }
+    },
+    {
+      "action": "Approve",
+      "state": {
+        "snapText": "t1",
+        "revoked": false,
+        "text": "t1",
+        "approvedText": "t1",
+        "loaded": false,
+        "status": "approved",
+        "snapApproved": "",
+        "version": 1,
+        "snapStatus": "draft"
+      },
+      "sourceRef": {
+        "file": "server.py",
+        "line": 780,
+        "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+      }
+    },
+    {
+      "action": "Load",
+      "state": {
+        "snapText": "t1",
+        "revoked": false,
+        "text": "t1",
+        "approvedText": "t1",
+        "loaded": true,
+        "status": "approved",
+        "snapApproved": "t1",
+        "version": 1,
+        "snapStatus": "approved"
+      },
+      "sourceRef": {
+        "file": "server.py",
+        "line": 775,
+        "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+      }
+    },
+    {
+      "action": "Edit",
+      "state": {
+        "snapText": "t1",
+        "revoked": true,
+        "text": "t2",
+        "approvedText": "",
+        "loaded": true,
+        "status": "draft",
+        "snapApproved": "t1",
+        "version": 2,
+        "snapStatus": "approved"
+      },
+      "sourceRef": {
+        "file": "server.py",
+        "line": 763,
+        "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+      }
+    },
+    {
+      "action": "Arm",
+      "state": {
+        "snapText": "t1",
+        "revoked": true,
+        "text": "t2",
+        "approvedText": "",
+        "loaded": true,
+        "status": "draft",
+        "snapApproved": "t1",
+        "version": 2,
+        "snapStatus": "posted"
+      },
+      "sourceRef": {
+        "file": "server.py",
+        "line": 794,
+        "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+      }
+    },
+    {
+      "action": "CommitSnap",
+      "state": {
+        "snapText": "t1",
+        "revoked": true,
+        "text": "t1",
+        "approvedText": "t1",
+        "loaded": false,
+        "status": "posted",
+        "snapApproved": "t1",
+        "version": 3,
+        "snapStatus": "posted"
+      },
+      "sourceRef": {
+        "file": "server.py",
+        "line": 799,
+        "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+      }
+    }
+  ],
+  "chartSvg": "charts/post-queue-approval-blueprint.svg",
+  "chartField": "charts/post-queue-approval-field.svg"
+}

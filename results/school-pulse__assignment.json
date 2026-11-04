@@ -1,0 +1,25 @@
+{
+  "id": "school-pulse/assignment",
+  "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+  "repo": "https://github.com/BoydVC/school-pulse",
+  "states": 4,
+  "invariants": [
+    {
+      "name": "GradedHasPoints",
+      "kind": "safety",
+      "text": "A graded assignment has points.",
+      "expected": false,
+      "holds": true
+    },
+    {
+      "name": "MissingIsUngraded",
+      "kind": "safety",
+      "text": "Missing work is not graded.",
+      "expected": false,
+      "holds": true
+    }
+  ],
+  "status": "pass",
+  "chartSvg": "charts/school-pulse-assignment-blueprint.svg",
+  "chartField": "charts/school-pulse-assignment-field.svg"
+}

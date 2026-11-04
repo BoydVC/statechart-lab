@@ -1,0 +1,79 @@
+{
+  "id": "post-queue/approval",
+  "title": "Stale mark-posted",
+  "blurb": "Mark posted saves a copy it loaded before an edit cleared approval.",
+  "group": "lab",
+  "order": 6,
+  "stateKey": "status",
+  "nodes": [
+    {
+      "id": "draft",
+      "label": "Draft",
+      "x": 70,
+      "y": 150
+    },
+    {
+      "id": "approved",
+      "label": "Approved",
+      "x": 230,
+      "y": 70
+    },
+    {
+      "id": "posted",
+      "label": "Posted",
+      "x": 420,
+      "y": 160
+    }
+  ],
+  "edges": [
+    {
+      "from": "draft",
+      "to": "approved",
+      "action": "Approve",
+      "label": "Approve"
+    },
+    {
+      "from": "approved",
+      "to": "approved",
+      "action": "Load",
+      "label": "Load a copy"
+    },
+    {
+      "from": "approved",
+      "to": "draft",
+      "action": "Edit",
+      "label": "Edit clears approval"
+    },
+    {
+      "from": "draft",
+      "to": "draft",
+      "action": "Arm",
+      "label": "Old copy marks posted"
+    },
+    {
+      "from": "draft",
+      "to": "posted",
+      "action": "CommitSnap",
+      "label": "Old copy is saved",
+      "tone": "danger"
+    }
+  ],
+  "story": [
+    {
+      "phase": "draft",
+      "label": "A synthetic draft."
+    },
+    {
+      "phase": "approved",
+      "label": "It is approved, then a copy is loaded."
+    },
+    {
+      "phase": "draft",
+      "label": "An edit clears approval."
+    },
+    {
+      "phase": "posted",
+      "label": "The older save writes posted."
+    }
+  ]
+}

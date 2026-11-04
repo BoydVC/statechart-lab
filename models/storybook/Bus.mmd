@@ -1,0 +1,8 @@
+---
+title: "Bus morning"
+---
+stateDiagram-v2
+  home --> waiting: Walk
+  waiting --> boarded: Board
+  boarded --> riding: Ride
+  riding --> school: Arrive
