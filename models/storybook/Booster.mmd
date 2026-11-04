@@ -1,0 +1,11 @@
+---
+title: "Booster catch"
+---
+stateDiagram-v2
+  pad --> ascent: Launch
+  ascent --> entry: Entry
+  entry --> arms: Arms ready
+  entry --> window: Arms late
+  arms --> window: Window
+  window --> caught: Catch
+  window --> missed: Miss

@@ -1,0 +1,9 @@
+---
+title: "Play clock"
+---
+stateDiagram-v2
+  ready --> running: Start
+  running --> timeout: Timeout
+  timeout --> running: Resume
+  running --> snapped: Snap
+  running --> expired: Hits zero

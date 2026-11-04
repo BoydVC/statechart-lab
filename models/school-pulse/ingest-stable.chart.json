@@ -1,0 +1,56 @@
+{
+  "id": "school-pulse/ingest-stable",
+  "title": "Stable source id",
+  "blurb": "The same source id stays one row when the publish callback throws.",
+  "group": "lab",
+  "order": 3,
+  "stateKey": "phase",
+  "nodes": [
+    {
+      "id": "ready",
+      "label": "Ready",
+      "x": 90,
+      "y": 150
+    },
+    {
+      "id": "callback",
+      "label": "Committed",
+      "x": 260,
+      "y": 80
+    },
+    {
+      "id": "done",
+      "label": "Done",
+      "x": 420,
+      "y": 150
+    }
+  ],
+  "edges": [
+    {
+      "from": "ready",
+      "to": "callback",
+      "action": "Commit",
+      "label": "Upsert the row"
+    },
+    {
+      "from": "callback",
+      "to": "done",
+      "action": "CallbackOk",
+      "label": "Done"
+    }
+  ],
+  "story": [
+    {
+      "phase": "ready",
+      "label": "A stable source id arrives."
+    },
+    {
+      "phase": "callback",
+      "label": "The unique key keeps one row."
+    },
+    {
+      "phase": "done",
+      "label": "A retry does not add another."
+    }
+  ]
+}

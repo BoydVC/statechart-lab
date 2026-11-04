@@ -1,0 +1,9 @@
+---
+title: "Cue and skip"
+---
+stateDiagram-v2
+  draft --> approved: Approve
+  approved --> cued: Cue
+  cued --> posted: Post after cue
+  approved --> posted: Skip the cue
+  posted --> skipped: Skip after post

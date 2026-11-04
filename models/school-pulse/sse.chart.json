@@ -1,0 +1,86 @@
+{
+  "id": "school-pulse/sse",
+  "title": "Live pill",
+  "blurb": "The pill turns on when the socket opens, before a missed pulse is refreshed.",
+  "group": "lab",
+  "order": 4,
+  "stateKey": "link",
+  "actionNode": {
+    "Init": "live",
+    "Drop": "down",
+    "Publish": "missed",
+    "Connect": "false-live",
+    "Poll": "live"
+  },
+  "nodes": [
+    {
+      "id": "live",
+      "label": "Live",
+      "x": 70,
+      "y": 80
+    },
+    {
+      "id": "down",
+      "label": "Down",
+      "x": 220,
+      "y": 80
+    },
+    {
+      "id": "missed",
+      "label": "Missed",
+      "x": 370,
+      "y": 80
+    },
+    {
+      "id": "false-live",
+      "label": "Pill on",
+      "x": 370,
+      "y": 200
+    }
+  ],
+  "edges": [
+    {
+      "from": "live",
+      "to": "down",
+      "action": "Drop",
+      "label": "Stream errors"
+    },
+    {
+      "from": "down",
+      "to": "missed",
+      "action": "Publish",
+      "label": "Pulse while down"
+    },
+    {
+      "from": "missed",
+      "to": "false-live",
+      "action": "Connect",
+      "label": "Pill on, no refresh",
+      "tone": "danger"
+    },
+    {
+      "from": "false-live",
+      "to": "live",
+      "action": "Poll",
+      "label": "Minute poll"
+    }
+  ],
+  "story": [
+    {
+      "phase": "live",
+      "label": "The pill is on and the page is current."
+    },
+    {
+      "phase": "down",
+      "label": "The stream drops."
+    },
+    {
+      "phase": "missed",
+      "label": "A pulse is published to nobody."
+    },
+    {
+      "phase": "false-live",
+      "label": "Reconnect lights the pill and skips refresh."
+    }
+  ]
+}

@@ -1,0 +1,196 @@
+{
+  "id": "school-pulse/ingest-retry",
+  "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+  "repo": "https://github.com/BoydVC/school-pulse",
+  "states": 6,
+  "invariants": [
+    {
+      "name": "AtMostOneRow",
+      "kind": "safety",
+      "text": "One inbox file ends as one assignment row, including a retry.",
+      "expected": true,
+      "holds": false,
+      "trace": [
+        {
+          "action": "Init",
+          "state": {
+            "changes": 0,
+            "rows": 0,
+            "attempt": 0,
+            "phase": "ready",
+            "threw": false
+          }
+        },
+        {
+          "action": "Commit",
+          "state": {
+            "changes": 1,
+            "rows": 1,
+            "attempt": 1,
+            "phase": "callback",
+            "threw": false
+          },
+          "sourceRef": {
+            "file": "src/ingest/watch.ts",
+            "line": 60,
+            "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+          }
+        },
+        {
+          "action": "CallbackThrows",
+          "state": {
+            "changes": 1,
+            "rows": 1,
+            "attempt": 1,
+            "phase": "ready",
+            "threw": true
+          },
+          "sourceRef": {
+            "file": "src/main.ts",
+            "line": 70,
+            "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+          }
+        },
+        {
+          "action": "Commit",
+          "state": {
+            "changes": 2,
+            "rows": 2,
+            "attempt": 2,
+            "phase": "callback",
+            "threw": true
+          },
+          "sourceRef": {
+            "file": "src/ingest/watch.ts",
+            "line": 60,
+            "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+          }
+        }
+      ]
+    },
+    {
+      "name": "NoExtraChange",
+      "kind": "safety",
+      "text": "A retry of the same file bytes does not append another change.",
+      "expected": true,
+      "holds": false,
+      "trace": [
+        {
+          "action": "Init",
+          "state": {
+            "changes": 0,
+            "rows": 0,
+            "attempt": 0,
+            "phase": "ready",
+            "threw": false
+          }
+        },
+        {
+          "action": "Commit",
+          "state": {
+            "changes": 1,
+            "rows": 1,
+            "attempt": 1,
+            "phase": "callback",
+            "threw": false
+          },
+          "sourceRef": {
+            "file": "src/ingest/watch.ts",
+            "line": 60,
+            "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+          }
+        },
+        {
+          "action": "CallbackThrows",
+          "state": {
+            "changes": 1,
+            "rows": 1,
+            "attempt": 1,
+            "phase": "ready",
+            "threw": true
+          },
+          "sourceRef": {
+            "file": "src/main.ts",
+            "line": 70,
+            "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+          }
+        },
+        {
+          "action": "Commit",
+          "state": {
+            "changes": 2,
+            "rows": 2,
+            "attempt": 2,
+            "phase": "callback",
+            "threw": true
+          },
+          "sourceRef": {
+            "file": "src/ingest/watch.ts",
+            "line": 60,
+            "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+          }
+        }
+      ]
+    }
+  ],
+  "status": "violation",
+  "trace": [
+    {
+      "action": "Init",
+      "state": {
+        "changes": 0,
+        "rows": 0,
+        "attempt": 0,
+        "phase": "ready",
+        "threw": false
+      }
+    },
+    {
+      "action": "Commit",
+      "state": {
+        "changes": 1,
+        "rows": 1,
+        "attempt": 1,
+        "phase": "callback",
+        "threw": false
+      },
+      "sourceRef": {
+        "file": "src/ingest/watch.ts",
+        "line": 60,
+        "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+      }
+    },
+    {
+      "action": "CallbackThrows",
+      "state": {
+        "changes": 1,
+        "rows": 1,
+        "attempt": 1,
+        "phase": "ready",
+        "threw": true
+      },
+      "sourceRef": {
+        "file": "src/main.ts",
+        "line": 70,
+        "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+      }
+    },
+    {
+      "action": "Commit",
+      "state": {
+        "changes": 2,
+        "rows": 2,
+        "attempt": 2,
+        "phase": "callback",
+        "threw": true
+      },
+      "sourceRef": {
+        "file": "src/ingest/watch.ts",
+        "line": 60,
+        "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+      }
+    }
+  ],
+  "chartSvg": "charts/school-pulse-ingest-retry-blueprint.svg",
+  "chartField": "charts/school-pulse-ingest-retry-field.svg"
+}

@@ -1,0 +1,8 @@
+---
+title: "Silent stream"
+---
+stateDiagram-v2
+  off --> live: Open
+  live --> silent: No ping
+  live --> down: Socket error
+  down --> live: Browser retries

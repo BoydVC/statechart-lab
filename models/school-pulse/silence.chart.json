@@ -1,0 +1,75 @@
+{
+  "id": "school-pulse/silence",
+  "title": "Silent stream",
+  "blurb": "An open stream that stops sending never starts a reconnect timer.",
+  "group": "lab",
+  "order": 5,
+  "stateKey": "phase",
+  "nodes": [
+    {
+      "id": "off",
+      "label": "Off",
+      "x": 70,
+      "y": 150
+    },
+    {
+      "id": "live",
+      "label": "Live",
+      "x": 210,
+      "y": 70
+    },
+    {
+      "id": "silent",
+      "label": "Silent",
+      "x": 380,
+      "y": 70
+    },
+    {
+      "id": "down",
+      "label": "Down",
+      "x": 210,
+      "y": 220
+    }
+  ],
+  "edges": [
+    {
+      "from": "off",
+      "to": "live",
+      "action": "Open",
+      "label": "Open"
+    },
+    {
+      "from": "live",
+      "to": "silent",
+      "action": "Silence",
+      "label": "No ping",
+      "tone": "danger"
+    },
+    {
+      "from": "live",
+      "to": "down",
+      "action": "Error",
+      "label": "Socket error"
+    },
+    {
+      "from": "down",
+      "to": "live",
+      "action": "Reconnect",
+      "label": "Browser retries"
+    }
+  ],
+  "story": [
+    {
+      "phase": "off",
+      "label": "The page has not connected."
+    },
+    {
+      "phase": "live",
+      "label": "One EventSource is open."
+    },
+    {
+      "phase": "silent",
+      "label": "Nothing arrives, and nothing times out."
+    }
+  ]
+}

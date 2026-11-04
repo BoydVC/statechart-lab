@@ -1,0 +1,75 @@
+{
+  "id": "school-pulse/oauth",
+  "title": "Token file",
+  "blurb": "Two sign-ins write one file. Sync reads the access token after expires_at.",
+  "group": "lab",
+  "order": 1,
+  "stateKey": "filePhase",
+  "nodes": [
+    {
+      "id": "empty",
+      "label": "Empty",
+      "x": 70,
+      "y": 150
+    },
+    {
+      "id": "fresh",
+      "label": "Fresh",
+      "x": 200,
+      "y": 70
+    },
+    {
+      "id": "expiring",
+      "label": "Expiring",
+      "x": 340,
+      "y": 70
+    },
+    {
+      "id": "expired",
+      "label": "Expired",
+      "x": 470,
+      "y": 160
+    }
+  ],
+  "edges": [
+    {
+      "from": "empty",
+      "to": "fresh",
+      "action": "FinishDesk",
+      "label": "Sign-in writes the file"
+    },
+    {
+      "from": "fresh",
+      "to": "expiring",
+      "action": "Tick",
+      "label": "Time passes"
+    },
+    {
+      "from": "expiring",
+      "to": "expired",
+      "action": "Tick",
+      "label": "Past expires_at"
+    },
+    {
+      "from": "expired",
+      "to": "expired",
+      "action": "UseDesk",
+      "label": "Sync sends it",
+      "tone": "danger"
+    }
+  ],
+  "story": [
+    {
+      "phase": "empty",
+      "label": "No token file."
+    },
+    {
+      "phase": "fresh",
+      "label": "The sign-in stores access and refresh."
+    },
+    {
+      "phase": "expired",
+      "label": "Sync still sends the access token."
+    }
+  ]
+}

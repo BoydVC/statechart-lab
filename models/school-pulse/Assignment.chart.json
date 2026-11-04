@@ -1,0 +1,71 @@
+{
+  "id": "school-pulse/assignment",
+  "title": "Assignment flow",
+  "blurb": "A graded row needs points. Missing work stays ungraded.",
+  "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+  "group": "lab",
+  "order": 7,
+  "stateKey": "phase",
+  "poster": {
+    "kicker": "Homework",
+    "title": "Missing, turned in, graded",
+    "caption": "Missing work stays ungraded. A grade needs points.",
+    "scene": "assignment"
+  },
+  "invariantText": {
+    "GradedHasPoints": "A graded assignment has points.",
+    "MissingIsUngraded": "Missing work is not graded."
+  },
+  "nodes": [
+    {
+      "id": "missing",
+      "label": "Missing",
+      "x": 90,
+      "y": 150
+    },
+    {
+      "id": "turned_in",
+      "label": "Turned in",
+      "x": 260,
+      "y": 150
+    },
+    {
+      "id": "graded",
+      "label": "Graded",
+      "x": 430,
+      "y": 150
+    }
+  ],
+  "edges": [
+    {
+      "from": "missing",
+      "to": "turned_in",
+      "action": "TurnIn",
+      "label": "Turn in"
+    },
+    {
+      "from": "turned_in",
+      "to": "graded",
+      "action": "Grade",
+      "label": "Grade"
+    }
+  ],
+  "story": [
+    {
+      "phase": "missing",
+      "label": "The work is missing."
+    },
+    {
+      "phase": "turned_in",
+      "label": "It is turned in."
+    },
+    {
+      "phase": "turned_in",
+      "label": "Points are attached."
+    },
+    {
+      "phase": "graded",
+      "label": "A grade needs those points."
+    }
+  ]
+}

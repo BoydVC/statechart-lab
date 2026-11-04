@@ -1,0 +1,25 @@
+{
+  "id": "storybook/bus",
+  "commit": "none",
+  "repo": "",
+  "states": 5,
+  "invariants": [
+    {
+      "name": "ArriveAfterBoarding",
+      "kind": "safety",
+      "text": "The bus arrives at school after someone boarded.",
+      "expected": false,
+      "holds": true
+    },
+    {
+      "name": "NoRideBeforeBoard",
+      "kind": "safety",
+      "text": "A rider is on the bus only after boarding.",
+      "expected": false,
+      "holds": true
+    }
+  ],
+  "status": "pass",
+  "chartSvg": "charts/storybook-bus-blueprint.svg",
+  "chartField": "charts/storybook-bus-field.svg"
+}

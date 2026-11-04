@@ -1,0 +1,413 @@
+{
+  "tlc": {
+    "version": "1.7.4",
+    "url": "https://github.com/tlaplus/tlaplus/releases/download/v1.7.4/tla2tools.jar",
+    "sha256": "936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88"
+  },
+  "machines": [
+    {
+      "id": "school-pulse/oauth",
+      "spec": "models/school-pulse/OAuth.tla",
+      "config": "models/school-pulse/OAuth.cfg",
+      "chart": "models/school-pulse/oauth.mmd",
+      "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+      "repo": "https://github.com/BoydVC/school-pulse",
+      "invariants": [
+        {
+          "name": "TokenFileCoherent",
+          "kind": "safety",
+          "text": "An empty token file names no account, and a stored token names one.",
+          "expected": false
+        },
+        {
+          "name": "NotExpiredUse",
+          "kind": "safety",
+          "text": "A sync does not read an access token after it has expired.",
+          "expected": true
+        },
+        {
+          "name": "NoStaleClobber",
+          "kind": "safety",
+          "text": "A sign-in that started earlier does not overwrite a token written after it started.",
+          "expected": true
+        }
+      ],
+      "sources": {
+        "StartDesk": "src/auth/oauth.ts:127",
+        "StartPhone": "src/auth/oauth.ts:127",
+        "FinishDesk": "src/auth/oauth.ts:118",
+        "FinishPhone": "src/auth/oauth.ts:118",
+        "Tick": "src/main.ts:155",
+        "UseDesk": "src/main.ts:155",
+        "UsePhone": "src/main.ts:155"
+      },
+      "view": "models/school-pulse/oauth.chart.json"
+    },
+    {
+      "id": "school-pulse/ingest-retry",
+      "spec": "models/school-pulse/Ingest.tla",
+      "config": "models/school-pulse/IngestToken.cfg",
+      "chart": "models/school-pulse/ingest-token.mmd",
+      "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+      "repo": "https://github.com/BoydVC/school-pulse",
+      "invariants": [
+        {
+          "name": "AtMostOneRow",
+          "kind": "safety",
+          "text": "One inbox file ends as one assignment row, including a retry.",
+          "expected": true
+        },
+        {
+          "name": "NoExtraChange",
+          "kind": "safety",
+          "text": "A retry of the same file bytes does not append another change.",
+          "expected": true
+        }
+      ],
+      "sources": {
+        "Commit": "src/ingest/watch.ts:60",
+        "CallbackThrows": "src/main.ts:70",
+        "CallbackOk": "src/main.ts:74"
+      },
+      "view": "models/school-pulse/ingest-retry.chart.json"
+    },
+    {
+      "id": "school-pulse/ingest-stable",
+      "spec": "models/school-pulse/Ingest.tla",
+      "config": "models/school-pulse/IngestStable.cfg",
+      "chart": "models/school-pulse/ingest-stable.mmd",
+      "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+      "repo": "https://github.com/BoydVC/school-pulse",
+      "invariants": [
+        {
+          "name": "AtMostOneRow",
+          "kind": "safety",
+          "text": "A stable source id stays one row when the publish callback throws and the watcher retries.",
+          "expected": false
+        },
+        {
+          "name": "NoExtraChange",
+          "kind": "safety",
+          "text": "A stable source id does not grow a second change on that retry.",
+          "expected": false
+        }
+      ],
+      "sources": {
+        "Commit": "src/ingest/ingest.ts:97",
+        "CallbackThrows": "src/ingest/watch.ts:66",
+        "CallbackOk": "src/ingest/watch.ts:67"
+      },
+      "view": "models/school-pulse/ingest-stable.chart.json"
+    },
+    {
+      "id": "school-pulse/sse",
+      "spec": "models/school-pulse/Sse.tla",
+      "config": "models/school-pulse/Sse.cfg",
+      "chart": "models/school-pulse/sse.mmd",
+      "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+      "repo": "https://github.com/BoydVC/school-pulse",
+      "invariants": [
+        {
+          "name": "LiveMeansCaughtUp",
+          "kind": "safety",
+          "text": "The live pill is on only after the page has caught up with pulses it missed.",
+          "expected": true
+        },
+        {
+          "name": "PillMatchesLink",
+          "kind": "safety",
+          "text": "The pill is on exactly when the stream is up.",
+          "expected": false
+        }
+      ],
+      "sources": {
+        "Drop": "web/app.ts:476",
+        "Publish": "src/server/hub.ts:26",
+        "Connect": "web/app.ts:472",
+        "Poll": "web/app.ts:100"
+      },
+      "view": "models/school-pulse/sse.chart.json"
+    },
+    {
+      "id": "post-queue/approval",
+      "spec": "models/post-queue/Queue.tla",
+      "config": "models/post-queue/Queue.cfg",
+      "chart": "models/post-queue/queue.mmd",
+      "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b",
+      "repo": "https://github.com/BoydVC/x-post-queue",
+      "invariants": [
+        {
+          "name": "RevokeSticks",
+          "kind": "safety",
+          "text": "An edit that cleared approval is not overwritten by an older mark-posted.",
+          "expected": true
+        },
+        {
+          "name": "NeverPostedUnapproved",
+          "kind": "safety",
+          "text": "Posted text was approved on the snapshot that got saved.",
+          "expected": false
+        }
+      ],
+      "sources": {
+        "Approve": "server.py:780",
+        "Edit": "server.py:763",
+        "Cue": "server.py:788",
+        "PostedFresh": "server.py:794",
+        "Load": "server.py:775",
+        "Arm": "server.py:794",
+        "CommitSnap": "server.py:799"
+      },
+      "view": "models/post-queue/approval.chart.json"
+    },
+    {
+      "id": "draft-day/pipeline",
+      "spec": "models/draft-day/Pipeline.tla",
+      "config": "models/draft-day/Pipeline.cfg",
+      "chart": "models/draft-day/pipeline.mmd",
+      "commit": "7fb564d8d974db4ad3c8584a0b9b1f4e35a8ea96",
+      "repo": "https://github.com/BoydVC/draft-day",
+      "invariants": [
+        {
+          "name": "EachSeatJudgedOnce",
+          "kind": "safety",
+          "text": "Each seat is judged once.",
+          "expected": false
+        },
+        {
+          "name": "NoMergeWithoutApproval",
+          "kind": "safety",
+          "text": "A merge happens only after approval.",
+          "expected": false
+        }
+      ],
+      "sources": {
+        "ToSpec": "demo/app.js:111",
+        "Seat": "demo/app.js:156",
+        "JudgeS1": "demo/app.js:15",
+        "JudgeS2": "demo/app.js:15",
+        "FinishJudge": "demo/app.js:156",
+        "Graft": "demo/app.js:156",
+        "Physical": "demo/app.js:167",
+        "OpenDraft": "demo/app.js:167",
+        "Approve": "demo/index.html:129",
+        "Merge": "demo/app.js:177"
+      },
+      "view": "models/draft-day/pipeline.chart.json"
+    },
+    {
+      "id": "session-owner/lease",
+      "spec": "models/session-owner/Session.tla",
+      "config": "models/session-owner/Session.cfg",
+      "chart": "models/session-owner/session.mmd",
+      "commit": "none",
+      "repo": "",
+      "invariants": [
+        {
+          "name": "NoSendOnStaleLease",
+          "kind": "safety",
+          "text": "A message is not in flight on a stale lease.",
+          "expected": false
+        },
+        {
+          "name": "StaleSessionMustReauth",
+          "kind": "safety",
+          "text": "After the lease goes stale, the session is active again only once someone has signed in.",
+          "expected": false
+        }
+      ],
+      "sources": {},
+      "view": "models/session-owner/session.chart.json"
+    },
+    {
+      "id": "school-pulse/silence",
+      "spec": "models/school-pulse/Silence.tla",
+      "config": "models/school-pulse/Silence.cfg",
+      "chart": "models/school-pulse/silence.mmd",
+      "view": "models/school-pulse/silence.chart.json",
+      "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+      "repo": "https://github.com/BoydVC/school-pulse",
+      "invariants": [
+        {
+          "name": "SilentStreamReconnects",
+          "kind": "safety",
+          "text": "A stream that stops sending is reconnected.",
+          "expected": true
+        },
+        {
+          "name": "AtMostOneSocket",
+          "kind": "safety",
+          "text": "The page opens one event stream.",
+          "expected": false
+        }
+      ],
+      "sources": {
+        "Open": "web/app.ts:466",
+        "Silence": "web/app.ts:466",
+        "Error": "web/app.ts:476",
+        "Reconnect": "web/app.ts:472"
+      }
+    },
+    {
+      "id": "school-pulse/assignment",
+      "spec": "models/school-pulse/Assignment.tla",
+      "config": "models/school-pulse/Assignment.cfg",
+      "chart": "models/school-pulse/assignment.mmd",
+      "view": "models/school-pulse/Assignment.chart.json",
+      "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+      "repo": "https://github.com/BoydVC/school-pulse",
+      "invariants": [
+        {
+          "name": "GradedHasPoints",
+          "kind": "safety",
+          "text": "A graded assignment has points.",
+          "expected": false
+        },
+        {
+          "name": "MissingIsUngraded",
+          "kind": "safety",
+          "text": "Missing work is not graded.",
+          "expected": false
+        }
+      ],
+      "sources": {
+        "TurnIn": "src/domain/enforce.ts:33",
+        "Attach": "src/domain/enforce.ts:70",
+        "Grade": "src/domain/enforce.ts:70"
+      }
+    },
+    {
+      "id": "post-queue/status",
+      "spec": "models/post-queue/Status.tla",
+      "config": "models/post-queue/Status.cfg",
+      "chart": "models/post-queue/status.mmd",
+      "view": "models/post-queue/status.chart.json",
+      "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b",
+      "repo": "https://github.com/BoydVC/x-post-queue",
+      "invariants": [
+        {
+          "name": "PostedRequiresApproval",
+          "kind": "safety",
+          "text": "Posted happens only after approval.",
+          "expected": false
+        },
+        {
+          "name": "ScheduledBeforePosted",
+          "kind": "safety",
+          "text": "Posted happens only after the item was cued.",
+          "expected": true
+        },
+        {
+          "name": "SkipOnlyBeforePost",
+          "kind": "safety",
+          "text": "Skip does not run after posted.",
+          "expected": true
+        }
+      ],
+      "sources": {
+        "Approve": "server.py:780",
+        "Cue": "server.py:788",
+        "PostFromCued": "server.py:794",
+        "PostFromApproved": "server.py:794",
+        "Skip": "server.py:786",
+        "Edit": "server.py:763"
+      }
+    },
+    {
+      "id": "storybook/play-clock",
+      "spec": "models/storybook/PlayClock.tla",
+      "config": "models/storybook/PlayClock.cfg",
+      "chart": "models/storybook/PlayClock.mmd",
+      "view": "models/storybook/PlayClock.chart.json",
+      "commit": "none",
+      "repo": "",
+      "invariants": [
+        {
+          "name": "NoSnapAtZero",
+          "kind": "safety",
+          "text": "The ball is not snapped at zero.",
+          "expected": false
+        },
+        {
+          "name": "TimeoutFreezes",
+          "kind": "safety",
+          "text": "A timeout holds the clock where it stopped.",
+          "expected": false
+        }
+      ],
+      "sources": {}
+    },
+    {
+      "id": "storybook/replay",
+      "spec": "models/storybook/Replay.tla",
+      "config": "models/storybook/Replay.cfg",
+      "chart": "models/storybook/Replay.mmd",
+      "view": "models/storybook/Replay.chart.json",
+      "commit": "none",
+      "repo": "",
+      "invariants": [
+        {
+          "name": "AtMostOneChallenge",
+          "kind": "safety",
+          "text": "A play has at most one challenge.",
+          "expected": false
+        },
+        {
+          "name": "ReviewNeedsChallenge",
+          "kind": "safety",
+          "text": "Review runs only after a challenge.",
+          "expected": false
+        }
+      ],
+      "sources": {}
+    },
+    {
+      "id": "storybook/bus",
+      "spec": "models/storybook/Bus.tla",
+      "config": "models/storybook/Bus.cfg",
+      "chart": "models/storybook/Bus.mmd",
+      "view": "models/storybook/Bus.chart.json",
+      "commit": "none",
+      "repo": "",
+      "invariants": [
+        {
+          "name": "ArriveAfterBoarding",
+          "kind": "safety",
+          "text": "The bus arrives at school after someone boarded.",
+          "expected": false
+        },
+        {
+          "name": "NoRideBeforeBoard",
+          "kind": "safety",
+          "text": "A rider is on the bus only after boarding.",
+          "expected": false
+        }
+      ],
+      "sources": {}
+    },
+    {
+      "id": "storybook/booster",
+      "spec": "models/storybook/Booster.tla",
+      "config": "models/storybook/Booster.cfg",
+      "chart": "models/storybook/Booster.mmd",
+      "view": "models/storybook/Booster.chart.json",
+      "commit": "none",
+      "repo": "",
+      "invariants": [
+        {
+          "name": "CatchNeedsArms",
+          "kind": "safety",
+          "text": "The catch happens with the arms out.",
+          "expected": false
+        },
+        {
+          "name": "MissIsBare",
+          "kind": "safety",
+          "text": "A miss is a catch without the arms.",
+          "expected": false
+        }
+      ],
+      "sources": {}
+    }
+  ]
+}

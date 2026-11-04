@@ -1,0 +1,24 @@
+---
+title: "One household session"
+---
+stateDiagram-v2
+  state "Legend" as legend {
+    lg0: Blocked
+    lg1: Ready
+  }
+  class lg0 orange
+  class lg1 teal
+  s0: Session fresh
+  s1: Lease stale
+  s2: Sending
+  s3: Sign-in required
+  [*] --> s0
+  s0 --> s1: the lease goes stale
+  s0 --> s2: send a message
+  s1 --> s3: sign in again
+  s2 --> s0: the send finishes
+  s3 --> s0: resume the session
+  class s0 teal
+  class s1 orange
+  class s2 teal
+  class s3 orange

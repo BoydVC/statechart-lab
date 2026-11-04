@@ -1,0 +1,1891 @@
+{
+  "generatedAt": "2026-11-04T00:32:24.699Z",
+  "tlaVersion": "1.7.4",
+  "machines": [
+    {
+      "id": "school-pulse/oauth",
+      "machine": "school-pulse/oauth",
+      "title": "Token file",
+      "blurb": "Two sign-ins write one file. Sync reads the access token after expires_at.",
+      "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+      "group": "lab",
+      "order": 1,
+      "states": 112,
+      "status": "violation",
+      "invariants": [
+        {
+          "name": "TokenFileCoherent",
+          "kind": "safety",
+          "text": "An empty token file names no account, and a stored token names one.",
+          "holds": true,
+          "expected": false
+        },
+        {
+          "name": "NotExpiredUse",
+          "kind": "safety",
+          "text": "A sync does not read an access token after it has expired.",
+          "holds": false,
+          "expected": true
+        },
+        {
+          "name": "NoStaleClobber",
+          "kind": "safety",
+          "text": "A sign-in that started earlier does not overwrite a token written after it started.",
+          "holds": false,
+          "expected": true
+        }
+      ],
+      "trace": [
+        {
+          "action": "Init",
+          "state": {
+            "pending": {
+              "desk": -1,
+              "phone": -1
+            },
+            "clobbered": false,
+            "filePhase": "empty",
+            "usedExpired": false,
+            "fileAccount": "none",
+            "fileGen": 0
+          },
+          "chartState": "empty",
+          "label": "Start"
+        },
+        {
+          "action": "StartDesk",
+          "state": {
+            "pending": {
+              "desk": 0,
+              "phone": -1
+            },
+            "clobbered": false,
+            "filePhase": "empty",
+            "usedExpired": false,
+            "fileAccount": "none",
+            "fileGen": 0
+          },
+          "chartState": "empty",
+          "label": "StartDesk",
+          "sourceRef": "src/auth/oauth.ts:127"
+        },
+        {
+          "action": "FinishDesk",
+          "state": {
+            "pending": {
+              "desk": -1,
+              "phone": -1
+            },
+            "clobbered": false,
+            "filePhase": "fresh",
+            "usedExpired": false,
+            "fileAccount": "desk",
+            "fileGen": 1
+          },
+          "chartState": "fresh",
+          "label": "Sign-in writes the file",
+          "sourceRef": "src/auth/oauth.ts:118"
+        },
+        {
+          "action": "Tick",
+          "state": {
+            "pending": {
+              "desk": -1,
+              "phone": -1
+            },
+            "clobbered": false,
+            "filePhase": "expiring",
+            "usedExpired": false,
+            "fileAccount": "desk",
+            "fileGen": 1
+          },
+          "chartState": "expiring",
+          "label": "Time passes",
+          "sourceRef": "src/main.ts:155"
+        },
+        {
+          "action": "Tick",
+          "state": {
+            "pending": {
+              "desk": -1,
+              "phone": -1
+            },
+            "clobbered": false,
+            "filePhase": "expired",
+            "usedExpired": false,
+            "fileAccount": "desk",
+            "fileGen": 1
+          },
+          "chartState": "expired",
+          "label": "Past expires_at",
+          "sourceRef": "src/main.ts:155"
+        },
+        {
+          "action": "UseDesk",
+          "state": {
+            "pending": {
+              "desk": -1,
+              "phone": -1
+            },
+            "clobbered": false,
+            "filePhase": "expired",
+            "usedExpired": true,
+            "fileAccount": "desk",
+            "fileGen": 1
+          },
+          "chartState": "expired",
+          "label": "Sync sends it",
+          "sourceRef": "src/main.ts:155"
+        }
+      ],
+      "story": [
+        {
+          "phase": "empty",
+          "label": "No token file."
+        },
+        {
+          "phase": "fresh",
+          "label": "The sign-in stores access and refresh."
+        },
+        {
+          "phase": "expired",
+          "label": "Sync still sends the access token."
+        }
+      ],
+      "chart": {
+        "nodes": [
+          {
+            "id": "empty",
+            "label": "Empty",
+            "x": 70,
+            "y": 150
+          },
+          {
+            "id": "fresh",
+            "label": "Fresh",
+            "x": 200,
+            "y": 70
+          },
+          {
+            "id": "expiring",
+            "label": "Expiring",
+            "x": 340,
+            "y": 70
+          },
+          {
+            "id": "expired",
+            "label": "Expired",
+            "x": 470,
+            "y": 160
+          }
+        ],
+        "edges": [
+          {
+            "from": "empty",
+            "to": "fresh",
+            "action": "FinishDesk",
+            "label": "Sign-in writes the file"
+          },
+          {
+            "from": "fresh",
+            "to": "expiring",
+            "action": "Tick",
+            "label": "Time passes"
+          },
+          {
+            "from": "expiring",
+            "to": "expired",
+            "action": "Tick",
+            "label": "Past expires_at"
+          },
+          {
+            "from": "expired",
+            "to": "expired",
+            "action": "UseDesk",
+            "label": "Sync sends it",
+            "tone": "danger"
+          }
+        ]
+      },
+      "bugId": "oauth-expired-use"
+    },
+    {
+      "id": "school-pulse/ingest-retry",
+      "machine": "school-pulse/ingest-retry",
+      "title": "Clock token retry",
+      "blurb": "A retried inbox file expands {{SP:NOW}} again and stores a second row.",
+      "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+      "group": "lab",
+      "order": 2,
+      "states": 6,
+      "status": "violation",
+      "invariants": [
+        {
+          "name": "AtMostOneRow",
+          "kind": "safety",
+          "text": "One inbox file ends as one assignment row, including a retry.",
+          "holds": false,
+          "expected": true
+        },
+        {
+          "name": "NoExtraChange",
+          "kind": "safety",
+          "text": "A retry of the same file bytes does not append another change.",
+          "holds": false,
+          "expected": true
+        }
+      ],
+      "trace": [
+        {
+          "action": "Init",
+          "state": {
+            "changes": 0,
+            "rows": 0,
+            "attempt": 0,
+            "phase": "ready",
+            "threw": false
+          },
+          "chartState": "ready",
+          "label": "Start"
+        },
+        {
+          "action": "Commit",
+          "state": {
+            "changes": 1,
+            "rows": 1,
+            "attempt": 1,
+            "phase": "callback",
+            "threw": false
+          },
+          "chartState": "callback",
+          "label": "Insert the row",
+          "sourceRef": "src/ingest/watch.ts:60"
+        },
+        {
+          "action": "CallbackThrows",
+          "state": {
+            "changes": 1,
+            "rows": 1,
+            "attempt": 1,
+            "phase": "ready",
+            "threw": true
+          },
+          "chartState": "ready",
+          "label": "Callback throws",
+          "sourceRef": "src/main.ts:70"
+        },
+        {
+          "action": "Commit",
+          "state": {
+            "changes": 2,
+            "rows": 2,
+            "attempt": 2,
+            "phase": "callback",
+            "threw": true
+          },
+          "chartState": "callback",
+          "label": "Insert the row",
+          "sourceRef": "src/ingest/watch.ts:60"
+        }
+      ],
+      "story": [
+        {
+          "phase": "ready",
+          "label": "The watcher reads the file."
+        },
+        {
+          "phase": "callback",
+          "label": "The row is committed, then the callback throws."
+        },
+        {
+          "phase": "ready",
+          "label": "The retry expands the clock token again."
+        }
+      ],
+      "chart": {
+        "nodes": [
+          {
+            "id": "ready",
+            "label": "Ready",
+            "x": 80,
+            "y": 150
+          },
+          {
+            "id": "callback",
+            "label": "Committed",
+            "x": 250,
+            "y": 70
+          },
+          {
+            "id": "done",
+            "label": "Done",
+            "x": 420,
+            "y": 150
+          }
+        ],
+        "edges": [
+          {
+            "from": "ready",
+            "to": "callback",
+            "action": "Commit",
+            "label": "Insert the row"
+          },
+          {
+            "from": "callback",
+            "to": "ready",
+            "action": "CallbackThrows",
+            "label": "Callback throws",
+            "tone": "danger"
+          },
+          {
+            "from": "callback",
+            "to": "done",
+            "action": "CallbackOk",
+            "label": "Callback returns"
+          }
+        ]
+      },
+      "bugId": "ingest-clock-retry"
+    },
+    {
+      "id": "school-pulse/ingest-stable",
+      "machine": "school-pulse/ingest-stable",
+      "title": "Stable source id",
+      "blurb": "The same source id stays one row when the publish callback throws.",
+      "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+      "group": "lab",
+      "order": 3,
+      "states": 6,
+      "status": "pass",
+      "invariants": [
+        {
+          "name": "AtMostOneRow",
+          "kind": "safety",
+          "text": "A stable source id stays one row when the publish callback throws and the watcher retries.",
+          "holds": true,
+          "expected": false
+        },
+        {
+          "name": "NoExtraChange",
+          "kind": "safety",
+          "text": "A stable source id does not grow a second change on that retry.",
+          "holds": true,
+          "expected": false
+        }
+      ],
+      "story": [
+        {
+          "phase": "ready",
+          "label": "A stable source id arrives."
+        },
+        {
+          "phase": "callback",
+          "label": "The unique key keeps one row."
+        },
+        {
+          "phase": "done",
+          "label": "A retry does not add another."
+        }
+      ],
+      "chart": {
+        "nodes": [
+          {
+            "id": "ready",
+            "label": "Ready",
+            "x": 90,
+            "y": 150
+          },
+          {
+            "id": "callback",
+            "label": "Committed",
+            "x": 260,
+            "y": 80
+          },
+          {
+            "id": "done",
+            "label": "Done",
+            "x": 420,
+            "y": 150
+          }
+        ],
+        "edges": [
+          {
+            "from": "ready",
+            "to": "callback",
+            "action": "Commit",
+            "label": "Upsert the row"
+          },
+          {
+            "from": "callback",
+            "to": "done",
+            "action": "CallbackOk",
+            "label": "Done"
+          }
+        ]
+      }
+    },
+    {
+      "id": "school-pulse/sse",
+      "machine": "school-pulse/sse",
+      "title": "Live pill",
+      "blurb": "The pill turns on when the socket opens, before a missed pulse is refreshed.",
+      "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+      "group": "lab",
+      "order": 4,
+      "states": 4,
+      "status": "violation",
+      "invariants": [
+        {
+          "name": "LiveMeansCaughtUp",
+          "kind": "safety",
+          "text": "The live pill is on only after the page has caught up with pulses it missed.",
+          "holds": false,
+          "expected": true
+        },
+        {
+          "name": "PillMatchesLink",
+          "kind": "safety",
+          "text": "The pill is on exactly when the stream is up.",
+          "holds": true,
+          "expected": false
+        }
+      ],
+      "trace": [
+        {
+          "action": "Init",
+          "state": {
+            "pending": false,
+            "view": "current",
+            "pill": "on",
+            "link": "up"
+          },
+          "chartState": "live",
+          "label": "Start"
+        },
+        {
+          "action": "Drop",
+          "state": {
+            "pending": false,
+            "view": "current",
+            "pill": "off",
+            "link": "down"
+          },
+          "chartState": "down",
+          "label": "Stream errors",
+          "sourceRef": "web/app.ts:476"
+        },
+        {
+          "action": "Publish",
+          "state": {
+            "pending": true,
+            "view": "stale",
+            "pill": "off",
+            "link": "down"
+          },
+          "chartState": "missed",
+          "label": "Pulse while down",
+          "sourceRef": "src/server/hub.ts:26"
+        },
+        {
+          "action": "Connect",
+          "state": {
+            "pending": true,
+            "view": "stale",
+            "pill": "on",
+            "link": "up"
+          },
+          "chartState": "false-live",
+          "label": "Pill on, no refresh",
+          "sourceRef": "web/app.ts:472"
+        }
+      ],
+      "story": [
+        {
+          "phase": "live",
+          "label": "The pill is on and the page is current."
+        },
+        {
+          "phase": "down",
+          "label": "The stream drops."
+        },
+        {
+          "phase": "missed",
+          "label": "A pulse is published to nobody."
+        },
+        {
+          "phase": "false-live",
+          "label": "Reconnect lights the pill and skips refresh."
+        }
+      ],
+      "chart": {
+        "nodes": [
+          {
+            "id": "live",
+            "label": "Live",
+            "x": 70,
+            "y": 80
+          },
+          {
+            "id": "down",
+            "label": "Down",
+            "x": 220,
+            "y": 80
+          },
+          {
+            "id": "missed",
+            "label": "Missed",
+            "x": 370,
+            "y": 80
+          },
+          {
+            "id": "false-live",
+            "label": "Pill on",
+            "x": 370,
+            "y": 200
+          }
+        ],
+        "edges": [
+          {
+            "from": "live",
+            "to": "down",
+            "action": "Drop",
+            "label": "Stream errors"
+          },
+          {
+            "from": "down",
+            "to": "missed",
+            "action": "Publish",
+            "label": "Pulse while down"
+          },
+          {
+            "from": "missed",
+            "to": "false-live",
+            "action": "Connect",
+            "label": "Pill on, no refresh",
+            "tone": "danger"
+          },
+          {
+            "from": "false-live",
+            "to": "live",
+            "action": "Poll",
+            "label": "Minute poll"
+          }
+        ]
+      },
+      "bugId": "sse-reconnect-gap"
+    },
+    {
+      "id": "post-queue/approval",
+      "machine": "post-queue/approval",
+      "title": "Stale mark-posted",
+      "blurb": "Mark posted saves a copy it loaded before an edit cleared approval.",
+      "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b",
+      "group": "lab",
+      "order": 6,
+      "states": 115,
+      "status": "violation",
+      "invariants": [
+        {
+          "name": "RevokeSticks",
+          "kind": "safety",
+          "text": "An edit that cleared approval is not overwritten by an older mark-posted.",
+          "holds": false,
+          "expected": true
+        },
+        {
+          "name": "NeverPostedUnapproved",
+          "kind": "safety",
+          "text": "Posted text was approved on the snapshot that got saved.",
+          "holds": true,
+          "expected": false
+        }
+      ],
+      "trace": [
+        {
+          "action": "Init",
+          "state": {
+            "snapText": "t1",
+            "revoked": false,
+            "text": "t1",
+            "approvedText": "",
+            "loaded": false,
+            "status": "draft",
+            "snapApproved": "",
+            "version": 0,
+            "snapStatus": "draft"
+          },
+          "chartState": "draft",
+          "label": "Start"
+        },
+        {
+          "action": "Approve",
+          "state": {
+            "snapText": "t1",
+            "revoked": false,
+            "text": "t1",
+            "approvedText": "t1",
+            "loaded": false,
+            "status": "approved",
+            "snapApproved": "",
+            "version": 1,
+            "snapStatus": "draft"
+          },
+          "chartState": "approved",
+          "label": "Approve",
+          "sourceRef": "server.py:780"
+        },
+        {
+          "action": "Load",
+          "state": {
+            "snapText": "t1",
+            "revoked": false,
+            "text": "t1",
+            "approvedText": "t1",
+            "loaded": true,
+            "status": "approved",
+            "snapApproved": "t1",
+            "version": 1,
+            "snapStatus": "approved"
+          },
+          "chartState": "approved",
+          "label": "Load a copy",
+          "sourceRef": "server.py:775"
+        },
+        {
+          "action": "Edit",
+          "state": {
+            "snapText": "t1",
+            "revoked": true,
+            "text": "t2",
+            "approvedText": "",
+            "loaded": true,
+            "status": "draft",
+            "snapApproved": "t1",
+            "version": 2,
+            "snapStatus": "approved"
+          },
+          "chartState": "draft",
+          "label": "Edit clears approval",
+          "sourceRef": "server.py:763"
+        },
+        {
+          "action": "Arm",
+          "state": {
+            "snapText": "t1",
+            "revoked": true,
+            "text": "t2",
+            "approvedText": "",
+            "loaded": true,
+            "status": "draft",
+            "snapApproved": "t1",
+            "version": 2,
+            "snapStatus": "posted"
+          },
+          "chartState": "draft",
+          "label": "Old copy marks posted",
+          "sourceRef": "server.py:794"
+        },
+        {
+          "action": "CommitSnap",
+          "state": {
+            "snapText": "t1",
+            "revoked": true,
+            "text": "t1",
+            "approvedText": "t1",
+            "loaded": false,
+            "status": "posted",
+            "snapApproved": "t1",
+            "version": 3,
+            "snapStatus": "posted"
+          },
+          "chartState": "posted",
+          "label": "Old copy is saved",
+          "sourceRef": "server.py:799"
+        }
+      ],
+      "story": [
+        {
+          "phase": "draft",
+          "label": "A synthetic draft."
+        },
+        {
+          "phase": "approved",
+          "label": "It is approved, then a copy is loaded."
+        },
+        {
+          "phase": "draft",
+          "label": "An edit clears approval."
+        },
+        {
+          "phase": "posted",
+          "label": "The older save writes posted."
+        }
+      ],
+      "chart": {
+        "nodes": [
+          {
+            "id": "draft",
+            "label": "Draft",
+            "x": 70,
+            "y": 150
+          },
+          {
+            "id": "approved",
+            "label": "Approved",
+            "x": 230,
+            "y": 70
+          },
+          {
+            "id": "posted",
+            "label": "Posted",
+            "x": 420,
+            "y": 160
+          }
+        ],
+        "edges": [
+          {
+            "from": "draft",
+            "to": "approved",
+            "action": "Approve",
+            "label": "Approve"
+          },
+          {
+            "from": "approved",
+            "to": "approved",
+            "action": "Load",
+            "label": "Load a copy"
+          },
+          {
+            "from": "approved",
+            "to": "draft",
+            "action": "Edit",
+            "label": "Edit clears approval"
+          },
+          {
+            "from": "draft",
+            "to": "draft",
+            "action": "Arm",
+            "label": "Old copy marks posted"
+          },
+          {
+            "from": "draft",
+            "to": "posted",
+            "action": "CommitSnap",
+            "label": "Old copy is saved",
+            "tone": "danger"
+          }
+        ]
+      },
+      "bugId": "queue-stale-posted"
+    },
+    {
+      "id": "draft-day/pipeline",
+      "machine": "draft-day/pipeline",
+      "title": "Draft Day protocol",
+      "blurb": "The public commit is a visual player. This machine is the protocol in the spec. Each seat is judged once, and merge waits for approval.",
+      "commit": "7fb564d8d974db4ad3c8584a0b9b1f4e35a8ea96",
+      "group": "lab",
+      "order": 8,
+      "states": 12,
+      "status": "pass",
+      "invariants": [
+        {
+          "name": "EachSeatJudgedOnce",
+          "kind": "safety",
+          "text": "Each seat is judged once.",
+          "holds": true,
+          "expected": false
+        },
+        {
+          "name": "NoMergeWithoutApproval",
+          "kind": "safety",
+          "text": "A merge happens only after approval.",
+          "holds": true,
+          "expected": false
+        }
+      ],
+      "story": [
+        {
+          "phase": "idea",
+          "label": "An idea."
+        },
+        {
+          "phase": "seated",
+          "label": "Two seats."
+        },
+        {
+          "phase": "judged",
+          "label": "Each seat is judged once."
+        },
+        {
+          "phase": "draft",
+          "label": "The draft waits for approval."
+        },
+        {
+          "phase": "merged",
+          "label": "Merge requires that approval."
+        }
+      ],
+      "chart": {
+        "nodes": [
+          {
+            "id": "idea",
+            "label": "Idea",
+            "x": 40,
+            "y": 150
+          },
+          {
+            "id": "spec",
+            "label": "Spec",
+            "x": 130,
+            "y": 70
+          },
+          {
+            "id": "seated",
+            "label": "Seats",
+            "x": 230,
+            "y": 70
+          },
+          {
+            "id": "judged",
+            "label": "Judged",
+            "x": 330,
+            "y": 70
+          },
+          {
+            "id": "grafted",
+            "label": "Graft",
+            "x": 430,
+            "y": 70
+          },
+          {
+            "id": "physical",
+            "label": "Physical",
+            "x": 430,
+            "y": 170
+          },
+          {
+            "id": "draft",
+            "label": "Draft",
+            "x": 300,
+            "y": 220
+          },
+          {
+            "id": "merged",
+            "label": "Merged",
+            "x": 140,
+            "y": 220
+          }
+        ],
+        "edges": [
+          {
+            "from": "idea",
+            "to": "spec",
+            "action": "ToSpec",
+            "label": "Spec"
+          },
+          {
+            "from": "spec",
+            "to": "seated",
+            "action": "Seat",
+            "label": "Seats"
+          },
+          {
+            "from": "seated",
+            "to": "judged",
+            "action": "FinishJudge",
+            "label": "Each seat once"
+          },
+          {
+            "from": "judged",
+            "to": "grafted",
+            "action": "Graft",
+            "label": "Graft"
+          },
+          {
+            "from": "grafted",
+            "to": "physical",
+            "action": "Physical",
+            "label": "Physical"
+          },
+          {
+            "from": "physical",
+            "to": "draft",
+            "action": "OpenDraft",
+            "label": "Draft"
+          },
+          {
+            "from": "draft",
+            "to": "merged",
+            "action": "Merge",
+            "label": "Merge after approval"
+          }
+        ]
+      }
+    },
+    {
+      "id": "session-owner/lease",
+      "machine": "session-owner/lease",
+      "title": "Session lease",
+      "blurb": "One household owner. A stale lease has to be signed in again before a message is sent. No school data.",
+      "commit": "none",
+      "group": "lab",
+      "order": 9,
+      "states": 7,
+      "status": "pass",
+      "invariants": [
+        {
+          "name": "NoSendOnStaleLease",
+          "kind": "safety",
+          "text": "A message is not in flight on a stale lease.",
+          "holds": true,
+          "expected": false
+        },
+        {
+          "name": "StaleSessionMustReauth",
+          "kind": "safety",
+          "text": "After the lease goes stale, the session is active again only once someone has signed in.",
+          "holds": true,
+          "expected": false
+        }
+      ],
+      "story": [
+        {
+          "phase": "active",
+          "label": "The lease is fresh. One owner."
+        },
+        {
+          "phase": "reauth",
+          "label": "After it goes stale, someone signs in."
+        },
+        {
+          "phase": "active",
+          "label": "A message waits until the lease is fresh."
+        }
+      ],
+      "chart": {
+        "nodes": [
+          {
+            "id": "active",
+            "label": "Active",
+            "x": 90,
+            "y": 140
+          },
+          {
+            "id": "reauth",
+            "label": "Sign in",
+            "x": 280,
+            "y": 80
+          }
+        ],
+        "edges": [
+          {
+            "from": "active",
+            "to": "reauth",
+            "action": "Reauth",
+            "label": "Lease went stale"
+          },
+          {
+            "from": "reauth",
+            "to": "active",
+            "action": "Resume",
+            "label": "Signed in"
+          }
+        ]
+      }
+    },
+    {
+      "id": "school-pulse/silence",
+      "machine": "school-pulse/silence",
+      "title": "Silent stream",
+      "blurb": "An open stream that stops sending never starts a reconnect timer.",
+      "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+      "group": "lab",
+      "order": 5,
+      "states": 4,
+      "status": "violation",
+      "invariants": [
+        {
+          "name": "SilentStreamReconnects",
+          "kind": "safety",
+          "text": "A stream that stops sending is reconnected.",
+          "holds": false,
+          "expected": true
+        },
+        {
+          "name": "AtMostOneSocket",
+          "kind": "safety",
+          "text": "The page opens one event stream.",
+          "holds": true,
+          "expected": false
+        }
+      ],
+      "trace": [
+        {
+          "action": "Init",
+          "state": {
+            "phase": "off",
+            "sockets": 0
+          },
+          "chartState": "off",
+          "label": "Start"
+        },
+        {
+          "action": "Open",
+          "state": {
+            "phase": "live",
+            "sockets": 1
+          },
+          "chartState": "live",
+          "label": "Open",
+          "sourceRef": "web/app.ts:466"
+        },
+        {
+          "action": "Silence",
+          "state": {
+            "phase": "silent",
+            "sockets": 1
+          },
+          "chartState": "silent",
+          "label": "No ping",
+          "sourceRef": "web/app.ts:466"
+        }
+      ],
+      "story": [
+        {
+          "phase": "off",
+          "label": "The page has not connected."
+        },
+        {
+          "phase": "live",
+          "label": "One EventSource is open."
+        },
+        {
+          "phase": "silent",
+          "label": "Nothing arrives, and nothing times out."
+        }
+      ],
+      "chart": {
+        "nodes": [
+          {
+            "id": "off",
+            "label": "Off",
+            "x": 70,
+            "y": 150
+          },
+          {
+            "id": "live",
+            "label": "Live",
+            "x": 210,
+            "y": 70
+          },
+          {
+            "id": "silent",
+            "label": "Silent",
+            "x": 380,
+            "y": 70
+          },
+          {
+            "id": "down",
+            "label": "Down",
+            "x": 210,
+            "y": 220
+          }
+        ],
+        "edges": [
+          {
+            "from": "off",
+            "to": "live",
+            "action": "Open",
+            "label": "Open"
+          },
+          {
+            "from": "live",
+            "to": "silent",
+            "action": "Silence",
+            "label": "No ping",
+            "tone": "danger"
+          },
+          {
+            "from": "live",
+            "to": "down",
+            "action": "Error",
+            "label": "Socket error"
+          },
+          {
+            "from": "down",
+            "to": "live",
+            "action": "Reconnect",
+            "label": "Browser retries"
+          }
+        ]
+      },
+      "bugId": "sse-silent-stream"
+    },
+    {
+      "id": "school-pulse/assignment",
+      "machine": "school-pulse/assignment",
+      "title": "Assignment flow",
+      "blurb": "A graded row needs points. Missing work stays ungraded.",
+      "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+      "group": "lab",
+      "order": 7,
+      "states": 4,
+      "status": "pass",
+      "invariants": [
+        {
+          "name": "GradedHasPoints",
+          "kind": "safety",
+          "text": "A graded assignment has points.",
+          "holds": true,
+          "expected": false
+        },
+        {
+          "name": "MissingIsUngraded",
+          "kind": "safety",
+          "text": "Missing work is not graded.",
+          "holds": true,
+          "expected": false
+        }
+      ],
+      "story": [
+        {
+          "phase": "missing",
+          "label": "The work is missing."
+        },
+        {
+          "phase": "turned_in",
+          "label": "It is turned in."
+        },
+        {
+          "phase": "turned_in",
+          "label": "Points are attached."
+        },
+        {
+          "phase": "graded",
+          "label": "A grade needs those points."
+        }
+      ],
+      "chart": {
+        "nodes": [
+          {
+            "id": "missing",
+            "label": "Missing",
+            "x": 90,
+            "y": 150
+          },
+          {
+            "id": "turned_in",
+            "label": "Turned in",
+            "x": 260,
+            "y": 150
+          },
+          {
+            "id": "graded",
+            "label": "Graded",
+            "x": 430,
+            "y": 150
+          }
+        ],
+        "edges": [
+          {
+            "from": "missing",
+            "to": "turned_in",
+            "action": "TurnIn",
+            "label": "Turn in"
+          },
+          {
+            "from": "turned_in",
+            "to": "graded",
+            "action": "Grade",
+            "label": "Grade"
+          }
+        ]
+      },
+      "poster": {
+        "kicker": "Homework",
+        "title": "Missing, turned in, graded",
+        "caption": "Missing work stays ungraded. A grade needs points.",
+        "scene": "assignment"
+      }
+    },
+    {
+      "id": "post-queue/status",
+      "machine": "post-queue/status",
+      "title": "Cue and skip",
+      "blurb": "Posted is accepted from approved. Skip is accepted after posted.",
+      "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b",
+      "group": "lab",
+      "order": 7,
+      "states": 10,
+      "status": "violation",
+      "invariants": [
+        {
+          "name": "PostedRequiresApproval",
+          "kind": "safety",
+          "text": "Posted happens only after approval.",
+          "holds": true,
+          "expected": false
+        },
+        {
+          "name": "ScheduledBeforePosted",
+          "kind": "safety",
+          "text": "Posted happens only after the item was cued.",
+          "holds": false,
+          "expected": true
+        },
+        {
+          "name": "SkipOnlyBeforePost",
+          "kind": "safety",
+          "text": "Skip does not run after posted.",
+          "holds": false,
+          "expected": true
+        }
+      ],
+      "trace": [
+        {
+          "action": "Init",
+          "state": {
+            "cued": false,
+            "seenPosted": false,
+            "approved": false,
+            "phase": "draft"
+          },
+          "chartState": "draft",
+          "label": "Start"
+        },
+        {
+          "action": "Approve",
+          "state": {
+            "cued": false,
+            "seenPosted": false,
+            "approved": true,
+            "phase": "approved"
+          },
+          "chartState": "approved",
+          "label": "Approve",
+          "sourceRef": "server.py:780"
+        },
+        {
+          "action": "PostFromApproved",
+          "state": {
+            "cued": false,
+            "seenPosted": true,
+            "approved": true,
+            "phase": "posted"
+          },
+          "chartState": "posted",
+          "label": "Skip the cue",
+          "sourceRef": "server.py:794"
+        }
+      ],
+      "story": [
+        {
+          "phase": "draft",
+          "label": "A synthetic draft."
+        },
+        {
+          "phase": "approved",
+          "label": "Approval is recorded."
+        },
+        {
+          "phase": "posted",
+          "label": "Posted does not require the cue."
+        }
+      ],
+      "chart": {
+        "nodes": [
+          {
+            "id": "draft",
+            "label": "Draft",
+            "x": 60,
+            "y": 150
+          },
+          {
+            "id": "approved",
+            "label": "Approved",
+            "x": 190,
+            "y": 70
+          },
+          {
+            "id": "cued",
+            "label": "Cued",
+            "x": 330,
+            "y": 70
+          },
+          {
+            "id": "posted",
+            "label": "Posted",
+            "x": 460,
+            "y": 150
+          },
+          {
+            "id": "skipped",
+            "label": "Skipped",
+            "x": 300,
+            "y": 220
+          }
+        ],
+        "edges": [
+          {
+            "from": "draft",
+            "to": "approved",
+            "action": "Approve",
+            "label": "Approve"
+          },
+          {
+            "from": "approved",
+            "to": "cued",
+            "action": "Cue",
+            "label": "Cue"
+          },
+          {
+            "from": "cued",
+            "to": "posted",
+            "action": "PostFromCued",
+            "label": "Post after cue"
+          },
+          {
+            "from": "approved",
+            "to": "posted",
+            "action": "PostFromApproved",
+            "label": "Skip the cue",
+            "tone": "danger"
+          },
+          {
+            "from": "posted",
+            "to": "skipped",
+            "action": "Skip",
+            "label": "Skip after post",
+            "tone": "danger"
+          }
+        ]
+      },
+      "bugId": "pq-posted-skips-cue"
+    },
+    {
+      "id": "storybook/play-clock",
+      "machine": "storybook/play-clock",
+      "title": "Play clock",
+      "blurb": "The clock runs on a live play. A timeout freezes it. The snap needs time left.",
+      "commit": "none",
+      "group": "story",
+      "order": 1,
+      "states": 20,
+      "status": "pass",
+      "invariants": [
+        {
+          "name": "NoSnapAtZero",
+          "kind": "safety",
+          "text": "The ball is not snapped at zero.",
+          "holds": true,
+          "expected": false
+        },
+        {
+          "name": "TimeoutFreezes",
+          "kind": "safety",
+          "text": "A timeout holds the clock where it stopped.",
+          "holds": true,
+          "expected": false
+        }
+      ],
+      "story": [
+        {
+          "phase": "ready",
+          "label": "The ball is set."
+        },
+        {
+          "phase": "running",
+          "label": "The clock starts."
+        },
+        {
+          "phase": "timeout",
+          "label": "Timeout. The clock holds."
+        },
+        {
+          "phase": "running",
+          "label": "Play resumes."
+        },
+        {
+          "phase": "snapped",
+          "label": "The ball is snapped with time left."
+        }
+      ],
+      "chart": {
+        "nodes": [
+          {
+            "id": "ready",
+            "label": "Ready",
+            "x": 70,
+            "y": 150
+          },
+          {
+            "id": "running",
+            "label": "Running",
+            "x": 210,
+            "y": 70
+          },
+          {
+            "id": "timeout",
+            "label": "Timeout",
+            "x": 360,
+            "y": 70
+          },
+          {
+            "id": "snapped",
+            "label": "Snapped",
+            "x": 210,
+            "y": 220
+          },
+          {
+            "id": "expired",
+            "label": "Zero",
+            "x": 430,
+            "y": 200
+          }
+        ],
+        "edges": [
+          {
+            "from": "ready",
+            "to": "running",
+            "action": "Start",
+            "label": "Start"
+          },
+          {
+            "from": "running",
+            "to": "timeout",
+            "action": "Timeout",
+            "label": "Timeout"
+          },
+          {
+            "from": "timeout",
+            "to": "running",
+            "action": "Resume",
+            "label": "Resume"
+          },
+          {
+            "from": "running",
+            "to": "snapped",
+            "action": "Snap",
+            "label": "Snap"
+          },
+          {
+            "from": "running",
+            "to": "expired",
+            "action": "Expire",
+            "label": "Hits zero"
+          }
+        ]
+      },
+      "poster": {
+        "kicker": "Friday night",
+        "title": "Play clock",
+        "caption": "The clock runs on a live play. A timeout freezes it. You cannot snap the ball at zero.",
+        "scene": "play-clock"
+      }
+    },
+    {
+      "id": "storybook/replay",
+      "machine": "storybook/replay",
+      "title": "Replay challenge",
+      "blurb": "One challenge. The window closes on the next pitch.",
+      "commit": "none",
+      "group": "story",
+      "order": 2,
+      "states": 7,
+      "status": "pass",
+      "invariants": [
+        {
+          "name": "AtMostOneChallenge",
+          "kind": "safety",
+          "text": "A play has at most one challenge.",
+          "holds": true,
+          "expected": false
+        },
+        {
+          "name": "ReviewNeedsChallenge",
+          "kind": "safety",
+          "text": "Review runs only after a challenge.",
+          "holds": true,
+          "expected": false
+        }
+      ],
+      "story": [
+        {
+          "phase": "live",
+          "label": "The pitch is live."
+        },
+        {
+          "phase": "window",
+          "label": "The challenge window is open."
+        },
+        {
+          "phase": "review",
+          "label": "The one challenge is used."
+        },
+        {
+          "phase": "overturned",
+          "label": "The call is overturned."
+        },
+        {
+          "phase": "closed",
+          "label": "The window is closed."
+        }
+      ],
+      "chart": {
+        "nodes": [
+          {
+            "id": "live",
+            "label": "Live",
+            "x": 60,
+            "y": 150
+          },
+          {
+            "id": "window",
+            "label": "Window",
+            "x": 180,
+            "y": 70
+          },
+          {
+            "id": "review",
+            "label": "Review",
+            "x": 320,
+            "y": 70
+          },
+          {
+            "id": "stands",
+            "label": "Stands",
+            "x": 450,
+            "y": 70
+          },
+          {
+            "id": "overturned",
+            "label": "Overturned",
+            "x": 430,
+            "y": 190
+          },
+          {
+            "id": "closed",
+            "label": "Closed",
+            "x": 200,
+            "y": 220
+          }
+        ],
+        "edges": [
+          {
+            "from": "live",
+            "to": "window",
+            "action": "Pitch",
+            "label": "Pitch"
+          },
+          {
+            "from": "window",
+            "to": "review",
+            "action": "Challenge",
+            "label": "Challenge"
+          },
+          {
+            "from": "review",
+            "to": "stands",
+            "action": "Stand",
+            "label": "Stands"
+          },
+          {
+            "from": "review",
+            "to": "overturned",
+            "action": "Overturn",
+            "label": "Overturned"
+          },
+          {
+            "from": "window",
+            "to": "closed",
+            "action": "Close",
+            "label": "Next pitch"
+          },
+          {
+            "from": "stands",
+            "to": "closed",
+            "action": "Close",
+            "label": "Play on"
+          },
+          {
+            "from": "overturned",
+            "to": "closed",
+            "action": "Close",
+            "label": "Play on"
+          }
+        ]
+      },
+      "poster": {
+        "kicker": "One challenge",
+        "title": "Replay",
+        "caption": "A side gets one challenge. The window closes when the next pitch is thrown.",
+        "scene": "replay"
+      }
+    },
+    {
+      "id": "storybook/bus",
+      "machine": "storybook/bus",
+      "title": "Bus morning",
+      "blurb": "Home, the stop, the seat, the ride, then school. Arrival requires boarding.",
+      "commit": "none",
+      "group": "story",
+      "order": 3,
+      "states": 5,
+      "status": "pass",
+      "invariants": [
+        {
+          "name": "ArriveAfterBoarding",
+          "kind": "safety",
+          "text": "The bus arrives at school after someone boarded.",
+          "holds": true,
+          "expected": false
+        },
+        {
+          "name": "NoRideBeforeBoard",
+          "kind": "safety",
+          "text": "A rider is on the bus only after boarding.",
+          "holds": true,
+          "expected": false
+        }
+      ],
+      "story": [
+        {
+          "phase": "home",
+          "label": "Still at home."
+        },
+        {
+          "phase": "waiting",
+          "label": "Waiting at the stop."
+        },
+        {
+          "phase": "boarded",
+          "label": "A seat is taken."
+        },
+        {
+          "phase": "riding",
+          "label": "The bus is moving."
+        },
+        {
+          "phase": "school",
+          "label": "School, after boarding."
+        }
+      ],
+      "chart": {
+        "nodes": [
+          {
+            "id": "home",
+            "label": "Home",
+            "x": 60,
+            "y": 150
+          },
+          {
+            "id": "waiting",
+            "label": "Stop",
+            "x": 170,
+            "y": 150
+          },
+          {
+            "id": "boarded",
+            "label": "Boarded",
+            "x": 290,
+            "y": 150
+          },
+          {
+            "id": "riding",
+            "label": "Riding",
+            "x": 400,
+            "y": 80
+          },
+          {
+            "id": "school",
+            "label": "School",
+            "x": 450,
+            "y": 210
+          }
+        ],
+        "edges": [
+          {
+            "from": "home",
+            "to": "waiting",
+            "action": "Walk",
+            "label": "Walk"
+          },
+          {
+            "from": "waiting",
+            "to": "boarded",
+            "action": "Board",
+            "label": "Board"
+          },
+          {
+            "from": "boarded",
+            "to": "riding",
+            "action": "Ride",
+            "label": "Ride"
+          },
+          {
+            "from": "riding",
+            "to": "school",
+            "action": "Arrive",
+            "label": "Arrive"
+          }
+        ]
+      },
+      "poster": {
+        "kicker": "Maple stop",
+        "title": "Bus morning",
+        "caption": "Home, the stop, a seat, the ride, then school. The bus arrives only after someone boards.",
+        "scene": "bus"
+      }
+    },
+    {
+      "id": "storybook/booster",
+      "machine": "storybook/booster",
+      "title": "Booster catch",
+      "blurb": "The arms have to be ready. Otherwise the booster misses.",
+      "commit": "none",
+      "group": "story",
+      "order": 4,
+      "states": 8,
+      "status": "pass",
+      "invariants": [
+        {
+          "name": "CatchNeedsArms",
+          "kind": "safety",
+          "text": "The catch happens with the arms out.",
+          "holds": true,
+          "expected": false
+        },
+        {
+          "name": "MissIsBare",
+          "kind": "safety",
+          "text": "A miss is a catch without the arms.",
+          "holds": true,
+          "expected": false
+        }
+      ],
+      "story": [
+        {
+          "phase": "pad",
+          "label": "The booster is on the pad."
+        },
+        {
+          "phase": "ascent",
+          "label": "Ascent."
+        },
+        {
+          "phase": "entry",
+          "label": "It comes back."
+        },
+        {
+          "phase": "arms",
+          "label": "The arms are ready."
+        },
+        {
+          "phase": "window",
+          "label": "The catch window is open."
+        },
+        {
+          "phase": "caught",
+          "label": "Caught, because the arms were ready."
+        }
+      ],
+      "chart": {
+        "nodes": [
+          {
+            "id": "pad",
+            "label": "Pad",
+            "x": 60,
+            "y": 160
+          },
+          {
+            "id": "ascent",
+            "label": "Ascent",
+            "x": 160,
+            "y": 70
+          },
+          {
+            "id": "entry",
+            "label": "Entry",
+            "x": 280,
+            "y": 70
+          },
+          {
+            "id": "arms",
+            "label": "Arms",
+            "x": 420,
+            "y": 70
+          },
+          {
+            "id": "window",
+            "label": "Window",
+            "x": 300,
+            "y": 190
+          },
+          {
+            "id": "caught",
+            "label": "Caught",
+            "x": 450,
+            "y": 190
+          },
+          {
+            "id": "missed",
+            "label": "Missed",
+            "x": 140,
+            "y": 230
+          }
+        ],
+        "edges": [
+          {
+            "from": "pad",
+            "to": "ascent",
+            "action": "Launch",
+            "label": "Launch"
+          },
+          {
+            "from": "ascent",
+            "to": "entry",
+            "action": "Entry",
+            "label": "Entry"
+          },
+          {
+            "from": "entry",
+            "to": "arms",
+            "action": "Ready",
+            "label": "Arms ready"
+          },
+          {
+            "from": "entry",
+            "to": "window",
+            "action": "SkipArms",
+            "label": "Arms late"
+          },
+          {
+            "from": "arms",
+            "to": "window",
+            "action": "OpenWindow",
+            "label": "Window"
+          },
+          {
+            "from": "window",
+            "to": "caught",
+            "action": "Catch",
+            "label": "Catch"
+          },
+          {
+            "from": "window",
+            "to": "missed",
+            "action": "Miss",
+            "label": "Miss"
+          }
+        ]
+      },
+      "poster": {
+        "kicker": "Catch window",
+        "title": "Booster catch",
+        "caption": "The arms have to be ready before a catch counts. If they are not, the booster misses.",
+        "scene": "booster"
+      }
+    }
+  ]
+}

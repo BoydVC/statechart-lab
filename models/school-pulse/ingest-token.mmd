@@ -1,0 +1,37 @@
+---
+title: "Inbox retry of one file"
+---
+stateDiagram-v2
+  state "Legend" as legend {
+    lg0: Broken
+    lg1: Waiting
+    lg2: Stored
+    lg3: Breaks AtMostOneRow or NoExtraChange
+    lg4: Path to the AtMostOneRow or NoExtraChange bug
+  }
+  class lg0 pink
+  class lg1 tan
+  class lg2 teal
+  class lg3 breaks
+  class lg4 bugPath
+  s0: File waiting
+  s1: Row stored, callback running
+  s2: Import finished
+  s3: One row, retry pending
+  s4: Two rows for one file
+  [*] --> s0
+  s0 --> s1: the watcher reads the file and imports it
+  s1 --> s2: the publish callback returns
+  s1 --> s3: the publish callback throws
+  s3 --> s4: the watcher reads the file and imports it
+  classDef breaks fill:#ffecee,stroke:#e72e3b,stroke-width:2.5px,color:#cd2834
+  class s0 tan
+  class s0 bugPath
+  class s1 teal
+  class s1 bugPath
+  class s2 teal
+  class s3 teal
+  class s3 bugPath
+  class s4 pink
+  class s4 breaks
+  class s4 bugPath

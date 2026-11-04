@@ -1,0 +1,11 @@
+---
+title: "Replay challenge"
+---
+stateDiagram-v2
+  live --> window: Pitch
+  window --> review: Challenge
+  review --> stands: Stands
+  review --> overturned: Overturned
+  window --> closed: Next pitch
+  stands --> closed: Play on
+  overturned --> closed: Play on

@@ -1,0 +1,105 @@
+{
+  "id": "storybook/play-clock",
+  "title": "Play clock",
+  "blurb": "The clock runs on a live play. A timeout freezes it. The snap needs time left.",
+  "commit": "none",
+  "group": "story",
+  "order": 1,
+  "stateKey": "phase",
+  "poster": {
+    "kicker": "Friday night",
+    "title": "Play clock",
+    "caption": "The clock runs on a live play. A timeout freezes it. You cannot snap the ball at zero.",
+    "scene": "play-clock"
+  },
+  "invariantText": {
+    "NoSnapAtZero": "The ball is not snapped at zero.",
+    "TimeoutFreezes": "A timeout holds the clock where it stopped."
+  },
+  "nodes": [
+    {
+      "id": "ready",
+      "label": "Ready",
+      "x": 70,
+      "y": 150
+    },
+    {
+      "id": "running",
+      "label": "Running",
+      "x": 210,
+      "y": 70
+    },
+    {
+      "id": "timeout",
+      "label": "Timeout",
+      "x": 360,
+      "y": 70
+    },
+    {
+      "id": "snapped",
+      "label": "Snapped",
+      "x": 210,
+      "y": 220
+    },
+    {
+      "id": "expired",
+      "label": "Zero",
+      "x": 430,
+      "y": 200
+    }
+  ],
+  "edges": [
+    {
+      "from": "ready",
+      "to": "running",
+      "action": "Start",
+      "label": "Start"
+    },
+    {
+      "from": "running",
+      "to": "timeout",
+      "action": "Timeout",
+      "label": "Timeout"
+    },
+    {
+      "from": "timeout",
+      "to": "running",
+      "action": "Resume",
+      "label": "Resume"
+    },
+    {
+      "from": "running",
+      "to": "snapped",
+      "action": "Snap",
+      "label": "Snap"
+    },
+    {
+      "from": "running",
+      "to": "expired",
+      "action": "Expire",
+      "label": "Hits zero"
+    }
+  ],
+  "story": [
+    {
+      "phase": "ready",
+      "label": "The ball is set."
+    },
+    {
+      "phase": "running",
+      "label": "The clock starts."
+    },
+    {
+      "phase": "timeout",
+      "label": "Timeout. The clock holds."
+    },
+    {
+      "phase": "running",
+      "label": "Play resumes."
+    },
+    {
+      "phase": "snapped",
+      "label": "The ball is snapped with time left."
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+[
+  {
+    "id": "oauth-expired-use",
+    "machine": "school-pulse/oauth",
+    "invariant": "NotExpiredUse",
+    "confirmed": true,
+    "runner": "In school-pulse at 3b76b08, copy verify/arena-repro.test.ts to tests/arena-repro.test.ts, then npx tsc --pretty false && node --test dist/tests/arena-repro.test.js",
+    "observed": "AssertionError: 3 !== 0. sync called fetch with the expired access token.",
+    "summary": "readToken returns access_token and never reads expires_at. school-pulse sync sends that string. Nothing in this commit moves the account to re-auth-needed.",
+    "code": "BoydVC/school-pulse@3b76b08 src/main.ts:150-157. expires_at is stored in src/auth/oauth.ts:114. runSync passes the string at src/main.ts:124-132.",
+    "test": "Test name: sync does not send an access token whose expires_at is in the past. The token file has expires_at in 2020. The test expects zero fetch calls. sync made 3.",
+    "fix": "If expires_at is missing or in the past, return null and print the auth command. A later change can use the stored refresh token. This commit does not send a refresh grant."
+  },
+  {
+    "id": "oauth-stale-write",
+    "machine": "school-pulse/oauth",
+    "invariant": "NoStaleClobber",
+    "confirmed": true,
+    "runner": "Same school-pulse node --test run as oauth-expired-use.",
+    "observed": "AssertionError: 'refresh-a' !== 'refresh-b'",
+    "summary": "Two sign-ins share one token file. The one that started first can finish last and replace the newer refresh token. writeToken has no generation check.",
+    "code": "BoydVC/school-pulse@3b76b08 src/auth/oauth.ts:118 and the call at line 199.",
+    "test": "Test name: an earlier sign-in does not overwrite a token written by a later sign-in. Sign-in A waits inside the token HTTP call, B finishes, then A is released. The file holds refresh-a.",
+    "fix": "Stamp a generation when the flow starts and write the file only if that generation is still current."
+  },
+  {
+    "id": "ingest-clock-retry",
+    "machine": "school-pulse/ingest-retry",
+    "invariant": "AtMostOneRow",
+    "confirmed": true,
+    "runner": "Same school-pulse node --test run as oauth-expired-use.",
+    "observed": "AssertionError: { rows: 2, changes: 2 } !== { rows: 1, changes: 1 }. The stable source id test in the same file passed with 1 row.",
+    "summary": "The watcher retries inside the same try that already committed. Each attempt expands {{SP:NOW}} with a new Date. A source id that depends on that clock becomes a second row. A stable source id stays one row.",
+    "code": "BoydVC/school-pulse@3b76b08 src/ingest/watch.ts:56-67, src/model/tokens.ts:12, src/main.ts:70. ingestSnapshot commits in src/ingest/ingest.ts:61 before the callback.",
+    "test": "Test name: a watcher retry of {{SP:NOW}} does not insert a second row or a second change. startWatcher onResult throws once. The clock id stored 2 rows and 2 changes.",
+    "fix": "Treat a successful ingestSnapshot as committed even if the callback throws. Expand clock tokens once per file bytes."
+  },
+  {
+    "id": "ingest-clock-change",
+    "machine": "school-pulse/ingest-retry",
+    "invariant": "NoExtraChange",
+    "confirmed": true,
+    "runner": "Same school-pulse node --test run as ingest-clock-retry.",
+    "observed": "The same assertion recorded changes: 2. TLC violates NoExtraChange on that path.",
+    "summary": "The second attempt appends another change, because the new clock id looks like a new assignment.",
+    "code": "BoydVC/school-pulse@3b76b08 src/ingest/watch.ts:60 and src/ingest/ingest.ts:61.",
+    "test": "Same watcher test as ingest-clock-retry. A stable source id does not add a second change. A {{SP:NOW}} source id does.",
+    "fix": "Same fix as ingest-clock-retry. Do not retry a file whose ingest transaction already committed."
+  },
+  {
+    "id": "sse-reconnect-gap",
+    "machine": "school-pulse/sse",
+    "invariant": "LiveMeansCaughtUp",
+    "confirmed": true,
+    "runner": "Same school-pulse node --test run as oauth-expired-use.",
+    "observed": "AssertionError: 0 !== 1. The pill state was on.",
+    "summary": "onopen turns the live pill on and does not refresh. The hub does not buffer a pulse published while the stream is down. The page can look live and miss that pulse until the 60 second poll.",
+    "code": "BoydVC/school-pulse@3b76b08 web/app.ts:472-475 and web/app.ts:100. src/server/hub.ts:26 writes only to current clients. src/server/server.ts:102 does not send an event id.",
+    "test": "Test name: opening the stream refreshes before the pill is treated as caught up. The real connect function runs against a fake EventSource. onopen fires. refresh runs 0 times.",
+    "fix": "Call the same refresh used at startup from onopen, and keep the pill off until that refresh resolves."
+  },
+  {
+    "id": "sse-silent-stream",
+    "machine": "school-pulse/silence",
+    "invariant": "SilentStreamReconnects",
+    "confirmed": true,
+    "runner": "Same school-pulse node --test run as oauth-expired-use.",
+    "observed": "AssertionError: the silence check was falsy. connect() scheduled no timer under 60 seconds and opened one socket. The pill stayed on.",
+    "summary": "connect() creates one EventSource. onerror sets the pill off and the browser retries a broken socket. A stream that stays open and sends nothing has no timer, so the pill stays live.",
+    "code": "BoydVC/school-pulse@3b76b08 web/app.ts:466-479. The server writes a comment ping at src/server/server.ts:110-116. The client does not read it.",
+    "test": "Test name: a silent event stream schedules a reconnect. The real connect function runs, onopen fires, and the test expects a silence timer or a second socket.",
+    "fix": "Start a timer in connect(). If no pulse arrives, close the EventSource and call connect() again."
+  },
+  {
+    "id": "queue-stale-posted",
+    "machine": "post-queue/approval",
+    "invariant": "RevokeSticks",
+    "confirmed": true,
+    "runner": "python3 verify/queue_repro.py /path/to/x-post-queue at dea8484",
+    "observed": "FAIL edit that cleared approval is not overwritten by an older mark-posted. status=posted text=synthetic draft race. The edit response was draft, then the blocked mark-posted save finished.",
+    "summary": "load_queue and save_queue each take the lock, and the handler mutates the copy in between. A mark-posted that read an approved item can save after an edit has already cleared approval. The item ends posted with the old text. A draft that was never approved still cannot be marked posted in one request.",
+    "code": "BoydVC/x-post-queue@dea8484 server.py:134, server.py:144, server.py:762, server.py:794.",
+    "test": "The script blocks inside save when the copy is already marked posted, lets an edit revert the item to draft, then lets the posted save finish. The stored status is posted, not draft. The draft-to-posted request in the same script returned HTTP 400.",
+    "fix": "Hold the lock across load, the status check, and save. Reject the save when approved_at no longer matches the copy that was checked."
+  },
+  {
+    "id": "pq-posted-skips-cue",
+    "machine": "post-queue/status",
+    "invariant": "ScheduledBeforePosted",
+    "confirmed": true,
+    "runner": "python3 verify/queue_repro.py /path/to/x-post-queue at dea8484",
+    "observed": "FAIL posted from approved is refused. HTTP 200 and status posted. cued_at_et was null.",
+    "summary": "Mark posted is accepted from approved, so the cue step can be skipped. Approval still holds. The scheduled step, called cued in the code, does not.",
+    "code": "BoydVC/x-post-queue@dea8484 server.py:794-798 allows approved, cued, or posted. The button gate is server.py:443.",
+    "test": "Create a synthetic draft, approve it, POST /posted. The test expects HTTP 400. The server returned 200 posted.",
+    "fix": "Accept posted only from cued or posted."
+  },
+  {
+    "id": "pq-skip-after-post",
+    "machine": "post-queue/status",
+    "invariant": "SkipOnlyBeforePost",
+    "confirmed": true,
+    "runner": "python3 verify/queue_repro.py /path/to/x-post-queue at dea8484",
+    "observed": "FAIL skip after posted is refused. HTTP 200 and stored status skipped.",
+    "summary": "Skip writes skipped with no status guard, including after the item is already posted.",
+    "code": "BoydVC/x-post-queue@dea8484 server.py:786-787.",
+    "test": "After the posted-from-approved call, POST /skip. The test expects HTTP 400 and the stored status to stay posted. The server returned 200 and stored skipped.",
+    "fix": "Refuse skip unless the status is draft, approved, or cued."
+  }
+]

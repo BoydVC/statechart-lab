@@ -1,0 +1,1376 @@
+[
+  {
+    "id": "school-pulse/oauth",
+    "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+    "repo": "https://github.com/BoydVC/school-pulse",
+    "states": 112,
+    "invariants": [
+      {
+        "name": "TokenFileCoherent",
+        "kind": "safety",
+        "text": "An empty token file names no account, and a stored token names one.",
+        "expected": false,
+        "holds": true
+      },
+      {
+        "name": "NotExpiredUse",
+        "kind": "safety",
+        "text": "A sync does not read an access token after it has expired.",
+        "expected": true,
+        "holds": false,
+        "trace": [
+          {
+            "action": "Init",
+            "state": {
+              "pending": {
+                "desk": -1,
+                "phone": -1
+              },
+              "clobbered": false,
+              "filePhase": "empty",
+              "usedExpired": false,
+              "fileAccount": "none",
+              "fileGen": 0
+            }
+          },
+          {
+            "action": "StartDesk",
+            "state": {
+              "pending": {
+                "desk": 0,
+                "phone": -1
+              },
+              "clobbered": false,
+              "filePhase": "empty",
+              "usedExpired": false,
+              "fileAccount": "none",
+              "fileGen": 0
+            },
+            "sourceRef": {
+              "file": "src/auth/oauth.ts",
+              "line": 127,
+              "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+            }
+          },
+          {
+            "action": "FinishDesk",
+            "state": {
+              "pending": {
+                "desk": -1,
+                "phone": -1
+              },
+              "clobbered": false,
+              "filePhase": "fresh",
+              "usedExpired": false,
+              "fileAccount": "desk",
+              "fileGen": 1
+            },
+            "sourceRef": {
+              "file": "src/auth/oauth.ts",
+              "line": 118,
+              "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+            }
+          },
+          {
+            "action": "Tick",
+            "state": {
+              "pending": {
+                "desk": -1,
+                "phone": -1
+              },
+              "clobbered": false,
+              "filePhase": "expiring",
+              "usedExpired": false,
+              "fileAccount": "desk",
+              "fileGen": 1
+            },
+            "sourceRef": {
+              "file": "src/main.ts",
+              "line": 155,
+              "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+            }
+          },
+          {
+            "action": "Tick",
+            "state": {
+              "pending": {
+                "desk": -1,
+                "phone": -1
+              },
+              "clobbered": false,
+              "filePhase": "expired",
+              "usedExpired": false,
+              "fileAccount": "desk",
+              "fileGen": 1
+            },
+            "sourceRef": {
+              "file": "src/main.ts",
+              "line": 155,
+              "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+            }
+          },
+          {
+            "action": "UseDesk",
+            "state": {
+              "pending": {
+                "desk": -1,
+                "phone": -1
+              },
+              "clobbered": false,
+              "filePhase": "expired",
+              "usedExpired": true,
+              "fileAccount": "desk",
+              "fileGen": 1
+            },
+            "sourceRef": {
+              "file": "src/main.ts",
+              "line": 155,
+              "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+            }
+          }
+        ]
+      },
+      {
+        "name": "NoStaleClobber",
+        "kind": "safety",
+        "text": "A sign-in that started earlier does not overwrite a token written after it started.",
+        "expected": true,
+        "holds": false,
+        "trace": [
+          {
+            "action": "Init",
+            "state": {
+              "pending": {
+                "desk": -1,
+                "phone": -1
+              },
+              "clobbered": false,
+              "filePhase": "empty",
+              "usedExpired": false,
+              "fileAccount": "none",
+              "fileGen": 0
+            }
+          },
+          {
+            "action": "StartDesk",
+            "state": {
+              "pending": {
+                "desk": 0,
+                "phone": -1
+              },
+              "clobbered": false,
+              "filePhase": "empty",
+              "usedExpired": false,
+              "fileAccount": "none",
+              "fileGen": 0
+            },
+            "sourceRef": {
+              "file": "src/auth/oauth.ts",
+              "line": 127,
+              "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+            }
+          },
+          {
+            "action": "StartPhone",
+            "state": {
+              "pending": {
+                "desk": 0,
+                "phone": 0
+              },
+              "clobbered": false,
+              "filePhase": "empty",
+              "usedExpired": false,
+              "fileAccount": "none",
+              "fileGen": 0
+            },
+            "sourceRef": {
+              "file": "src/auth/oauth.ts",
+              "line": 127,
+              "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+            }
+          },
+          {
+            "action": "FinishDesk",
+            "state": {
+              "pending": {
+                "desk": -1,
+                "phone": 0
+              },
+              "clobbered": false,
+              "filePhase": "fresh",
+              "usedExpired": false,
+              "fileAccount": "desk",
+              "fileGen": 1
+            },
+            "sourceRef": {
+              "file": "src/auth/oauth.ts",
+              "line": 118,
+              "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+            }
+          },
+          {
+            "action": "FinishPhone",
+            "state": {
+              "pending": {
+                "desk": -1,
+                "phone": -1
+              },
+              "clobbered": true,
+              "filePhase": "fresh",
+              "usedExpired": false,
+              "fileAccount": "phone",
+              "fileGen": 2
+            },
+            "sourceRef": {
+              "file": "src/auth/oauth.ts",
+              "line": 118,
+              "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+            }
+          }
+        ]
+      }
+    ],
+    "status": "violation",
+    "trace": [
+      {
+        "action": "Init",
+        "state": {
+          "pending": {
+            "desk": -1,
+            "phone": -1
+          },
+          "clobbered": false,
+          "filePhase": "empty",
+          "usedExpired": false,
+          "fileAccount": "none",
+          "fileGen": 0
+        }
+      },
+      {
+        "action": "StartDesk",
+        "state": {
+          "pending": {
+            "desk": 0,
+            "phone": -1
+          },
+          "clobbered": false,
+          "filePhase": "empty",
+          "usedExpired": false,
+          "fileAccount": "none",
+          "fileGen": 0
+        },
+        "sourceRef": {
+          "file": "src/auth/oauth.ts",
+          "line": 127,
+          "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+        }
+      },
+      {
+        "action": "FinishDesk",
+        "state": {
+          "pending": {
+            "desk": -1,
+            "phone": -1
+          },
+          "clobbered": false,
+          "filePhase": "fresh",
+          "usedExpired": false,
+          "fileAccount": "desk",
+          "fileGen": 1
+        },
+        "sourceRef": {
+          "file": "src/auth/oauth.ts",
+          "line": 118,
+          "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+        }
+      },
+      {
+        "action": "Tick",
+        "state": {
+          "pending": {
+            "desk": -1,
+            "phone": -1
+          },
+          "clobbered": false,
+          "filePhase": "expiring",
+          "usedExpired": false,
+          "fileAccount": "desk",
+          "fileGen": 1
+        },
+        "sourceRef": {
+          "file": "src/main.ts",
+          "line": 155,
+          "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+        }
+      },
+      {
+        "action": "Tick",
+        "state": {
+          "pending": {
+            "desk": -1,
+            "phone": -1
+          },
+          "clobbered": false,
+          "filePhase": "expired",
+          "usedExpired": false,
+          "fileAccount": "desk",
+          "fileGen": 1
+        },
+        "sourceRef": {
+          "file": "src/main.ts",
+          "line": 155,
+          "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+        }
+      },
+      {
+        "action": "UseDesk",
+        "state": {
+          "pending": {
+            "desk": -1,
+            "phone": -1
+          },
+          "clobbered": false,
+          "filePhase": "expired",
+          "usedExpired": true,
+          "fileAccount": "desk",
+          "fileGen": 1
+        },
+        "sourceRef": {
+          "file": "src/main.ts",
+          "line": 155,
+          "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+        }
+      }
+    ],
+    "chartSvg": "charts/school-pulse-oauth-blueprint.svg",
+    "chartField": "charts/school-pulse-oauth-field.svg"
+  },
+  {
+    "id": "school-pulse/ingest-retry",
+    "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+    "repo": "https://github.com/BoydVC/school-pulse",
+    "states": 6,
+    "invariants": [
+      {
+        "name": "AtMostOneRow",
+        "kind": "safety",
+        "text": "One inbox file ends as one assignment row, including a retry.",
+        "expected": true,
+        "holds": false,
+        "trace": [
+          {
+            "action": "Init",
+            "state": {
+              "changes": 0,
+              "rows": 0,
+              "attempt": 0,
+              "phase": "ready",
+              "threw": false
+            }
+          },
+          {
+            "action": "Commit",
+            "state": {
+              "changes": 1,
+              "rows": 1,
+              "attempt": 1,
+              "phase": "callback",
+              "threw": false
+            },
+            "sourceRef": {
+              "file": "src/ingest/watch.ts",
+              "line": 60,
+              "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+            }
+          },
+          {
+            "action": "CallbackThrows",
+            "state": {
+              "changes": 1,
+              "rows": 1,
+              "attempt": 1,
+              "phase": "ready",
+              "threw": true
+            },
+            "sourceRef": {
+              "file": "src/main.ts",
+              "line": 70,
+              "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+            }
+          },
+          {
+            "action": "Commit",
+            "state": {
+              "changes": 2,
+              "rows": 2,
+              "attempt": 2,
+              "phase": "callback",
+              "threw": true
+            },
+            "sourceRef": {
+              "file": "src/ingest/watch.ts",
+              "line": 60,
+              "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+            }
+          }
+        ]
+      },
+      {
+        "name": "NoExtraChange",
+        "kind": "safety",
+        "text": "A retry of the same file bytes does not append another change.",
+        "expected": true,
+        "holds": false,
+        "trace": [
+          {
+            "action": "Init",
+            "state": {
+              "changes": 0,
+              "rows": 0,
+              "attempt": 0,
+              "phase": "ready",
+              "threw": false
+            }
+          },
+          {
+            "action": "Commit",
+            "state": {
+              "changes": 1,
+              "rows": 1,
+              "attempt": 1,
+              "phase": "callback",
+              "threw": false
+            },
+            "sourceRef": {
+              "file": "src/ingest/watch.ts",
+              "line": 60,
+              "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+            }
+          },
+          {
+            "action": "CallbackThrows",
+            "state": {
+              "changes": 1,
+              "rows": 1,
+              "attempt": 1,
+              "phase": "ready",
+              "threw": true
+            },
+            "sourceRef": {
+              "file": "src/main.ts",
+              "line": 70,
+              "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+            }
+          },
+          {
+            "action": "Commit",
+            "state": {
+              "changes": 2,
+              "rows": 2,
+              "attempt": 2,
+              "phase": "callback",
+              "threw": true
+            },
+            "sourceRef": {
+              "file": "src/ingest/watch.ts",
+              "line": 60,
+              "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+            }
+          }
+        ]
+      }
+    ],
+    "status": "violation",
+    "trace": [
+      {
+        "action": "Init",
+        "state": {
+          "changes": 0,
+          "rows": 0,
+          "attempt": 0,
+          "phase": "ready",
+          "threw": false
+        }
+      },
+      {
+        "action": "Commit",
+        "state": {
+          "changes": 1,
+          "rows": 1,
+          "attempt": 1,
+          "phase": "callback",
+          "threw": false
+        },
+        "sourceRef": {
+          "file": "src/ingest/watch.ts",
+          "line": 60,
+          "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+        }
+      },
+      {
+        "action": "CallbackThrows",
+        "state": {
+          "changes": 1,
+          "rows": 1,
+          "attempt": 1,
+          "phase": "ready",
+          "threw": true
+        },
+        "sourceRef": {
+          "file": "src/main.ts",
+          "line": 70,
+          "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+        }
+      },
+      {
+        "action": "Commit",
+        "state": {
+          "changes": 2,
+          "rows": 2,
+          "attempt": 2,
+          "phase": "callback",
+          "threw": true
+        },
+        "sourceRef": {
+          "file": "src/ingest/watch.ts",
+          "line": 60,
+          "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+        }
+      }
+    ],
+    "chartSvg": "charts/school-pulse-ingest-retry-blueprint.svg",
+    "chartField": "charts/school-pulse-ingest-retry-field.svg"
+  },
+  {
+    "id": "school-pulse/ingest-stable",
+    "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+    "repo": "https://github.com/BoydVC/school-pulse",
+    "states": 6,
+    "invariants": [
+      {
+        "name": "AtMostOneRow",
+        "kind": "safety",
+        "text": "A stable source id stays one row when the publish callback throws and the watcher retries.",
+        "expected": false,
+        "holds": true
+      },
+      {
+        "name": "NoExtraChange",
+        "kind": "safety",
+        "text": "A stable source id does not grow a second change on that retry.",
+        "expected": false,
+        "holds": true
+      }
+    ],
+    "status": "pass",
+    "chartSvg": "charts/school-pulse-ingest-stable-blueprint.svg",
+    "chartField": "charts/school-pulse-ingest-stable-field.svg"
+  },
+  {
+    "id": "school-pulse/sse",
+    "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+    "repo": "https://github.com/BoydVC/school-pulse",
+    "states": 4,
+    "invariants": [
+      {
+        "name": "LiveMeansCaughtUp",
+        "kind": "safety",
+        "text": "The live pill is on only after the page has caught up with pulses it missed.",
+        "expected": true,
+        "holds": false,
+        "trace": [
+          {
+            "action": "Init",
+            "state": {
+              "pending": false,
+              "view": "current",
+              "pill": "on",
+              "link": "up"
+            }
+          },
+          {
+            "action": "Drop",
+            "state": {
+              "pending": false,
+              "view": "current",
+              "pill": "off",
+              "link": "down"
+            },
+            "sourceRef": {
+              "file": "web/app.ts",
+              "line": 476,
+              "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+            }
+          },
+          {
+            "action": "Publish",
+            "state": {
+              "pending": true,
+              "view": "stale",
+              "pill": "off",
+              "link": "down"
+            },
+            "sourceRef": {
+              "file": "src/server/hub.ts",
+              "line": 26,
+              "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+            }
+          },
+          {
+            "action": "Connect",
+            "state": {
+              "pending": true,
+              "view": "stale",
+              "pill": "on",
+              "link": "up"
+            },
+            "sourceRef": {
+              "file": "web/app.ts",
+              "line": 472,
+              "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+            }
+          }
+        ]
+      },
+      {
+        "name": "PillMatchesLink",
+        "kind": "safety",
+        "text": "The pill is on exactly when the stream is up.",
+        "expected": false,
+        "holds": true
+      }
+    ],
+    "status": "violation",
+    "trace": [
+      {
+        "action": "Init",
+        "state": {
+          "pending": false,
+          "view": "current",
+          "pill": "on",
+          "link": "up"
+        }
+      },
+      {
+        "action": "Drop",
+        "state": {
+          "pending": false,
+          "view": "current",
+          "pill": "off",
+          "link": "down"
+        },
+        "sourceRef": {
+          "file": "web/app.ts",
+          "line": 476,
+          "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+        }
+      },
+      {
+        "action": "Publish",
+        "state": {
+          "pending": true,
+          "view": "stale",
+          "pill": "off",
+          "link": "down"
+        },
+        "sourceRef": {
+          "file": "src/server/hub.ts",
+          "line": 26,
+          "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+        }
+      },
+      {
+        "action": "Connect",
+        "state": {
+          "pending": true,
+          "view": "stale",
+          "pill": "on",
+          "link": "up"
+        },
+        "sourceRef": {
+          "file": "web/app.ts",
+          "line": 472,
+          "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+        }
+      }
+    ],
+    "chartSvg": "charts/school-pulse-sse-blueprint.svg",
+    "chartField": "charts/school-pulse-sse-field.svg"
+  },
+  {
+    "id": "post-queue/approval",
+    "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b",
+    "repo": "https://github.com/BoydVC/x-post-queue",
+    "states": 115,
+    "invariants": [
+      {
+        "name": "RevokeSticks",
+        "kind": "safety",
+        "text": "An edit that cleared approval is not overwritten by an older mark-posted.",
+        "expected": true,
+        "holds": false,
+        "trace": [
+          {
+            "action": "Init",
+            "state": {
+              "snapText": "t1",
+              "revoked": false,
+              "text": "t1",
+              "approvedText": "",
+              "loaded": false,
+              "status": "draft",
+              "snapApproved": "",
+              "version": 0,
+              "snapStatus": "draft"
+            }
+          },
+          {
+            "action": "Approve",
+            "state": {
+              "snapText": "t1",
+              "revoked": false,
+              "text": "t1",
+              "approvedText": "t1",
+              "loaded": false,
+              "status": "approved",
+              "snapApproved": "",
+              "version": 1,
+              "snapStatus": "draft"
+            },
+            "sourceRef": {
+              "file": "server.py",
+              "line": 780,
+              "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+            }
+          },
+          {
+            "action": "Load",
+            "state": {
+              "snapText": "t1",
+              "revoked": false,
+              "text": "t1",
+              "approvedText": "t1",
+              "loaded": true,
+              "status": "approved",
+              "snapApproved": "t1",
+              "version": 1,
+              "snapStatus": "approved"
+            },
+            "sourceRef": {
+              "file": "server.py",
+              "line": 775,
+              "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+            }
+          },
+          {
+            "action": "Edit",
+            "state": {
+              "snapText": "t1",
+              "revoked": true,
+              "text": "t2",
+              "approvedText": "",
+              "loaded": true,
+              "status": "draft",
+              "snapApproved": "t1",
+              "version": 2,
+              "snapStatus": "approved"
+            },
+            "sourceRef": {
+              "file": "server.py",
+              "line": 763,
+              "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+            }
+          },
+          {
+            "action": "Arm",
+            "state": {
+              "snapText": "t1",
+              "revoked": true,
+              "text": "t2",
+              "approvedText": "",
+              "loaded": true,
+              "status": "draft",
+              "snapApproved": "t1",
+              "version": 2,
+              "snapStatus": "posted"
+            },
+            "sourceRef": {
+              "file": "server.py",
+              "line": 794,
+              "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+            }
+          },
+          {
+            "action": "CommitSnap",
+            "state": {
+              "snapText": "t1",
+              "revoked": true,
+              "text": "t1",
+              "approvedText": "t1",
+              "loaded": false,
+              "status": "posted",
+              "snapApproved": "t1",
+              "version": 3,
+              "snapStatus": "posted"
+            },
+            "sourceRef": {
+              "file": "server.py",
+              "line": 799,
+              "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+            }
+          }
+        ]
+      },
+      {
+        "name": "NeverPostedUnapproved",
+        "kind": "safety",
+        "text": "Posted text was approved on the snapshot that got saved.",
+        "expected": false,
+        "holds": true
+      }
+    ],
+    "status": "violation",
+    "trace": [
+      {
+        "action": "Init",
+        "state": {
+          "snapText": "t1",
+          "revoked": false,
+          "text": "t1",
+          "approvedText": "",
+          "loaded": false,
+          "status": "draft",
+          "snapApproved": "",
+          "version": 0,
+          "snapStatus": "draft"
+        }
+      },
+      {
+        "action": "Approve",
+        "state": {
+          "snapText": "t1",
+          "revoked": false,
+          "text": "t1",
+          "approvedText": "t1",
+          "loaded": false,
+          "status": "approved",
+          "snapApproved": "",
+          "version": 1,
+          "snapStatus": "draft"
+        },
+        "sourceRef": {
+          "file": "server.py",
+          "line": 780,
+          "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+        }
+      },
+      {
+        "action": "Load",
+        "state": {
+          "snapText": "t1",
+          "revoked": false,
+          "text": "t1",
+          "approvedText": "t1",
+          "loaded": true,
+          "status": "approved",
+          "snapApproved": "t1",
+          "version": 1,
+          "snapStatus": "approved"
+        },
+        "sourceRef": {
+          "file": "server.py",
+          "line": 775,
+          "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+        }
+      },
+      {
+        "action": "Edit",
+        "state": {
+          "snapText": "t1",
+          "revoked": true,
+          "text": "t2",
+          "approvedText": "",
+          "loaded": true,
+          "status": "draft",
+          "snapApproved": "t1",
+          "version": 2,
+          "snapStatus": "approved"
+        },
+        "sourceRef": {
+          "file": "server.py",
+          "line": 763,
+          "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+        }
+      },
+      {
+        "action": "Arm",
+        "state": {
+          "snapText": "t1",
+          "revoked": true,
+          "text": "t2",
+          "approvedText": "",
+          "loaded": true,
+          "status": "draft",
+          "snapApproved": "t1",
+          "version": 2,
+          "snapStatus": "posted"
+        },
+        "sourceRef": {
+          "file": "server.py",
+          "line": 794,
+          "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+        }
+      },
+      {
+        "action": "CommitSnap",
+        "state": {
+          "snapText": "t1",
+          "revoked": true,
+          "text": "t1",
+          "approvedText": "t1",
+          "loaded": false,
+          "status": "posted",
+          "snapApproved": "t1",
+          "version": 3,
+          "snapStatus": "posted"
+        },
+        "sourceRef": {
+          "file": "server.py",
+          "line": 799,
+          "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+        }
+      }
+    ],
+    "chartSvg": "charts/post-queue-approval-blueprint.svg",
+    "chartField": "charts/post-queue-approval-field.svg"
+  },
+  {
+    "id": "draft-day/pipeline",
+    "commit": "7fb564d8d974db4ad3c8584a0b9b1f4e35a8ea96",
+    "repo": "https://github.com/BoydVC/draft-day",
+    "states": 12,
+    "invariants": [
+      {
+        "name": "EachSeatJudgedOnce",
+        "kind": "safety",
+        "text": "Each seat is judged once.",
+        "expected": false,
+        "holds": true
+      },
+      {
+        "name": "NoMergeWithoutApproval",
+        "kind": "safety",
+        "text": "A merge happens only after approval.",
+        "expected": false,
+        "holds": true
+      }
+    ],
+    "status": "pass",
+    "chartSvg": "charts/draft-day-pipeline-blueprint.svg",
+    "chartField": "charts/draft-day-pipeline-field.svg"
+  },
+  {
+    "id": "session-owner/lease",
+    "commit": "none",
+    "repo": "",
+    "states": 7,
+    "invariants": [
+      {
+        "name": "NoSendOnStaleLease",
+        "kind": "safety",
+        "text": "A message is not in flight on a stale lease.",
+        "expected": false,
+        "holds": true
+      },
+      {
+        "name": "StaleSessionMustReauth",
+        "kind": "safety",
+        "text": "After the lease goes stale, the session is active again only once someone has signed in.",
+        "expected": false,
+        "holds": true
+      }
+    ],
+    "status": "pass",
+    "chartSvg": "charts/session-owner-lease-blueprint.svg",
+    "chartField": "charts/session-owner-lease-field.svg"
+  },
+  {
+    "id": "school-pulse/silence",
+    "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+    "repo": "https://github.com/BoydVC/school-pulse",
+    "states": 4,
+    "invariants": [
+      {
+        "name": "SilentStreamReconnects",
+        "kind": "safety",
+        "text": "A stream that stops sending is reconnected.",
+        "expected": true,
+        "holds": false,
+        "trace": [
+          {
+            "action": "Init",
+            "state": {
+              "phase": "off",
+              "sockets": 0
+            }
+          },
+          {
+            "action": "Open",
+            "state": {
+              "phase": "live",
+              "sockets": 1
+            },
+            "sourceRef": {
+              "file": "web/app.ts",
+              "line": 466,
+              "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+            }
+          },
+          {
+            "action": "Silence",
+            "state": {
+              "phase": "silent",
+              "sockets": 1
+            },
+            "sourceRef": {
+              "file": "web/app.ts",
+              "line": 466,
+              "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+            }
+          }
+        ]
+      },
+      {
+        "name": "AtMostOneSocket",
+        "kind": "safety",
+        "text": "The page opens one event stream.",
+        "expected": false,
+        "holds": true
+      }
+    ],
+    "status": "violation",
+    "trace": [
+      {
+        "action": "Init",
+        "state": {
+          "phase": "off",
+          "sockets": 0
+        }
+      },
+      {
+        "action": "Open",
+        "state": {
+          "phase": "live",
+          "sockets": 1
+        },
+        "sourceRef": {
+          "file": "web/app.ts",
+          "line": 466,
+          "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+        }
+      },
+      {
+        "action": "Silence",
+        "state": {
+          "phase": "silent",
+          "sockets": 1
+        },
+        "sourceRef": {
+          "file": "web/app.ts",
+          "line": 466,
+          "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b"
+        }
+      }
+    ],
+    "chartSvg": "charts/school-pulse-silence-blueprint.svg",
+    "chartField": "charts/school-pulse-silence-field.svg"
+  },
+  {
+    "id": "school-pulse/assignment",
+    "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+    "repo": "https://github.com/BoydVC/school-pulse",
+    "states": 4,
+    "invariants": [
+      {
+        "name": "GradedHasPoints",
+        "kind": "safety",
+        "text": "A graded assignment has points.",
+        "expected": false,
+        "holds": true
+      },
+      {
+        "name": "MissingIsUngraded",
+        "kind": "safety",
+        "text": "Missing work is not graded.",
+        "expected": false,
+        "holds": true
+      }
+    ],
+    "status": "pass",
+    "chartSvg": "charts/school-pulse-assignment-blueprint.svg",
+    "chartField": "charts/school-pulse-assignment-field.svg"
+  },
+  {
+    "id": "post-queue/status",
+    "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b",
+    "repo": "https://github.com/BoydVC/x-post-queue",
+    "states": 10,
+    "invariants": [
+      {
+        "name": "PostedRequiresApproval",
+        "kind": "safety",
+        "text": "Posted happens only after approval.",
+        "expected": false,
+        "holds": true
+      },
+      {
+        "name": "ScheduledBeforePosted",
+        "kind": "safety",
+        "text": "Posted happens only after the item was cued.",
+        "expected": true,
+        "holds": false,
+        "trace": [
+          {
+            "action": "Init",
+            "state": {
+              "cued": false,
+              "seenPosted": false,
+              "approved": false,
+              "phase": "draft"
+            }
+          },
+          {
+            "action": "Approve",
+            "state": {
+              "cued": false,
+              "seenPosted": false,
+              "approved": true,
+              "phase": "approved"
+            },
+            "sourceRef": {
+              "file": "server.py",
+              "line": 780,
+              "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+            }
+          },
+          {
+            "action": "PostFromApproved",
+            "state": {
+              "cued": false,
+              "seenPosted": true,
+              "approved": true,
+              "phase": "posted"
+            },
+            "sourceRef": {
+              "file": "server.py",
+              "line": 794,
+              "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+            }
+          }
+        ]
+      },
+      {
+        "name": "SkipOnlyBeforePost",
+        "kind": "safety",
+        "text": "Skip does not run after posted.",
+        "expected": true,
+        "holds": false,
+        "trace": [
+          {
+            "action": "Init",
+            "state": {
+              "cued": false,
+              "seenPosted": false,
+              "approved": false,
+              "phase": "draft"
+            }
+          },
+          {
+            "action": "Approve",
+            "state": {
+              "cued": false,
+              "seenPosted": false,
+              "approved": true,
+              "phase": "approved"
+            },
+            "sourceRef": {
+              "file": "server.py",
+              "line": 780,
+              "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+            }
+          },
+          {
+            "action": "PostFromApproved",
+            "state": {
+              "cued": false,
+              "seenPosted": true,
+              "approved": true,
+              "phase": "posted"
+            },
+            "sourceRef": {
+              "file": "server.py",
+              "line": 794,
+              "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+            }
+          },
+          {
+            "action": "Skip",
+            "state": {
+              "cued": false,
+              "seenPosted": true,
+              "approved": true,
+              "phase": "skipped"
+            },
+            "sourceRef": {
+              "file": "server.py",
+              "line": 786,
+              "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+            }
+          }
+        ]
+      }
+    ],
+    "status": "violation",
+    "trace": [
+      {
+        "action": "Init",
+        "state": {
+          "cued": false,
+          "seenPosted": false,
+          "approved": false,
+          "phase": "draft"
+        }
+      },
+      {
+        "action": "Approve",
+        "state": {
+          "cued": false,
+          "seenPosted": false,
+          "approved": true,
+          "phase": "approved"
+        },
+        "sourceRef": {
+          "file": "server.py",
+          "line": 780,
+          "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+        }
+      },
+      {
+        "action": "PostFromApproved",
+        "state": {
+          "cued": false,
+          "seenPosted": true,
+          "approved": true,
+          "phase": "posted"
+        },
+        "sourceRef": {
+          "file": "server.py",
+          "line": 794,
+          "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b"
+        }
+      }
+    ],
+    "chartSvg": "charts/post-queue-status-blueprint.svg",
+    "chartField": "charts/post-queue-status-field.svg"
+  },
+  {
+    "id": "storybook/play-clock",
+    "commit": "none",
+    "repo": "",
+    "states": 20,
+    "invariants": [
+      {
+        "name": "NoSnapAtZero",
+        "kind": "safety",
+        "text": "The ball is not snapped at zero.",
+        "expected": false,
+        "holds": true
+      },
+      {
+        "name": "TimeoutFreezes",
+        "kind": "safety",
+        "text": "A timeout holds the clock where it stopped.",
+        "expected": false,
+        "holds": true
+      }
+    ],
+    "status": "pass",
+    "chartSvg": "charts/storybook-play-clock-blueprint.svg",
+    "chartField": "charts/storybook-play-clock-field.svg"
+  },
+  {
+    "id": "storybook/replay",
+    "commit": "none",
+    "repo": "",
+    "states": 7,
+    "invariants": [
+      {
+        "name": "AtMostOneChallenge",
+        "kind": "safety",
+        "text": "A play has at most one challenge.",
+        "expected": false,
+        "holds": true
+      },
+      {
+        "name": "ReviewNeedsChallenge",
+        "kind": "safety",
+        "text": "Review runs only after a challenge.",
+        "expected": false,
+        "holds": true
+      }
+    ],
+    "status": "pass",
+    "chartSvg": "charts/storybook-replay-blueprint.svg",
+    "chartField": "charts/storybook-replay-field.svg"
+  },
+  {
+    "id": "storybook/bus",
+    "commit": "none",
+    "repo": "",
+    "states": 5,
+    "invariants": [
+      {
+        "name": "ArriveAfterBoarding",
+        "kind": "safety",
+        "text": "The bus arrives at school after someone boarded.",
+        "expected": false,
+        "holds": true
+      },
+      {
+        "name": "NoRideBeforeBoard",
+        "kind": "safety",
+        "text": "A rider is on the bus only after boarding.",
+        "expected": false,
+        "holds": true
+      }
+    ],
+    "status": "pass",
+    "chartSvg": "charts/storybook-bus-blueprint.svg",
+    "chartField": "charts/storybook-bus-field.svg"
+  },
+  {
+    "id": "storybook/booster",
+    "commit": "none",
+    "repo": "",
+    "states": 8,
+    "invariants": [
+      {
+        "name": "CatchNeedsArms",
+        "kind": "safety",
+        "text": "The catch happens with the arms out.",
+        "expected": false,
+        "holds": true
+      },
+      {
+        "name": "MissIsBare",
+        "kind": "safety",
+        "text": "A miss is a catch without the arms.",
+        "expected": false,
+        "holds": true
+      }
+    ],
+    "status": "pass",
+    "chartSvg": "charts/storybook-booster-blueprint.svg",
+    "chartField": "charts/storybook-booster-field.svg"
+  }
+]
