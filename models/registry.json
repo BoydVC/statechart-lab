@@ -1,0 +1,216 @@
+{
+  "tlc": {
+    "version": "1.7.4",
+    "url": "https://github.com/tlaplus/tlaplus/releases/download/v1.7.4/tla2tools.jar",
+    "sha256": "936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88"
+  },
+  "machines": [
+    {
+      "id": "school-pulse/oauth",
+      "spec": "models/school-pulse/OAuth.tla",
+      "config": "models/school-pulse/OAuth.cfg",
+      "chart": "models/school-pulse/oauth.mmd",
+      "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+      "repo": "https://github.com/BoydVC/school-pulse",
+      "invariants": [
+        {
+          "name": "TokenFileCoherent",
+          "kind": "safety",
+          "text": "An empty token file names no account, and a stored token names one.",
+          "expected": false
+        },
+        {
+          "name": "NotExpiredUse",
+          "kind": "safety",
+          "text": "A sync does not read an access token after it has expired.",
+          "expected": true
+        },
+        {
+          "name": "NoStaleClobber",
+          "kind": "safety",
+          "text": "A sign-in that started earlier does not overwrite a token written after it started.",
+          "expected": true
+        }
+      ],
+      "sources": {
+        "StartDesk": "src/auth/oauth.ts:127",
+        "StartPhone": "src/auth/oauth.ts:127",
+        "FinishDesk": "src/auth/oauth.ts:118",
+        "FinishPhone": "src/auth/oauth.ts:118",
+        "Tick": "src/main.ts:155",
+        "UseDesk": "src/main.ts:155",
+        "UsePhone": "src/main.ts:155"
+      }
+    },
+    {
+      "id": "school-pulse/ingest-retry",
+      "spec": "models/school-pulse/Ingest.tla",
+      "config": "models/school-pulse/IngestToken.cfg",
+      "chart": "models/school-pulse/ingest-token.mmd",
+      "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+      "repo": "https://github.com/BoydVC/school-pulse",
+      "invariants": [
+        {
+          "name": "AtMostOneRow",
+          "kind": "safety",
+          "text": "One inbox file ends as one assignment row, including a retry.",
+          "expected": true
+        },
+        {
+          "name": "NoExtraChange",
+          "kind": "safety",
+          "text": "A retry of the same file bytes does not append another change.",
+          "expected": true
+        }
+      ],
+      "sources": {
+        "Commit": "src/ingest/watch.ts:60",
+        "CallbackThrows": "src/main.ts:70",
+        "CallbackOk": "src/main.ts:74"
+      }
+    },
+    {
+      "id": "school-pulse/ingest-stable",
+      "spec": "models/school-pulse/Ingest.tla",
+      "config": "models/school-pulse/IngestStable.cfg",
+      "chart": "models/school-pulse/ingest-stable.mmd",
+      "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+      "repo": "https://github.com/BoydVC/school-pulse",
+      "invariants": [
+        {
+          "name": "AtMostOneRow",
+          "kind": "safety",
+          "text": "A stable source id stays one row when the publish callback throws and the watcher retries.",
+          "expected": false
+        },
+        {
+          "name": "NoExtraChange",
+          "kind": "safety",
+          "text": "A stable source id does not grow a second change on that retry.",
+          "expected": false
+        }
+      ],
+      "sources": {
+        "Commit": "src/ingest/ingest.ts:97",
+        "CallbackThrows": "src/ingest/watch.ts:66",
+        "CallbackOk": "src/ingest/watch.ts:67"
+      }
+    },
+    {
+      "id": "school-pulse/sse",
+      "spec": "models/school-pulse/Sse.tla",
+      "config": "models/school-pulse/Sse.cfg",
+      "chart": "models/school-pulse/sse.mmd",
+      "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+      "repo": "https://github.com/BoydVC/school-pulse",
+      "invariants": [
+        {
+          "name": "LiveMeansCaughtUp",
+          "kind": "safety",
+          "text": "The live pill is on only after the page has caught up with pulses it missed.",
+          "expected": true
+        },
+        {
+          "name": "PillMatchesLink",
+          "kind": "safety",
+          "text": "The pill is on exactly when the stream is up.",
+          "expected": false
+        }
+      ],
+      "sources": {
+        "Drop": "web/app.ts:476",
+        "Publish": "src/server/hub.ts:26",
+        "Connect": "web/app.ts:472",
+        "Poll": "web/app.ts:100"
+      }
+    },
+    {
+      "id": "post-queue/approval",
+      "spec": "models/post-queue/Queue.tla",
+      "config": "models/post-queue/Queue.cfg",
+      "chart": "models/post-queue/queue.mmd",
+      "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b",
+      "repo": "https://github.com/BoydVC/x-post-queue",
+      "invariants": [
+        {
+          "name": "RevokeSticks",
+          "kind": "safety",
+          "text": "An edit that cleared approval is not overwritten by an older mark-posted.",
+          "expected": true
+        },
+        {
+          "name": "NeverPostedUnapproved",
+          "kind": "safety",
+          "text": "Posted text was approved on the snapshot that got saved.",
+          "expected": false
+        }
+      ],
+      "sources": {
+        "Approve": "server.py:780",
+        "Edit": "server.py:763",
+        "Cue": "server.py:788",
+        "PostedFresh": "server.py:794",
+        "Load": "server.py:775",
+        "Arm": "server.py:794",
+        "CommitSnap": "server.py:799"
+      }
+    },
+    {
+      "id": "draft-day/pipeline",
+      "spec": "models/draft-day/Pipeline.tla",
+      "config": "models/draft-day/Pipeline.cfg",
+      "chart": "models/draft-day/pipeline.mmd",
+      "commit": "7fb564d8d974db4ad3c8584a0b9b1f4e35a8ea96",
+      "repo": "https://github.com/BoydVC/draft-day",
+      "invariants": [
+        {
+          "name": "EachSeatJudgedOnce",
+          "kind": "safety",
+          "text": "Each seat is judged once.",
+          "expected": false
+        },
+        {
+          "name": "NoMergeWithoutApproval",
+          "kind": "safety",
+          "text": "A merge happens only after approval.",
+          "expected": false
+        }
+      ],
+      "sources": {
+        "ToSpec": "demo/app.js:111",
+        "Seat": "demo/app.js:156",
+        "JudgeS1": "demo/app.js:15",
+        "JudgeS2": "demo/app.js:15",
+        "FinishJudge": "demo/app.js:156",
+        "Graft": "demo/app.js:156",
+        "Physical": "demo/app.js:167",
+        "OpenDraft": "demo/app.js:167",
+        "Approve": "demo/index.html:129",
+        "Merge": "demo/app.js:177"
+      }
+    },
+    {
+      "id": "session-owner/lease",
+      "spec": "models/session-owner/Session.tla",
+      "config": "models/session-owner/Session.cfg",
+      "chart": "models/session-owner/session.mmd",
+      "commit": "none",
+      "repo": "",
+      "invariants": [
+        {
+          "name": "NoSendOnStaleLease",
+          "kind": "safety",
+          "text": "A message is not in flight on a stale lease.",
+          "expected": false
+        },
+        {
+          "name": "StaleSessionMustReauth",
+          "kind": "safety",
+          "text": "After the lease goes stale, the session is active again only once someone has signed in.",
+          "expected": false
+        }
+      ],
+      "sources": {}
+    }
+  ]
+}

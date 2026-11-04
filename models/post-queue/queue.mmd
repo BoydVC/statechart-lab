@@ -1,0 +1,61 @@
+---
+title: "Approve, then a late save"
+---
+stateDiagram-v2
+  state "Legend" as legend {
+    lg0: Broken
+    lg1: Approved
+    lg2: Open
+    lg3: Breaks RevokeSticks
+    lg4: Path to the RevokeSticks bug
+  }
+  class lg0 pink
+  class lg1 teal
+  class lg2 tan
+  class lg3 breaks
+  class lg4 bugPath
+  s0: Draft
+  s1: Approved
+  s2: Cued
+  s3: Posted
+  s4: Approved, and a second request holds a copy
+  s5: Edited back to draft
+  s6: Stale mark-posted is waiting to save
+  s7: Edit cleared approval, stale save still open
+  s8: Posted after the edit cleared approval
+  [*] --> s0
+  s0 --> s1: approve
+  s0 --> s4: approve
+  s1 --> s2: cue the intent link
+  s1 --> s3: mark posted
+  s1 --> s4: a second request reads the queue
+  s1 --> s5: edit, which clears approval
+  s2 --> s3: mark posted
+  s3 --> s6: a second request reads the queue
+  s4 --> s5: edit, which clears approval
+  s4 --> s6: that request decides to mark posted
+  s5 --> s1: approve
+  s6 --> s3: that request saves over the newer edit
+  s6 --> s7: edit, which clears approval
+  s2 --> s6: that request decides to mark posted
+  s5 --> s4: approve
+  s5 --> s7: that request decides to mark posted
+  s7 --> s6: approve
+  s7 --> s8: that request saves over the newer edit
+  classDef breaks fill:#ffecee,stroke:#e72e3b,stroke-width:2.5px,color:#cd2834
+  class s0 tan
+  class s0 bugPath
+  class s1 teal
+  class s1 bugPath
+  class s2 teal
+  class s3 teal
+  class s4 teal
+  class s4 bugPath
+  class s5 tan
+  class s6 teal
+  class s6 bugPath
+  class s7 tan
+  class s7 bugPath
+  class s8 pink
+  class s8 breaks
+  class s8 bugPath

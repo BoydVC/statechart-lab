@@ -1,0 +1,63 @@
+---
+title: "Token file shared by two sign-ins"
+---
+stateDiagram-v2
+  state "Legend" as legend {
+    lg0: Broken
+    lg1: Aging
+    lg2: Ready
+    lg3: Empty
+    lg4: Breaks NoStaleClobber or NotExpiredUse
+    lg5: Path to the NoStaleClobber or NotExpiredUse bug
+  }
+  class lg0 pink
+  class lg1 orange
+  class lg2 teal
+  class lg3 tan
+  class lg4 breaks
+  class lg5 bugPath
+  s0: No token file
+  s1: One sign-in in flight
+  s2: Token is fresh
+  s3: Two sign-ins in flight
+  s4: Token is expiring
+  s5: Token is expired
+  s6: Older sign-in overwrote the newer token
+  s7: Sync used an expired token
+  s8: Expired token used after an older sign-in won
+  [*] --> s0
+  s0 --> s1: a sign-in starts
+  s1 --> s2: the sign-in writes the token file
+  s1 --> s3: a sign-in starts
+  s2 --> s4: time passes
+  s3 --> s2: the sign-in writes the token file
+  s4 --> s5: time passes
+  s2 --> s6: the sign-in writes the token file
+  s5 --> s7: sync reads the access token
+  s4 --> s6: the sign-in writes the token file
+  s4 --> s2: the sign-in writes the token file
+  s5 --> s6: the sign-in writes the token file
+  s5 --> s2: the sign-in writes the token file
+  s6 --> s8: sync reads the access token
+  s7 --> s8: the sign-in writes the token file
+  classDef breaks fill:#ffecee,stroke:#e72e3b,stroke-width:2.5px,color:#cd2834
+  class s0 tan
+  class s0 bugPath
+  class s1 tan
+  class s1 bugPath
+  class s2 teal
+  class s2 bugPath
+  class s3 tan
+  class s3 bugPath
+  class s4 orange
+  class s4 bugPath
+  class s5 orange
+  class s5 bugPath
+  class s6 pink
+  class s6 breaks
+  class s6 bugPath
+  class s7 pink
+  class s7 breaks
+  class s7 bugPath
+  class s8 pink
+  class s8 breaks
