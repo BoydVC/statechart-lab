@@ -1,0 +1,25 @@
+{
+  "id": "session-owner/lease",
+  "commit": "none",
+  "repo": "",
+  "states": 7,
+  "invariants": [
+    {
+      "name": "NoSendOnStaleLease",
+      "kind": "safety",
+      "text": "A message is not in flight on a stale lease.",
+      "expected": false,
+      "holds": true
+    },
+    {
+      "name": "StaleSessionMustReauth",
+      "kind": "safety",
+      "text": "After the lease goes stale, the session is active again only once someone has signed in.",
+      "expected": false,
+      "holds": true
+    }
+  ],
+  "status": "pass",
+  "chartSvg": "charts/session-owner-lease-blueprint.svg",
+  "chartField": "charts/session-owner-lease-field.svg"
+}

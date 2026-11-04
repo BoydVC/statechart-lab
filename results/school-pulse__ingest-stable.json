@@ -1,0 +1,25 @@
+{
+  "id": "school-pulse/ingest-stable",
+  "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+  "repo": "https://github.com/BoydVC/school-pulse",
+  "states": 6,
+  "invariants": [
+    {
+      "name": "AtMostOneRow",
+      "kind": "safety",
+      "text": "A stable source id stays one row when the publish callback throws and the watcher retries.",
+      "expected": false,
+      "holds": true
+    },
+    {
+      "name": "NoExtraChange",
+      "kind": "safety",
+      "text": "A stable source id does not grow a second change on that retry.",
+      "expected": false,
+      "holds": true
+    }
+  ],
+  "status": "pass",
+  "chartSvg": "charts/school-pulse-ingest-stable-blueprint.svg",
+  "chartField": "charts/school-pulse-ingest-stable-field.svg"
+}

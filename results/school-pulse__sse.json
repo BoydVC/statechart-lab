@@ -1,0 +1,107 @@
+{
+  "id": "school-pulse/sse",
+  "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+  "repo": "https://github.com/BoydVC/school-pulse",
+  "states": 4,
+  "invariants": [
+    {
+      "name": "LiveMeansCaughtUp",
+      "kind": "safety",
+      "text": "The live pill is on only after the page has caught up with pulses it missed.",
+      "expected": true,
+      "holds": false,
+      "trace": [
+        {
+          "action": "Init",
+          "state": {
+            "pending": false,
+            "view": "current",
+            "pill": "on",
+            "link": "up"
+          }
+        },
+        {
+          "action": "Drop",
+          "state": {
+            "pending": false,
+            "view": "current",
+            "pill": "off",
+            "link": "down"
+          },
+          "sourceRef": "https://github.com/BoydVC/school-pulse/blob/3b76b08fad2780bf7a760ea65dae619d3a5f628b/web/app.ts#L476"
+        },
+        {
+          "action": "Publish",
+          "state": {
+            "pending": true,
+            "view": "stale",
+            "pill": "off",
+            "link": "down"
+          },
+          "sourceRef": "https://github.com/BoydVC/school-pulse/blob/3b76b08fad2780bf7a760ea65dae619d3a5f628b/src/server/hub.ts#L26"
+        },
+        {
+          "action": "Connect",
+          "state": {
+            "pending": true,
+            "view": "stale",
+            "pill": "on",
+            "link": "up"
+          },
+          "sourceRef": "https://github.com/BoydVC/school-pulse/blob/3b76b08fad2780bf7a760ea65dae619d3a5f628b/web/app.ts#L472"
+        }
+      ]
+    },
+    {
+      "name": "PillMatchesLink",
+      "kind": "safety",
+      "text": "The pill is on exactly when the stream is up.",
+      "expected": false,
+      "holds": true
+    }
+  ],
+  "status": "violation",
+  "trace": [
+    {
+      "action": "Init",
+      "state": {
+        "pending": false,
+        "view": "current",
+        "pill": "on",
+        "link": "up"
+      }
+    },
+    {
+      "action": "Drop",
+      "state": {
+        "pending": false,
+        "view": "current",
+        "pill": "off",
+        "link": "down"
+      },
+      "sourceRef": "https://github.com/BoydVC/school-pulse/blob/3b76b08fad2780bf7a760ea65dae619d3a5f628b/web/app.ts#L476"
+    },
+    {
+      "action": "Publish",
+      "state": {
+        "pending": true,
+        "view": "stale",
+        "pill": "off",
+        "link": "down"
+      },
+      "sourceRef": "https://github.com/BoydVC/school-pulse/blob/3b76b08fad2780bf7a760ea65dae619d3a5f628b/src/server/hub.ts#L26"
+    },
+    {
+      "action": "Connect",
+      "state": {
+        "pending": true,
+        "view": "stale",
+        "pill": "on",
+        "link": "up"
+      },
+      "sourceRef": "https://github.com/BoydVC/school-pulse/blob/3b76b08fad2780bf7a760ea65dae619d3a5f628b/web/app.ts#L472"
+    }
+  ],
+  "chartSvg": "charts/school-pulse-sse-blueprint.svg",
+  "chartField": "charts/school-pulse-sse-field.svg"
+}

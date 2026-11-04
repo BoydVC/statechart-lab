@@ -1,0 +1,290 @@
+{
+  "id": "school-pulse/oauth",
+  "commit": "3b76b08fad2780bf7a760ea65dae619d3a5f628b",
+  "repo": "https://github.com/BoydVC/school-pulse",
+  "states": 112,
+  "invariants": [
+    {
+      "name": "TokenFileCoherent",
+      "kind": "safety",
+      "text": "An empty token file names no account, and a stored token names one.",
+      "expected": false,
+      "holds": true
+    },
+    {
+      "name": "NotExpiredUse",
+      "kind": "safety",
+      "text": "A sync does not read an access token after it has expired.",
+      "expected": true,
+      "holds": false,
+      "trace": [
+        {
+          "action": "Init",
+          "state": {
+            "pending": {
+              "desk": -1,
+              "phone": -1
+            },
+            "clobbered": false,
+            "filePhase": "empty",
+            "usedExpired": false,
+            "fileAccount": "none",
+            "fileGen": 0
+          }
+        },
+        {
+          "action": "StartDesk",
+          "state": {
+            "pending": {
+              "desk": 0,
+              "phone": -1
+            },
+            "clobbered": false,
+            "filePhase": "empty",
+            "usedExpired": false,
+            "fileAccount": "none",
+            "fileGen": 0
+          },
+          "sourceRef": "https://github.com/BoydVC/school-pulse/blob/3b76b08fad2780bf7a760ea65dae619d3a5f628b/src/auth/oauth.ts#L127"
+        },
+        {
+          "action": "FinishDesk",
+          "state": {
+            "pending": {
+              "desk": -1,
+              "phone": -1
+            },
+            "clobbered": false,
+            "filePhase": "fresh",
+            "usedExpired": false,
+            "fileAccount": "desk",
+            "fileGen": 1
+          },
+          "sourceRef": "https://github.com/BoydVC/school-pulse/blob/3b76b08fad2780bf7a760ea65dae619d3a5f628b/src/auth/oauth.ts#L118"
+        },
+        {
+          "action": "Tick",
+          "state": {
+            "pending": {
+              "desk": -1,
+              "phone": -1
+            },
+            "clobbered": false,
+            "filePhase": "expiring",
+            "usedExpired": false,
+            "fileAccount": "desk",
+            "fileGen": 1
+          },
+          "sourceRef": "https://github.com/BoydVC/school-pulse/blob/3b76b08fad2780bf7a760ea65dae619d3a5f628b/src/main.ts#L155"
+        },
+        {
+          "action": "Tick",
+          "state": {
+            "pending": {
+              "desk": -1,
+              "phone": -1
+            },
+            "clobbered": false,
+            "filePhase": "expired",
+            "usedExpired": false,
+            "fileAccount": "desk",
+            "fileGen": 1
+          },
+          "sourceRef": "https://github.com/BoydVC/school-pulse/blob/3b76b08fad2780bf7a760ea65dae619d3a5f628b/src/main.ts#L155"
+        },
+        {
+          "action": "UseDesk",
+          "state": {
+            "pending": {
+              "desk": -1,
+              "phone": -1
+            },
+            "clobbered": false,
+            "filePhase": "expired",
+            "usedExpired": true,
+            "fileAccount": "desk",
+            "fileGen": 1
+          },
+          "sourceRef": "https://github.com/BoydVC/school-pulse/blob/3b76b08fad2780bf7a760ea65dae619d3a5f628b/src/main.ts#L155"
+        }
+      ]
+    },
+    {
+      "name": "NoStaleClobber",
+      "kind": "safety",
+      "text": "A sign-in that started earlier does not overwrite a token written after it started.",
+      "expected": true,
+      "holds": false,
+      "trace": [
+        {
+          "action": "Init",
+          "state": {
+            "pending": {
+              "desk": -1,
+              "phone": -1
+            },
+            "clobbered": false,
+            "filePhase": "empty",
+            "usedExpired": false,
+            "fileAccount": "none",
+            "fileGen": 0
+          }
+        },
+        {
+          "action": "StartDesk",
+          "state": {
+            "pending": {
+              "desk": 0,
+              "phone": -1
+            },
+            "clobbered": false,
+            "filePhase": "empty",
+            "usedExpired": false,
+            "fileAccount": "none",
+            "fileGen": 0
+          },
+          "sourceRef": "https://github.com/BoydVC/school-pulse/blob/3b76b08fad2780bf7a760ea65dae619d3a5f628b/src/auth/oauth.ts#L127"
+        },
+        {
+          "action": "StartPhone",
+          "state": {
+            "pending": {
+              "desk": 0,
+              "phone": 0
+            },
+            "clobbered": false,
+            "filePhase": "empty",
+            "usedExpired": false,
+            "fileAccount": "none",
+            "fileGen": 0
+          },
+          "sourceRef": "https://github.com/BoydVC/school-pulse/blob/3b76b08fad2780bf7a760ea65dae619d3a5f628b/src/auth/oauth.ts#L127"
+        },
+        {
+          "action": "FinishDesk",
+          "state": {
+            "pending": {
+              "desk": -1,
+              "phone": 0
+            },
+            "clobbered": false,
+            "filePhase": "fresh",
+            "usedExpired": false,
+            "fileAccount": "desk",
+            "fileGen": 1
+          },
+          "sourceRef": "https://github.com/BoydVC/school-pulse/blob/3b76b08fad2780bf7a760ea65dae619d3a5f628b/src/auth/oauth.ts#L118"
+        },
+        {
+          "action": "FinishPhone",
+          "state": {
+            "pending": {
+              "desk": -1,
+              "phone": -1
+            },
+            "clobbered": true,
+            "filePhase": "fresh",
+            "usedExpired": false,
+            "fileAccount": "phone",
+            "fileGen": 2
+          },
+          "sourceRef": "https://github.com/BoydVC/school-pulse/blob/3b76b08fad2780bf7a760ea65dae619d3a5f628b/src/auth/oauth.ts#L118"
+        }
+      ]
+    }
+  ],
+  "status": "violation",
+  "trace": [
+    {
+      "action": "Init",
+      "state": {
+        "pending": {
+          "desk": -1,
+          "phone": -1
+        },
+        "clobbered": false,
+        "filePhase": "empty",
+        "usedExpired": false,
+        "fileAccount": "none",
+        "fileGen": 0
+      }
+    },
+    {
+      "action": "StartDesk",
+      "state": {
+        "pending": {
+          "desk": 0,
+          "phone": -1
+        },
+        "clobbered": false,
+        "filePhase": "empty",
+        "usedExpired": false,
+        "fileAccount": "none",
+        "fileGen": 0
+      },
+      "sourceRef": "https://github.com/BoydVC/school-pulse/blob/3b76b08fad2780bf7a760ea65dae619d3a5f628b/src/auth/oauth.ts#L127"
+    },
+    {
+      "action": "FinishDesk",
+      "state": {
+        "pending": {
+          "desk": -1,
+          "phone": -1
+        },
+        "clobbered": false,
+        "filePhase": "fresh",
+        "usedExpired": false,
+        "fileAccount": "desk",
+        "fileGen": 1
+      },
+      "sourceRef": "https://github.com/BoydVC/school-pulse/blob/3b76b08fad2780bf7a760ea65dae619d3a5f628b/src/auth/oauth.ts#L118"
+    },
+    {
+      "action": "Tick",
+      "state": {
+        "pending": {
+          "desk": -1,
+          "phone": -1
+        },
+        "clobbered": false,
+        "filePhase": "expiring",
+        "usedExpired": false,
+        "fileAccount": "desk",
+        "fileGen": 1
+      },
+      "sourceRef": "https://github.com/BoydVC/school-pulse/blob/3b76b08fad2780bf7a760ea65dae619d3a5f628b/src/main.ts#L155"
+    },
+    {
+      "action": "Tick",
+      "state": {
+        "pending": {
+          "desk": -1,
+          "phone": -1
+        },
+        "clobbered": false,
+        "filePhase": "expired",
+        "usedExpired": false,
+        "fileAccount": "desk",
+        "fileGen": 1
+      },
+      "sourceRef": "https://github.com/BoydVC/school-pulse/blob/3b76b08fad2780bf7a760ea65dae619d3a5f628b/src/main.ts#L155"
+    },
+    {
+      "action": "UseDesk",
+      "state": {
+        "pending": {
+          "desk": -1,
+          "phone": -1
+        },
+        "clobbered": false,
+        "filePhase": "expired",
+        "usedExpired": true,
+        "fileAccount": "desk",
+        "fileGen": 1
+      },
+      "sourceRef": "https://github.com/BoydVC/school-pulse/blob/3b76b08fad2780bf7a760ea65dae619d3a5f628b/src/main.ts#L155"
+    }
+  ],
+  "chartSvg": "charts/school-pulse-oauth-blueprint.svg",
+  "chartField": "charts/school-pulse-oauth-field.svg"
+}

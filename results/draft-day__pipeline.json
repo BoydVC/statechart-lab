@@ -1,0 +1,25 @@
+{
+  "id": "draft-day/pipeline",
+  "commit": "7fb564d8d974db4ad3c8584a0b9b1f4e35a8ea96",
+  "repo": "https://github.com/BoydVC/draft-day",
+  "states": 12,
+  "invariants": [
+    {
+      "name": "EachSeatJudgedOnce",
+      "kind": "safety",
+      "text": "Each seat is judged once.",
+      "expected": false,
+      "holds": true
+    },
+    {
+      "name": "NoMergeWithoutApproval",
+      "kind": "safety",
+      "text": "A merge happens only after approval.",
+      "expected": false,
+      "holds": true
+    }
+  ],
+  "status": "pass",
+  "chartSvg": "charts/draft-day-pipeline-blueprint.svg",
+  "chartField": "charts/draft-day-pipeline-field.svg"
+}

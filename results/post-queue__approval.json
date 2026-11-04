@@ -1,0 +1,207 @@
+{
+  "id": "post-queue/approval",
+  "commit": "dea8484c024decd2a3aa72ddf7f54c58b4e19a6b",
+  "repo": "https://github.com/BoydVC/x-post-queue",
+  "states": 115,
+  "invariants": [
+    {
+      "name": "RevokeSticks",
+      "kind": "safety",
+      "text": "An edit that cleared approval is not overwritten by an older mark-posted.",
+      "expected": true,
+      "holds": false,
+      "trace": [
+        {
+          "action": "Init",
+          "state": {
+            "snapText": "t1",
+            "revoked": false,
+            "text": "t1",
+            "approvedText": "",
+            "loaded": false,
+            "status": "draft",
+            "snapApproved": "",
+            "version": 0,
+            "snapStatus": "draft"
+          }
+        },
+        {
+          "action": "Approve",
+          "state": {
+            "snapText": "t1",
+            "revoked": false,
+            "text": "t1",
+            "approvedText": "t1",
+            "loaded": false,
+            "status": "approved",
+            "snapApproved": "",
+            "version": 1,
+            "snapStatus": "draft"
+          },
+          "sourceRef": "https://github.com/BoydVC/x-post-queue/blob/dea8484c024decd2a3aa72ddf7f54c58b4e19a6b/server.py#L780"
+        },
+        {
+          "action": "Load",
+          "state": {
+            "snapText": "t1",
+            "revoked": false,
+            "text": "t1",
+            "approvedText": "t1",
+            "loaded": true,
+            "status": "approved",
+            "snapApproved": "t1",
+            "version": 1,
+            "snapStatus": "approved"
+          },
+          "sourceRef": "https://github.com/BoydVC/x-post-queue/blob/dea8484c024decd2a3aa72ddf7f54c58b4e19a6b/server.py#L775"
+        },
+        {
+          "action": "Edit",
+          "state": {
+            "snapText": "t1",
+            "revoked": true,
+            "text": "t2",
+            "approvedText": "",
+            "loaded": true,
+            "status": "draft",
+            "snapApproved": "t1",
+            "version": 2,
+            "snapStatus": "approved"
+          },
+          "sourceRef": "https://github.com/BoydVC/x-post-queue/blob/dea8484c024decd2a3aa72ddf7f54c58b4e19a6b/server.py#L763"
+        },
+        {
+          "action": "Arm",
+          "state": {
+            "snapText": "t1",
+            "revoked": true,
+            "text": "t2",
+            "approvedText": "",
+            "loaded": true,
+            "status": "draft",
+            "snapApproved": "t1",
+            "version": 2,
+            "snapStatus": "posted"
+          },
+          "sourceRef": "https://github.com/BoydVC/x-post-queue/blob/dea8484c024decd2a3aa72ddf7f54c58b4e19a6b/server.py#L794"
+        },
+        {
+          "action": "CommitSnap",
+          "state": {
+            "snapText": "t1",
+            "revoked": true,
+            "text": "t1",
+            "approvedText": "t1",
+            "loaded": false,
+            "status": "posted",
+            "snapApproved": "t1",
+            "version": 3,
+            "snapStatus": "posted"
+          },
+          "sourceRef": "https://github.com/BoydVC/x-post-queue/blob/dea8484c024decd2a3aa72ddf7f54c58b4e19a6b/server.py#L799"
+        }
+      ]
+    },
+    {
+      "name": "NeverPostedUnapproved",
+      "kind": "safety",
+      "text": "Posted text was approved on the snapshot that got saved.",
+      "expected": false,
+      "holds": true
+    }
+  ],
+  "status": "violation",
+  "trace": [
+    {
+      "action": "Init",
+      "state": {
+        "snapText": "t1",
+        "revoked": false,
+        "text": "t1",
+        "approvedText": "",
+        "loaded": false,
+        "status": "draft",
+        "snapApproved": "",
+        "version": 0,
+        "snapStatus": "draft"
+      }
+    },
+    {
+      "action": "Approve",
+      "state": {
+        "snapText": "t1",
+        "revoked": false,
+        "text": "t1",
+        "approvedText": "t1",
+        "loaded": false,
+        "status": "approved",
+        "snapApproved": "",
+        "version": 1,
+        "snapStatus": "draft"
+      },
+      "sourceRef": "https://github.com/BoydVC/x-post-queue/blob/dea8484c024decd2a3aa72ddf7f54c58b4e19a6b/server.py#L780"
+    },
+    {
+      "action": "Load",
+      "state": {
+        "snapText": "t1",
+        "revoked": false,
+        "text": "t1",
+        "approvedText": "t1",
+        "loaded": true,
+        "status": "approved",
+        "snapApproved": "t1",
+        "version": 1,
+        "snapStatus": "approved"
+      },
+      "sourceRef": "https://github.com/BoydVC/x-post-queue/blob/dea8484c024decd2a3aa72ddf7f54c58b4e19a6b/server.py#L775"
+    },
+    {
+      "action": "Edit",
+      "state": {
+        "snapText": "t1",
+        "revoked": true,
+        "text": "t2",
+        "approvedText": "",
+        "loaded": true,
+        "status": "draft",
+        "snapApproved": "t1",
+        "version": 2,
+        "snapStatus": "approved"
+      },
+      "sourceRef": "https://github.com/BoydVC/x-post-queue/blob/dea8484c024decd2a3aa72ddf7f54c58b4e19a6b/server.py#L763"
+    },
+    {
+      "action": "Arm",
+      "state": {
+        "snapText": "t1",
+        "revoked": true,
+        "text": "t2",
+        "approvedText": "",
+        "loaded": true,
+        "status": "draft",
+        "snapApproved": "t1",
+        "version": 2,
+        "snapStatus": "posted"
+      },
+      "sourceRef": "https://github.com/BoydVC/x-post-queue/blob/dea8484c024decd2a3aa72ddf7f54c58b4e19a6b/server.py#L794"
+    },
+    {
+      "action": "CommitSnap",
+      "state": {
+        "snapText": "t1",
+        "revoked": true,
+        "text": "t1",
+        "approvedText": "t1",
+        "loaded": false,
+        "status": "posted",
+        "snapApproved": "t1",
+        "version": 3,
+        "snapStatus": "posted"
+      },
+      "sourceRef": "https://github.com/BoydVC/x-post-queue/blob/dea8484c024decd2a3aa72ddf7f54c58b4e19a6b/server.py#L799"
+    }
+  ],
+  "chartSvg": "charts/post-queue-approval-blueprint.svg",
+  "chartField": "charts/post-queue-approval-field.svg"
+}

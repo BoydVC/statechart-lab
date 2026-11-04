@@ -1,0 +1,74 @@
+[
+  {
+    "id": "oauth-stale-write",
+    "machine": "school-pulse/oauth",
+    "invariant": "NoStaleClobber",
+    "confirmed": true,
+    "runner": "node --test dist/tests/oauth-race.test.js",
+    "observed": "AssertionError: 'refresh-a' !== 'refresh-b'",
+    "summary": "Two sign-ins share one token file. The one that started first can finish last and replace the newer refresh token. writeToken has no generation check.",
+    "code": "BoydVC/school-pulse@3b76b08fad2780bf7a760ea65dae619d3a5f628b src/auth/oauth.ts:118 and the call at line 199. There is no refresh-token grant in this commit. The race is two installed-app flows writing the same path.",
+    "test": "tests/oauth-race.test.ts holds sign-in A inside the token HTTP call, lets sign-in B finish, then releases A. The file should still hold B. It holds A.",
+    "fix": "Stamp a generation when the flow starts and write the file only if that generation is still current. Return the stored token to the flow that lost, and ask that account to sign in again."
+  },
+  {
+    "id": "oauth-expired-use",
+    "machine": "school-pulse/oauth",
+    "invariant": "NotExpiredUse",
+    "confirmed": true,
+    "runner": "node --test dist/tests/oauth-race.test.js",
+    "observed": "AssertionError: 'synthetic-access' !== null",
+    "summary": "readToken returns access_token and never reads expires_at. A sync can run on an expired token. Nothing in this commit moves the account to re-auth-needed.",
+    "code": "BoydVC/school-pulse@3b76b08fad2780bf7a760ea65dae619d3a5f628b src/main.ts:150. expires_at is stored in src/auth/oauth.ts:114.",
+    "test": "The test transpiles the real readToken, writes a token with expires_at in 2000, and expects null. The function returns synthetic-access.",
+    "fix": "If expires_at is missing or in the past, return null and print the auth command. A later change can use the stored refresh token. This commit does not send a refresh grant."
+  },
+  {
+    "id": "ingest-clock-retry",
+    "machine": "school-pulse/ingest-retry",
+    "invariant": "AtMostOneRow",
+    "confirmed": true,
+    "runner": "node --test dist/tests/ingest-retry.test.js",
+    "observed": "AssertionError: 2 !== 1. The stable-id test in the same file passed.",
+    "summary": "The watcher retries inside the same try that already committed. Each attempt expands {{SP:NOW}} with a new Date. A source id that depends on that clock becomes a second row. A stable source id stays one row.",
+    "code": "BoydVC/school-pulse@3b76b08fad2780bf7a760ea65dae619d3a5f628b src/ingest/watch.ts:56, src/adapters/index.ts:20, src/main.ts:70. The publish callback sits inside the retry try. ingestSnapshot commits in src/ingest/ingest.ts:61 before the callback.",
+    "test": "startWatcher with onResult throwing once, then a generic file whose assignment sourceId is {{SP:NOW}}. listAssignments length is 2. The same test with sourceId quiz-1 stays at 1.",
+    "fix": "Treat a successful ingestSnapshot as committed even if the callback throws. Expand clock tokens once per file bytes, or refuse a retry when the database transaction already committed."
+  },
+  {
+    "id": "ingest-clock-change",
+    "machine": "school-pulse/ingest-retry",
+    "invariant": "NoExtraChange",
+    "confirmed": true,
+    "runner": "node --test dist/tests/ingest-retry.test.js",
+    "observed": "The same run that stored 2 rows also stored 2 changes. TLC violates NoExtraChange on that path.",
+    "summary": "The second attempt does not only add a row. It also appends another change, because the new clock id looks like a new assignment. This is the same retry as ingest-clock-retry, counted on the change log.",
+    "code": "BoydVC/school-pulse@3b76b08fad2780bf7a760ea65dae619d3a5f628b src/ingest/watch.ts:60 and src/ingest/ingest.ts:241. The baseline or assignment_new draft is inserted for an id the first attempt did not use.",
+    "test": "Same watcher test as ingest-clock-retry. A stable source id does not add a second change. A {{SP:NOW}} source id does.",
+    "fix": "Same fix as ingest-clock-retry. Do not retry a file whose ingest transaction already committed."
+  },
+  {
+    "id": "sse-reconnect-gap",
+    "machine": "school-pulse/sse",
+    "invariant": "LiveMeansCaughtUp",
+    "confirmed": true,
+    "runner": "node --test dist/tests/sse-reconnect.test.js",
+    "observed": "AssertionError: 0 !== 1",
+    "summary": "onopen turns the live pill on and does not refresh. The hub does not buffer a pulse published while the stream is down. The page can look live and miss that pulse until the 60 second poll.",
+    "code": "BoydVC/school-pulse@3b76b08fad2780bf7a760ea65dae619d3a5f628b web/app.ts:466 and web/app.ts:100. src/server/hub.ts:26 writes only to current clients. src/server/server.ts:102 does not send an id the client can resume from.",
+    "test": "The test loads the real connect function, fires onerror then onopen, and expects a refresh before the pill is treated as caught up. refresh runs 0 times. The pill still switches to on.",
+    "fix": "Call the same refresh used at startup from onopen, and keep the pill off until that refresh resolves. Buffer the latest pulse on the hub if a client is gone."
+  },
+  {
+    "id": "queue-stale-posted",
+    "machine": "post-queue/approval",
+    "invariant": "RevokeSticks",
+    "confirmed": true,
+    "runner": "python3 -m unittest test_stale_post.py",
+    "observed": "AssertionError: 'posted' != 'draft'. The draft-to-posted test in the same file returned HTTP 400.",
+    "summary": "load_queue and save_queue each take the lock, and the handler mutates the copy in between. A mark-posted that read an approved item can save after an edit has already cleared approval. The item ends posted with the old text. A draft that was never approved still cannot be marked posted in one request.",
+    "code": "BoydVC/x-post-queue@dea8484c024decd2a3aa72ddf7f54c58b4e19a6b server.py:134, server.py:144, server.py:762, server.py:794.",
+    "test": "The unittest blocks inside save when the copy is already marked posted, lets an edit revert the item to draft, then lets the posted save finish. The stored status is posted, not draft.",
+    "fix": "Hold the lock across load, the status check, and save. Reject the save when the item's version or approved_at no longer matches the copy that was checked."
+  }
+]

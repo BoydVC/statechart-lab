@@ -1,0 +1,20 @@
+{
+  "name": "statechart-lab",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "TLA+ models of stateful flows, checked with TLC and drawn as charts.",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "tsc && node --test dist/tools/check/parse.test.js dist/tools/chart/render.test.js",
+    "check": "tsc && node dist/tools/check/cli.js && node dist/tools/chart/cli.js && node dist/tools/bugs/cli.js && node --test dist/tools/check/parse.test.js dist/tools/chart/render.test.js",
+    "gallery": "python3 -m http.server 4173 -d web"
+  },
+  "dependencies": {
+    "pele": "1.9.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.18.12",
+    "typescript": "5.6.3"
+  }
+}
