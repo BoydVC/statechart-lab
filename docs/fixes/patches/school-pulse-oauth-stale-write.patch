@@ -1,0 +1,44 @@
+--- a/src/auth/oauth.ts
++++ b/src/auth/oauth.ts
+@@ -115,6 +115,22 @@
+   };
+ }
+ 
++const tokenGeneration = new Map<string, number>();
++
++/** Stamp a generation for this token path when a sign-in starts. */
++export function beginTokenFlow(path: string): number {
++  const next = (tokenGeneration.get(path) ?? 0) + 1;
++  tokenGeneration.set(path, next);
++  return next;
++}
++
++/** Write only if no newer sign-in started on this path since `generation`. */
++export function writeTokenIfCurrent(path: string, token: StoredToken, generation: number): boolean {
++  if (tokenGeneration.get(path) !== generation) return false;
++  writeToken(path, token);
++  return true;
++}
++
+ export function writeToken(path: string, token: StoredToken): void {
+   mkdirSync(dirname(path), { recursive: true });
+   writeFileSync(path, `${JSON.stringify(token, null, 2)}\n`, { mode: 0o600 });
+@@ -125,6 +141,7 @@
+  * code, and store the token under the data directory. Read-only scopes only.
+  */
+ export async function runInstalledAppFlow(options: AuthFlowOptions): Promise<{ path: string; authorizeUrl: string }> {
++  const generation = beginTokenFlow(options.tokenPath);
+   const verifier = randomBytes(32).toString("base64url");
+   const state = randomBytes(16).toString("base64url");
+   const challenge = codeChallenge(verifier);
+@@ -196,7 +213,9 @@
+     tenant: options.tenant,
+     fetchImpl: options.fetchImpl,
+   });
+-  writeToken(options.tokenPath, token);
++  if (!writeTokenIfCurrent(options.tokenPath, token, generation)) {
++    throw new Error("A newer sign-in started for this account; this one was discarded.");
++  }
+   return {
+     path: options.tokenPath,
+     authorizeUrl: buildAuthorizeUrl({

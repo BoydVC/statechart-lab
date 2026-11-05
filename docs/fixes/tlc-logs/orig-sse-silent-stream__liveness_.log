@@ -1,0 +1,20 @@
+Implied-temporal checking--satisfiability problem has 1 branches.
+Computing initial states...
+Error: Temporal properties were violated.
+
+Error: The following behavior constitutes a counter-example:
+
+State 1: <Initial predicate>
+/\ phase = "off"
+/\ sockets = 0
+
+State 2: <Open line 13, col 3 to line 16, col 17 of module SilenceLive>
+/\ phase = "live"
+/\ sockets = 1
+
+State 3: <Silence line 19, col 3 to line 21, col 22 of module SilenceLive>
+/\ phase = "silent"
+/\ sockets = 1
+
+State 4: Stuttering
+6 states generated, 4 distinct states found, 0 states left on queue.

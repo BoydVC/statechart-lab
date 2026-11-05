@@ -1,0 +1,54 @@
+Computing initial states...
+Error: Invariant NotExpiredUse is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ pending = [desk |-> -1, phone |-> -1]
+/\ clobbered = FALSE
+/\ filePhase = "empty"
+/\ usedExpired = FALSE
+/\ fileAccount = "none"
+/\ fileGen = 0
+
+State 2: <StartDesk line 19, col 3 to line 22, col 74 of module OAuth>
+/\ pending = [desk |-> 0, phone |-> -1]
+/\ clobbered = FALSE
+/\ filePhase = "empty"
+/\ usedExpired = FALSE
+/\ fileAccount = "none"
+/\ fileGen = 0
+
+State 3: <FinishDesk line 31, col 3 to line 38, col 26 of module OAuth>
+/\ pending = [desk |-> -1, phone |-> -1]
+/\ clobbered = FALSE
+/\ filePhase = "fresh"
+/\ usedExpired = FALSE
+/\ fileAccount = "desk"
+/\ fileGen = 1
+
+State 4: <Tick line 51, col 3 to line 53, col 72 of module OAuth>
+/\ pending = [desk |-> -1, phone |-> -1]
+/\ clobbered = FALSE
+/\ filePhase = "expiring"
+/\ usedExpired = FALSE
+/\ fileAccount = "desk"
+/\ fileGen = 1
+
+State 5: <Tick line 51, col 3 to line 53, col 72 of module OAuth>
+/\ pending = [desk |-> -1, phone |-> -1]
+/\ clobbered = FALSE
+/\ filePhase = "expired"
+/\ usedExpired = FALSE
+/\ fileAccount = "desk"
+/\ fileGen = 1
+
+State 6: <UseDesk line 56, col 3 to line 58, col 70 of module OAuth>
+/\ pending = [desk |-> -1, phone |-> -1]
+/\ clobbered = FALSE
+/\ filePhase = "expired"
+/\ usedExpired = TRUE
+/\ fileAccount = "desk"
+/\ fileGen = 1
+
+113 states generated, 48 distinct states found, 21 states left on queue.
+The depth of the complete state graph search is 6.
+The average outdegree of the complete state graph is 2 (minimum is 1, the maximum 3 and the 95th percentile is 3).

@@ -1,0 +1,7 @@
+Computing initial states...
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  calculated (optimistic):  val = 2.3E-18
+13 states generated, 7 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 4.
+The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 2 and the 95th percentile is 2).

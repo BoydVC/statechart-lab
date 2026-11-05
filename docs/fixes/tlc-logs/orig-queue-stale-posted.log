@@ -1,0 +1,72 @@
+Computing initial states...
+Error: Invariant RevokeSticks is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ snapText = "t1"
+/\ revoked = FALSE
+/\ text = "t1"
+/\ approvedText = ""
+/\ loaded = FALSE
+/\ status = "draft"
+/\ snapApproved = ""
+/\ version = 0
+/\ snapStatus = "draft"
+
+State 2: <Approve line 22, col 3 to line 28, col 67 of module Queue>
+/\ snapText = "t1"
+/\ revoked = FALSE
+/\ text = "t1"
+/\ approvedText = "t1"
+/\ loaded = FALSE
+/\ status = "approved"
+/\ snapApproved = ""
+/\ version = 1
+/\ snapStatus = "draft"
+
+State 3: <Load line 58, col 3 to line 64, col 63 of module Queue>
+/\ snapText = "t1"
+/\ revoked = FALSE
+/\ text = "t1"
+/\ approvedText = "t1"
+/\ loaded = TRUE
+/\ status = "approved"
+/\ snapApproved = "t1"
+/\ version = 1
+/\ snapStatus = "approved"
+
+State 4: <Edit line 31, col 3 to line 39, col 61 of module Queue>
+/\ snapText = "t1"
+/\ revoked = TRUE
+/\ text = "t2"
+/\ approvedText = ""
+/\ loaded = TRUE
+/\ status = "draft"
+/\ snapApproved = "t1"
+/\ version = 2
+/\ snapStatus = "approved"
+
+State 5: <Arm line 67, col 3 to line 70, col 95 of module Queue>
+/\ snapText = "t1"
+/\ revoked = TRUE
+/\ text = "t2"
+/\ approvedText = ""
+/\ loaded = TRUE
+/\ status = "draft"
+/\ snapApproved = "t1"
+/\ version = 2
+/\ snapStatus = "posted"
+
+State 6: <CommitSnap line 73, col 3 to line 81, col 62 of module Queue>
+/\ snapText = "t1"
+/\ revoked = TRUE
+/\ text = "t1"
+/\ approvedText = "t1"
+/\ loaded = FALSE
+/\ status = "posted"
+/\ snapApproved = "t1"
+/\ version = 3
+/\ snapStatus = "posted"
+
+137 states generated, 77 distinct states found, 30 states left on queue.
+The depth of the complete state graph search is 6.
+The average outdegree of the complete state graph is 2 (minimum is 0, the maximum 5 and the 95th percentile is 5).

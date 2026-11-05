@@ -1,0 +1,19 @@
+--- a/src/ingest/watch.ts
++++ b/src/ingest/watch.ts
+@@ -60,10 +60,15 @@
+       const now = new Date();
+       const snapshot = parseSnapshot({ source: sourceFromInboxPath(file), filename: file, raw, now });
+       const result = ingestSnapshot(db, snapshot, now);
++      // The transaction has committed. Nothing below may send us back into the retry loop.
+       await deliverWebhooks(db, result.alerts).catch((error: unknown) => {
+         console.error(`school-pulse: webhook failed: ${error instanceof Error ? error.message : "unknown"}`);
+       });
+-      onResult?.(result, file);
++      try {
++        onResult?.(result, file);
++      } catch (error) {
++        console.error(`school-pulse: ingested ${file}, but the result callback failed: ${error instanceof Error ? error.message : "unknown"}`);
++      }
+       return;
+     } catch (error) {
+       lastError = error instanceof Error ? error.message : "unknown error";
