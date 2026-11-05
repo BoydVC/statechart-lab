@@ -1,0 +1,43 @@
+--- a/server.py
++++ b/server.py
+@@ -440,7 +440,7 @@
+     const isDue = dueIds.has(it.id);
+     const canApprove = it.status === "draft";
+     const canCue = it.status === "approved" || it.status === "cued";
+-    const canPosted = it.status === "cued" || it.status === "approved";
++    const canPosted = it.status === "cued";
+     const canSkip = it.status === "draft" || it.status === "approved" || it.status === "cued";
+     return `<article class="item ${isDue ? "due-now" : ""}" data-id="${esc(it.id)}">
+       <div class="item-top">
+@@ -689,6 +689,13 @@
+         return self._json(404, {"error": "not found", "path": path})
+ 
+     def do_POST(self):
++        # queue-stale-posted: every POST does load -> check -> save. Hold the
++        # re-entrant lock across all three so an edit cannot land between another
++        # request's status check and its whole-file save.
++        with _lock:
++            return self._do_post_locked()
++
++    def _do_post_locked(self):
+         parsed = urlparse(self.path)
+         path = parsed.path.rstrip("/") or "/"
+         body = self._read_json()
+@@ -784,6 +791,8 @@
+                 it["approved_at_et"] = t
+                 it["intent_url"] = intent_url(it["text"], it.get("in_reply_to"))
+             elif action == "skip":
++                if it["status"] not in ("draft", "approved", "cued"):
++                    return self._json(400, {"error": f"cannot skip from status={it['status']}"})
+                 it["status"] = "skipped"
+             elif action == "cue":
+                 if it["status"] not in ("approved", "cued"):
+@@ -792,7 +801,7 @@
+                 it["cued_at_et"] = t
+                 it["intent_url"] = intent_url(it["text"], it.get("in_reply_to"))
+             elif action == "posted":
+-                if it["status"] not in ("approved", "cued", "posted"):
++                if it["status"] not in ("cued", "posted"):
+                     return self._json(400, {"error": f"cannot mark posted from status={it['status']}"})
+                 it["status"] = "posted"
+                 it["posted_at_et"] = t

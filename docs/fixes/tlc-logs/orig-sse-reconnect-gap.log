@@ -1,0 +1,30 @@
+Computing initial states...
+Error: Invariant LiveMeansCaughtUp is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ pending = FALSE
+/\ view = "current"
+/\ pill = "on"
+/\ link = "up"
+
+State 2: <Drop line 14, col 3 to line 17, col 32 of module Sse>
+/\ pending = FALSE
+/\ view = "current"
+/\ pill = "off"
+/\ link = "down"
+
+State 3: <Publish line 20, col 3 to line 25, col 29 of module Sse>
+/\ pending = TRUE
+/\ view = "stale"
+/\ pill = "off"
+/\ link = "down"
+
+State 4: <Connect line 28, col 3 to line 31, col 32 of module Sse>
+/\ pending = TRUE
+/\ view = "stale"
+/\ pill = "on"
+/\ link = "up"
+
+10 states generated, 4 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 4.
+The average outdegree of the complete state graph is 1 (minimum is 1, the maximum 1 and the 95th percentile is 1).

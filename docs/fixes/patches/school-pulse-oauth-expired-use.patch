@@ -1,0 +1,16 @@
+--- a/src/main.ts
++++ b/src/main.ts
+@@ -152,7 +152,12 @@
+   if (fromEnv) return fromEnv;
+   const path = join(dataDir, "tokens", file);
+   if (!existsSync(path)) return null;
+-  const parsed = JSON.parse(readFileSync(path, "utf8")) as { access_token?: string };
++  const parsed = JSON.parse(readFileSync(path, "utf8")) as { access_token?: string; expires_at?: string | null };
++  const expiresAt = parsed.expires_at ? Date.parse(parsed.expires_at) : Number.NaN;
++  if (!Number.isFinite(expiresAt) || expiresAt <= Date.now()) {
++    console.error(`school-pulse: ${file} has expired. Run \`school-pulse auth\` again.`);
++    return null;
++  }
+   return parsed.access_token ?? null;
+ }
+ 

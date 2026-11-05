@@ -1,0 +1,24 @@
+Computing initial states...
+Error: Invariant ScheduledBeforePosted is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ cued = FALSE
+/\ seenPosted = FALSE
+/\ approved = FALSE
+/\ phase = "draft"
+
+State 2: <Approve line 14, col 3 to line 17, col 35 of module Status>
+/\ cued = FALSE
+/\ seenPosted = FALSE
+/\ approved = TRUE
+/\ phase = "approved"
+
+State 3: <PostFromApproved line 32, col 3 to line 35, col 33 of module Status>
+/\ cued = FALSE
+/\ seenPosted = TRUE
+/\ approved = TRUE
+/\ phase = "posted"
+
+5 states generated, 5 distinct states found, 2 states left on queue.
+The depth of the complete state graph search is 3.
+The average outdegree of the complete state graph is 2 (minimum is 2, the maximum 2 and the 95th percentile is 2).

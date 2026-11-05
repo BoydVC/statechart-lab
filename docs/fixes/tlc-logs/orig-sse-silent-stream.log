@@ -1,0 +1,18 @@
+Computing initial states...
+Error: Invariant SilentStreamReconnects is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ phase = "off"
+/\ sockets = 0
+
+State 2: <Open line 13, col 3 to line 16, col 17 of module Silence>
+/\ phase = "live"
+/\ sockets = 1
+
+State 3: <Silence line 19, col 3 to line 21, col 22 of module Silence>
+/\ phase = "silent"
+/\ sockets = 1
+
+3 states generated, 3 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 3.
+The average outdegree of the complete state graph is 1 (minimum is 1, the maximum 1 and the 95th percentile is 1).

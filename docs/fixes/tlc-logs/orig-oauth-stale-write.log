@@ -1,0 +1,46 @@
+Computing initial states...
+Error: Invariant NoStaleClobber is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ pending = [desk |-> -1, phone |-> -1]
+/\ clobbered = FALSE
+/\ filePhase = "empty"
+/\ usedExpired = FALSE
+/\ fileAccount = "none"
+/\ fileGen = 0
+
+State 2: <StartDesk line 19, col 3 to line 22, col 74 of module OAuth>
+/\ pending = [desk |-> 0, phone |-> -1]
+/\ clobbered = FALSE
+/\ filePhase = "empty"
+/\ usedExpired = FALSE
+/\ fileAccount = "none"
+/\ fileGen = 0
+
+State 3: <StartPhone line 25, col 3 to line 28, col 74 of module OAuth>
+/\ pending = [desk |-> 0, phone |-> 0]
+/\ clobbered = FALSE
+/\ filePhase = "empty"
+/\ usedExpired = FALSE
+/\ fileAccount = "none"
+/\ fileGen = 0
+
+State 4: <FinishDesk line 31, col 3 to line 38, col 26 of module OAuth>
+/\ pending = [desk |-> -1, phone |-> 0]
+/\ clobbered = FALSE
+/\ filePhase = "fresh"
+/\ usedExpired = FALSE
+/\ fileAccount = "desk"
+/\ fileGen = 1
+
+State 5: <FinishPhone line 41, col 3 to line 48, col 26 of module OAuth>
+/\ pending = [desk |-> -1, phone |-> -1]
+/\ clobbered = TRUE
+/\ filePhase = "fresh"
+/\ usedExpired = FALSE
+/\ fileAccount = "phone"
+/\ fileGen = 2
+
+21 states generated, 16 distinct states found, 8 states left on queue.
+The depth of the complete state graph search is 5.
+The average outdegree of the complete state graph is 2 (minimum is 1, the maximum 3 and the 95th percentile is 3).
